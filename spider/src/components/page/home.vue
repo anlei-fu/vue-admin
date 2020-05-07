@@ -19,7 +19,7 @@
       </span>
       <!-- nav search box-->
       <span class="nav-search">
-        <search-box></search-box>
+        <search-box/>
       </span>
       <!--user dropdown menu-->
       <span class="user-dropdown-menu-container">
@@ -30,11 +30,13 @@
     <div class="body">
       <!--left nave menu -->
       <div class="body-left-menu-container">
+        <transition name="fade-transform" mode="out-in">
         <left-menu
           :menuGroup="selectedModule"
           :activeMenu="selectedModule.defaultMenu"
           @on-change="changeMenu"
         ></left-menu>
+        </transition>
       </div>
       <!--body content -->
       <div class="body-right-container">
@@ -43,8 +45,11 @@
           <nav-tab ref="tab" @on-change="changeTab"></nav-tab>
         </div>
         <!--router view page container-->
+       
         <div class="body-right-page-container">
+           <transition name="fade-transform" mode="out-in">
           <router-view />
+           </transition>
         </div>
         <!--footer-->
         <div class="footer">
@@ -56,12 +61,12 @@
 </template>
 <script>
 import { modules } from "./../../modules";
-import leftMenu from "./../control/leftNavMenu";
-import navMenu from "./../control/navMenu";
-import searchBox from "./../control/searchBox";
-import navTab from "./../control/navTab";
-import footers from "./../control/footers";
-import dropdownMenu from "./../control/dropdownMenu";
+import leftMenu from "./../control/LeftNavMenu";
+import navMenu from "./../control/NavMenu";
+import searchBox from "./../control/SearchBox";
+import navTab from "./../control/NavTab";
+import footers from "./../control/Footers";
+import dropdownMenu from "./../control/DropdownMenu";
 
 export default {
   name: "home",
@@ -186,7 +191,7 @@ export default {
      * @param {Map} map
      */
     cacheMenu(menu, map) {
-      map.set(menu.name, menu);
+      map.set(menu.path, menu);
       if (menu.menus) {
         menu.menus.forEach(x => {
           this.cacheMenu(x, map);
@@ -239,7 +244,7 @@ body {
 
 .header {
   height: 65px;
-  background-color: rgb(30, 30, 30);
+  background-color:rgb(48, 65, 86);
   text-align: left;
   position: fixed;
   width: 100%;
@@ -271,14 +276,12 @@ body {
 
 .body-left-menu-container {
   position: fixed;
-  top: 71px;
+ top: 65px;
   width: 13%;
   bottom: 0;
   vertical-align: top;
-  background-color: white;
-  margin-left: 3px;
-  border-left: 1px solid #dcdee2;
-  border-bottom: 1px solid #dcdee2;
+  background-color: rgb(48, 65, 86);
+
   /* box-shadow: 0px 0px 6px 4px rgba(80, 80, 80, 0.2); */
 }
 
@@ -351,4 +354,54 @@ body {
   /* background: #f0faff; */
   z-index: 2;
 }
+
+
+
+/* fade */
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.28s;
+}
+
+.fade-enter,
+.fade-leave-active {
+  opacity: 0;
+}
+
+/* fade-transform */
+.fade-transform-leave-active,
+.fade-transform-enter-active {
+  transition: all .5s;
+}
+
+.fade-transform-enter {
+  opacity: 0;
+  transform: translateX(-30px);
+}
+
+.fade-transform-leave-to {
+  opacity: 0;
+  transform: translateX(30px);
+}
+
+/* breadcrumb transition */
+.breadcrumb-enter-active,
+.breadcrumb-leave-active {
+  transition: all .5s;
+}
+
+.breadcrumb-enter,
+.breadcrumb-leave-active {
+  opacity: 0;
+  transform: translateX(20px);
+}
+
+.breadcrumb-move {
+  transition: all .5s;
+}
+
+.breadcrumb-leave-active {
+  position: absolute;
+}
+
 </style>

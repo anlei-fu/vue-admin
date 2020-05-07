@@ -8,37 +8,27 @@ exports.modules = [
                         {
                                 path: "/log",
                                 icon: "ios-search",
-                                name: "1",
-                                label: "111",
+                                label: "log",
                                 moduleName: "module1",
                                 menus: [{
-                                        path: "/log",
+                                        path: "/log/1",
                                         icon: "ios-search",
-                                        name: "1-1",
-                                        label: "111",
+                                        label: "search",
                                         moduleName: "module1",
-                                        children: [{
-                                                path: "/login",
-                                                icon: "",
-                                                name: "1-2-1",
-                                                label: "登录",
-                                                moduleName: "module1",
-                                        }]
+                                        
                                 },
                                 {
-                                        path: "/log",
+                                        path: "/log/2",
                                         icon: "",
-                                        name: "1-2",
                                         label: "aaa",
                                         moduleName: "module1",
                                 }
                                 ]
                         },
                         {
-                                path: "/login",
+                                path: "/login/2",
                                 icon: "",
-                                name: "2",
-                                label: "bb",
+                                label: "test",
                                 moduleName: "module1",
                         }
                 ]
@@ -51,9 +41,8 @@ exports.modules = [
                 activeMenuName: "1",
                 menus: [
                         {
-                                path: "/log",
+                                path: "/log/4",
                                 icon: "",
-                                name: "1",
                                 label: "日志",
                                 moduleName: "module2",
                         }
@@ -67,9 +56,8 @@ exports.modules = [
                 activeMenuName: "test",
                 menus: [
                         {
-                                path: "/log",
+                                path: "/log/5",
                                 icon: "",
-                                name: "bbb",
                                 label: "111-",
                                 moduleName: "module3",
                         }

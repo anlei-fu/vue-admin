@@ -7,12 +7,14 @@
       <span class="tab-container">
         <span
           v-for="item in tabs"
-          v-bind:class="{'tab-active':item.isActive}"
-          :key="item.name"
+          :class="item.isActive?'tab-item tab-active':'tab-item'"
+          :key="item.path"
           @click="toPage(item)"
-          class="tab-item"
         >
+          <Icon/>
+          <span class="tab-content">
           {{item.label}}
+          </span>
           <Icon  type="ios-close" @click="closeTab(item)" size="18" />
         </span>
       </span>
@@ -38,7 +40,7 @@ export default {
         {
           module: "sss",
           name: "456",
-          path: "/login",
+          path: "/login/1",
           label: "flow charge"
         },
         {
@@ -113,6 +115,7 @@ export default {
         }
       });
       this.$emit("on-change", tab);
+      console.log(tab);
     },
     /**
      * Callback of refresh current page
@@ -151,29 +154,35 @@ export default {
 }
 
 .tab-active {
-  background-color: rebeccapurple;
+  background-color: #57A3F3 !important;
 }
 
 .tab-item {
       background-color: whitesmoke;
     margin-right: 3px;
-    overflow: hidden;
     display: inline-block;
     -webkit-transition: 0.4s;
     transition: 0.4s;
     line-height: 30px;
     padding-left: 24px;
 }
+
+.tab-content{
+ overflow: hidden;
+ text-overflow: ellipsis;
+ max-width: 100px;
+}
+
 .tab-item:hover {
-  color: red;
+  color: white;
   cursor: pointer;
-  background-color: lightblue;
+  background-color: #57A3F3;
 }
 .icon-item {
   transition: 0.6s;
 }
 .icon-item:hover {
-  color: blue;
+  color: #57A3F3;
   cursor: pointer;
 }
 </style>

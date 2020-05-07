@@ -11,29 +11,15 @@ Vue.use(iview);
 
 Vue.config.productionTip = false;
 
-/**
- *  router interceptor
- */
-// router.beforeEach((to, _, next) => {
-//   iview.LoadingBar.start();
-//   if (store.state.userInfo.isLogined) {
-//     console.log(to.path);
-//     if (to.path == "/login") {
-//       console.log("redirect to home");
-//       router.push({ path: "/" });
-//     } else {
-//       next();
-//     }
-//     return;
-//   }
+router.beforeEach((to, from, next) => {
+  iview.LoadingBar.start();
+  next();
+});
 
-//   if (to.path != "/login"){
-//     router.push({ path: "/login" });
-//   }else{
-//     next();
-//   }
-
-// });
+router.afterEach((to, from, next)  => {
+  iview.LoadingBar.finish();
+  next();
+});
 
 // router.afterEach((to, from) => {
 //   iview.LoadingBar.finish();

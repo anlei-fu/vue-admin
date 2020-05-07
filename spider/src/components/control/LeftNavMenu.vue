@@ -15,35 +15,35 @@ string parameter 'name' of selected menu
       <Menu
         ref="leftMenu"
         :active-name="activeMenu"
-        style=" width:100%;height:100%;border:none;"
+        style=" width:100%;height:100%;border:none; background-color:rgb(48, 65, 86); color:rgb(64, 158, 255)"
         :open-names="openNames"
         @on-select="changeMenu"
       >
         <template v-for="level1Menu in menuGroup.menus">
-          <Submenu :key="level1Menu.name" :name="level1Menu.name" v-if="level1Menu.menus">
+          <Submenu :key="level1Menu.path" :name="level1Menu.path" v-if="level1Menu.menus" class="top-level-menu">
             <template slot="title">
               <Icon :type="level1Menu.icon" size="24" />
               {{level1Menu.label}}
             </template>
             <template v-for="level2Menu in level1Menu.menus">
-              <Submenu :key="level2Menu.name" v-if="level2Menu.menus">
+              <Submenu :key="level2Menu.path" :name="level2Menu.path" v-if="level2Menu.menus" style="color:white">
                 <template slot="title">
                   <Icon :type="level2Menu.icon" size="24" />
                   {{level2Menu.label}}
                 </template>
                 <template v-for="level3Menu in level2Menu.menus">
-                  <MenuItem :key="level3Menu.name" :name="level3Menu.name">{{level3Menu.label}}</MenuItem>
+                  <MenuItem :key="level3Menu.path" :name="level3Menu.path">{{level3Menu.label}}</MenuItem>
                 </template>
               </Submenu>
               <MenuItem
-                :key="level2Menu.name"
-                :path="level2Menu.path"
-                :name="level2Menu.name"
+                :key="level2Menu.path"
+                :name="level2Menu.path"
+                class="second-level-menu"
                 v-else
               >{{level2Menu.label}}</MenuItem>
             </template>
           </Submenu>
-          <MenuItem :key="level1Menu.name" :name="level1Menu.name" v-else>{{level1Menu.label}}</MenuItem>
+          <MenuItem :key="level1Menu.path" :name="level1Menu.path" v-else class="top-level-menu">{{level1Menu.label}}</MenuItem>
         </template>
       </Menu>
     </div>
@@ -90,21 +90,64 @@ export default {
 
 <style scoped>
 .module-title {
-  background-color: #fff;
+  background-color: rgb(48, 65, 86);
   width: 100%;
   height: 8%;
-  font-size: 25px;
+  font-size: 16px;
   padding: 8px;
   display: flex;
   align-items: center;
-  border-bottom: 1px solid #dcdee2;
-  border-top: 1px solid #dcdee2;
-  border-right: 1px solid #dcdee2;
+  color:rgb(191, 203, 217);
+}
+
+.top-level-menu{
+  color:rgb(191, 203, 217);
+  transition: all .5s;
+}
+.top-level-menu:hover{
+  color: #57A3F3;
+  background-color: rgb(38,52,69);
+}
+
+.second-level-menu{
+  background-color:#273445;color:rgb(191, 203, 217);
+  transition: .2s all;
+  
+}
+.second-level-menu :hover{
+  background-color:green;color:white
+}
+
+
+
+/* iview style override */
+.ivu-menu-horizontal.ivu-menu-light:after {
+  content: "";
+  display: block;
+  width: 100%;
+  height: 0px;
+  background: #dcdee2;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+}
+
+.ivu-menu-vertical.ivu-menu-light:after {
+    content: '';
+    display: block;
+    width: 0px;
+    height: 100%;
+    background: #dcdee2;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    z-index: 1;
 }
 
 .menu-container {
   overflow-y: auto;
   height: 92%;
-  background-color: white;
+  background-color: rgb(48, 65, 86);
 }
 </style>

@@ -26,7 +26,7 @@
   </div>
 </template>
 <script>
-import listBody from "./../control/listBody";
+import listBody from "./../control/ListBody";
 import add from "./add";
 export default {
   components: {

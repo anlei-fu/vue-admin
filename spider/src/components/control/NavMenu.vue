@@ -25,6 +25,9 @@ export default {
       activeMenu: ""
     };
   },
+  created(){
+         console.log(this.activeMenu);
+  },
   methods:{
     /**
      * Proxy iview menu component 'on-select' by emitting a 'on-changed' event
@@ -56,6 +59,21 @@ export default {
   display: inherit;
   float: right;
   font-size: 13px;
+}
+.ivu-menu-light.ivu-menu-horizontal .ivu-menu-item {
+    height: inherit;
+    line-height: inherit;
+    border-bottom: 2px solid transparent;
+    color: rgb(191, 203, 217);
+}
+.ivu-menu-light.ivu-menu-horizontal .ivu-menu-item:hover {
+    color: #57A3F3;
+    border-bottom: 2px solid;
+}
+
+.ivu-menu-item-selected{
+   color: #57A3F3;
+    border-bottom: 2px solid;
 }
 
 .nav-left-menu-item {

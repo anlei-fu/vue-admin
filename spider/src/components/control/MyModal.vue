@@ -1,5 +1,5 @@
 <template>
-  <Modal v-model="show_" draggable :title="title">
+  <Modal v-model="show_" draggable :title="title" mask>
     <slot></slot>
     <div slot="footer" class="footer">
       <Button type="primary" @click="onOk">ok</Button>
