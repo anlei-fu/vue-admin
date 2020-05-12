@@ -6,7 +6,7 @@ exports.modules = [
                 activeMenuName: "1",
                 menus: [
                         {
-                                path: "/log",
+                                path: "/log/25",
                                 icon: "ios-search",
                                 label: "log",
                                 moduleName: "module1",
@@ -18,7 +18,7 @@ exports.modules = [
                                         
                                 },
                                 {
-                                        path: "/log/2",
+                                        path: "/log/89",
                                         icon: "",
                                         label: "aaa",
                                         moduleName: "module1",
@@ -26,7 +26,25 @@ exports.modules = [
                                 ]
                         },
                         {
-                                path: "/login/2",
+                                path: "/log2",
+                                icon: "",
+                                label: "log2",
+                                moduleName: "module1",
+                        },
+                        {
+                                path: "/login",
+                                icon: "",
+                                label: "login",
+                                moduleName: "module1",
+                        },
+                        {
+                                path: "/login/4",
+                                icon: "",
+                                label: "test",
+                                moduleName: "module1",
+                        },
+                        {
+                                path: "/",
                                 icon: "",
                                 label: "test",
                                 moduleName: "module1",
@@ -41,7 +59,7 @@ exports.modules = [
                 activeMenuName: "1",
                 menus: [
                         {
-                                path: "/log/4",
+                                path: "/log",
                                 icon: "",
                                 label: "日志",
                                 moduleName: "module2",

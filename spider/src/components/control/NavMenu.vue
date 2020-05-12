@@ -3,7 +3,7 @@
     mode="horizontal"
     class="nav-left-menu"
     style
-    :active-name="activeMenu"
+    :activeName="activeMenu"
     @on-select="changeModule"
   >
     <template v-for="item in modules">
@@ -18,11 +18,11 @@
 <script>
 export default {
   props: {
-    modules: Array
+    modules: Array,
+    activeMenu:String
   },
   data() {
     return {
-      activeMenu: ""
     };
   },
   created(){
@@ -70,10 +70,9 @@ export default {
     color: #57A3F3;
     border-bottom: 2px solid;
 }
-
-.ivu-menu-item-selected{
-   color: #57A3F3;
-    border-bottom: 2px solid;
+ .ivu-menu-item-selected{
+   color: #57A3F3 !important;
+    border-bottom: 2px solid !important;
 }
 
 .nav-left-menu-item {

@@ -9,21 +9,16 @@ import "iview/dist/styles/iview.css";
 
 Vue.use(iview);
 
-Vue.config.productionTip = false;
-
 router.beforeEach((to, from, next) => {
   iview.LoadingBar.start();
   next();
 });
 
-router.afterEach((to, from, next)  => {
+router.afterEach(()  => {
   iview.LoadingBar.finish();
-  next();
 });
 
-// router.afterEach((to, from) => {
-//   iview.LoadingBar.finish();
-//  });
+
 
 new Vue({
   el: "#app",

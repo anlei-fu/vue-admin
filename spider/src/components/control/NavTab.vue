@@ -3,27 +3,27 @@
     <span class="wrapper">
       <Icon type="ios-home" class="icon-item" size="24" @click="toHome" />
       <Icon type="md-refresh" class="icon-item" size="24" @click="refresh" />
-        <Icon class="icon-item" type="ios-arrow-back" size="24" @click="moveLeft"></Icon>
+      <Icon v-if="tabs.length>10" class="icon-item" type="ios-arrow-back" size="24" @click="moveLeft"></Icon>
       <span class="tab-container">
-        <span
+        <TabItem
           v-for="item in tabs"
-          :class="item.isActive?'tab-item tab-active':'tab-item'"
           :key="item.path"
-          @click="toPage(item)"
-        >
-          <Icon/>
-          <span class="tab-content">
-          {{item.label}}
-          </span>
-          <Icon  type="ios-close" @click="closeTab(item)" size="18" />
-        </span>
+          :tab="item"
+          :selected="item.selected"
+          @close="closeTab(item,true)"
+          @click="addTab(item,true)"
+        />
       </span>
-        <Icon class="icon-item" type="ios-arrow-forward" size="24" @click="moveRight"></Icon>
+      <Icon v-if="tabs.length>10" class="icon-item" type="ios-arrow-forward" size="24" @click="moveRight"></Icon>
     </span>
   </div>
 </template>
 <script>
+import TabItem from "./TabItem";
 export default {
+  components:{
+    TabItem
+  },
   props: {
     currentLocation: String,
     homePath: String
@@ -31,31 +31,9 @@ export default {
   data() {
     return {
       tabs: [
-        {
-          module: "sss",
-          name: "123",
-          path: "/",
-          label: "phone charge"
-        },
-        {
-          module: "sss",
-          name: "456",
-          path: "/login/1",
-          label: "flow charge"
-        },
-        {
-          module: "sss",
-          name: "789",
-          path: "/log",
-          label: "phone charge"
-        },
-        {
-          module: "sss",
-          name: "987",
-          path: "/login",
-          label: "flow charge"
-        }
+       
       ],
+      offsetX:0,
       activePath: ""
     };
   },
@@ -67,12 +45,10 @@ export default {
      *
      * @param {Tab} tab
      */
-    closeTab(tab) {
-      console.log("tab");
-      console.log(tab);
+    closeTab(tab,toPage) {
       let index = 0;
       for (let i = 0; i < this.tabs.length; i++) {
-        if (this.tabs[i].path == tab.path) {
+        if (this.tabs[i]&& this.tabs[i].path == tab.path) {
           if (i == 0) {
             index = 0;
           } else {
@@ -82,7 +58,7 @@ export default {
         }
       }
       this.tabs = this.tabs.filter(x => x.path != tab.path);
-      if (this.tabs.length != 0) this.toPage(this.tabs[index]);
+      if (this.tabs.length != 0&&toPage) this.toPage(this.tabs[index],true);
     },
     /**
      * Remove old tab and insert it at the start of tabs
@@ -90,10 +66,10 @@ export default {
      *
      * @param {Tab} tab
      */
-    addTab(tab) {
-      this.closeTab(tab);
+    addTab(tab,emit) {
+      this.closeTab(tab,false);
       this.tabs.unshift(tab);
-      this.toPage(tab);
+      this.toPage(tab,emit);
     },
     /**
      * To home page
@@ -106,16 +82,18 @@ export default {
     /**
      * Emit tab ''on-changed' event to parent component
      */
-    toPage(tab) {
-      this.tabs.forEach(tab => {
-        if (tab.path == tab.path) {
-          tab.isActive = true;
+    toPage(tab,emit) {
+      this.tabs.forEach(tabItem => {
+        if (tabItem.path == tab.path) {
+          tabItem.selected = true;
         } else {
-          tab.isActive = false;
+          tabItem.selected = false;
         }
+        console.log(tab);
       });
+      if(emit){
       this.$emit("on-change", tab);
-      console.log(tab);
+      }
     },
     /**
      * Callback of refresh current page
@@ -133,7 +111,7 @@ export default {
     moveRight() {
       this.tabs.unshift(this.tabs.pop());
     }
-  },
+  }
 };
 </script>
 
@@ -142,47 +120,23 @@ export default {
   vertical-align: middle;
 }
 
-
 .tab-container {
-  max-width: 80%;
+  max-width: 1400px;
   display: inline-block;
   overflow: hidden;
   box-sizing: border-box;
   white-space: nowrap;
   vertical-align: middle;
   transition: 0.5s;
+  margin: 0px 10px;
 }
 
-.tab-active {
-  background-color: #57A3F3 !important;
-}
 
-.tab-item {
-      background-color: whitesmoke;
-    margin-right: 3px;
-    display: inline-block;
-    -webkit-transition: 0.4s;
-    transition: 0.4s;
-    line-height: 30px;
-    padding-left: 24px;
-}
-
-.tab-content{
- overflow: hidden;
- text-overflow: ellipsis;
- max-width: 100px;
-}
-
-.tab-item:hover {
-  color: white;
-  cursor: pointer;
-  background-color: #57A3F3;
-}
 .icon-item {
   transition: 0.6s;
 }
 .icon-item:hover {
-  color: #57A3F3;
+  color: #57a3f3;
   cursor: pointer;
 }
 </style>

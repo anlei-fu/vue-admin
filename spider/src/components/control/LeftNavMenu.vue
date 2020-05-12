@@ -7,20 +7,20 @@ string parameter 'name' of selected menu
   <div>
     <!--module name and collapse button-->
     <div class="module-title">
-      <Icon type="md-menu" size="30" @click="collapseAll" />
-      <span style="margin-left:5px;font-size:20px;">{{menuGroup.label}}</span>
+      <Icon type="md-menu" title="click to collapse" class="icon-item" size="30" @click="collapseAll" />
+      <span style="margin-left: 14px; font-size: 18px">{{menuGroup.label}}</span>
     </div>
     <!--menus max depth is 3-->
     <div class="menu-container">
       <Menu
         ref="leftMenu"
-        :active-name="activeMenu"
+        :activeName="activeMenu"
         style=" width:100%;height:100%;border:none; background-color:rgb(48, 65, 86); color:rgb(64, 158, 255)"
         :open-names="openNames"
         @on-select="changeMenu"
       >
         <template v-for="level1Menu in menuGroup.menus">
-          <Submenu :key="level1Menu.path" :name="level1Menu.path" v-if="level1Menu.menus" class="top-level-menu">
+          <Submenu :key="level1Menu.path" :name="level1Menu.path" v-if="level1Menu.menus" >
             <template slot="title">
               <Icon :type="level1Menu.icon" size="24" />
               {{level1Menu.label}}
@@ -77,11 +77,9 @@ export default {
      * collapse all menu
      */
     collapseAll() {
-      console.log("click");
       this.$nextTick(() => {
-        console.log(this.openNames);
-        console.log(this.$refs.leftMenu);
-        this.$refs.leftMenu.updateOpenKeys();
+        this.$refs.leftMenu.openedNames=[];
+         this.$refs.leftMenu.updateOpened();
       });
     }
   }
@@ -106,16 +104,22 @@ export default {
 }
 .top-level-menu:hover{
   color: #57A3F3;
-  background-color: rgb(38,52,69);
+  background-color: #263445;
+}
+.ivu-menu-item-selected{
+ color: #57A3F3 !important;
+ background-color: rgb(38,52,69) !important;
+
 }
 
 .second-level-menu{
-  background-color:#273445;color:rgb(191, 203, 217);
+  background-color:#1F2D3D;color:rgb(191, 203, 217);
   transition: .2s all;
   
 }
-.second-level-menu :hover{
-  background-color:green;color:white
+
+.second-level-menu:hover{
+  background-color:#001528!important;
 }
 
 
@@ -145,9 +149,39 @@ export default {
     z-index: 1;
 }
 
+.ivu-menu-light.ivu-menu-vertical .ivu-menu-item-active:not(.ivu-menu-submenu):after {
+    content: '';
+    display: block;
+    /* width: 2px; */
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    background: #2d8cf0;
+}
+
+.ivu-menu-light.ivu-menu-vertical .ivu-menu-item-active:not(.ivu-menu-submenu):after {
+    content: '';
+    display: block;
+    width: 0px;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    background: #2d8cf0;
+}
+
 .menu-container {
   overflow-y: auto;
   height: 92%;
   background-color: rgb(48, 65, 86);
+}
+
+.icon-item {
+  transition: 0.6s;
+}
+.icon-item:hover {
+  color: #57a3f3;
+  cursor: pointer;
 }
 </style>

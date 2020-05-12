@@ -11,15 +11,11 @@
       </span>
       <!--nav menus-->
       <span>
-        <nav-menu
-          :modules="modules"
-          :activeMenu="selectedModule._name"
-          @on-changed="changeModule"
-        ></nav-menu>
+        <nav-menu :modules="modules" :activeMenu="selectedModule._name" @on-changed="changeModule"></nav-menu>
       </span>
       <!-- nav search box-->
       <span class="nav-search">
-        <search-box/>
+        <search-box />
       </span>
       <!--user dropdown menu-->
       <span class="user-dropdown-menu-container">
@@ -31,11 +27,11 @@
       <!--left nave menu -->
       <div class="body-left-menu-container">
         <transition name="fade-transform" mode="out-in">
-        <left-menu
-          :menuGroup="selectedModule"
-          :activeMenu="selectedModule.defaultMenu"
-          @on-change="changeMenu"
-        ></left-menu>
+          <left-menu
+            :menuGroup="selectedModule"
+            :activeMenu="selectedModule.activeMenuName"
+            @on-change="changeMenu"
+          ></left-menu>
         </transition>
       </div>
       <!--body content -->
@@ -45,11 +41,11 @@
           <nav-tab ref="tab" @on-change="changeTab"></nav-tab>
         </div>
         <!--router view page container-->
-       
+
         <div class="body-right-page-container">
-           <transition name="fade-transform" mode="out-in">
-          <router-view />
-           </transition>
+          <transition name="fade-transform" mode="out-in">
+            <router-view />
+          </transition>
         </div>
         <!--footer-->
         <div class="footer">
@@ -86,7 +82,7 @@ export default {
       modules: [],
       // footers
       footers: [
-        "jasmin code generator ",
+        "jasmine code generator ",
         "all rights reserved by fuanlei since 2019"
       ],
       // use to cache all menus
@@ -102,9 +98,11 @@ export default {
      */
     changeMenu(menuName) {
       let menu = this.findMenu(this.selectedModule._name, menuName);
-      this.selectedModule.activeMenuName=menuName;
-      this.$refs.tab.addTab(menu);
-      this.toPage(menu);
+      if (menu) {
+        this.selectedModule.activeMenuName = menuName;
+        this.$refs.tab.addTab(menu);
+        this.toPage(menu);
+      }
     },
     /**
      * Callback of tab changed @see navTab
@@ -114,15 +112,15 @@ export default {
      * @param {Menu} menu
      */
     changeTab(menu) {
-      if (menu.module != this.selectedModule.name) {
+      if (menu.moduleName != this.selectedModule.name) {
         for (const module of this.modules) {
-          if ((module.name = menu.module)) {
+          if (module._name == menu.moduleName) {
             this.selectedModule = module;
             break;
           }
         }
       }
-      this.selectedModule.activeMenuName = menu.name;
+      this.selectedModule.activeMenuName = menu.path;
       this.toPage(menu);
     },
     /**
@@ -135,12 +133,17 @@ export default {
     changeModule(moduleName) {
       for (const module of this.modules) {
         if (module._name == moduleName) {
-          this.selectedModule =module;
-          let menu = this.findMenu(moduleName, this.selectedModule.activeMenuName);
-          console.log("menu found");
-          console.log(menu)
-          this.$refs.tab.addTab(menu);
-          this.toPage(menu);
+          this.selectedModule = module;
+          let activeMenu = this.findMenu(
+            moduleName,
+            this.selectedModule.activeMenuName
+          );
+
+          if (activeMenu) {
+            this.$refs.tab.addTab(activeMenu);
+            this.toPage(activeMenu);
+            this.selectedModule.activeMenuName=activeMenu.path;
+          }
         }
       }
     },
@@ -152,12 +155,8 @@ export default {
      * @returns {Menu}
      */
     findMenu(moduleName, menuName) {
-      console.log(moduleName);
-      console.log(menuName);
       let module = this.menuMap.get(moduleName);
-      console.log(module);
-      let menu =module.get(menuName);;
-      console.log(menu);
+      let menu = module.get(menuName);
       return menu;
     },
     /**
@@ -205,11 +204,7 @@ export default {
   }
 };
 </script>
-<style >
-body {
-  line-height: 1;
-}
-</style>
+
 
 <style scoped>
 .container {
@@ -244,7 +239,7 @@ body {
 
 .header {
   height: 65px;
-  background-color:rgb(48, 65, 86);
+  background-color: rgb(48, 65, 86);
   text-align: left;
   position: fixed;
   width: 100%;
@@ -276,7 +271,7 @@ body {
 
 .body-left-menu-container {
   position: fixed;
- top: 65px;
+  top: 65px;
   width: 13%;
   bottom: 0;
   vertical-align: top;
@@ -355,8 +350,6 @@ body {
   z-index: 2;
 }
 
-
-
 /* fade */
 .fade-enter-active,
 .fade-leave-active {
@@ -371,7 +364,7 @@ body {
 /* fade-transform */
 .fade-transform-leave-active,
 .fade-transform-enter-active {
-  transition: all .5s;
+  transition: all 0.5s;
 }
 
 .fade-transform-enter {
@@ -387,7 +380,7 @@ body {
 /* breadcrumb transition */
 .breadcrumb-enter-active,
 .breadcrumb-leave-active {
-  transition: all .5s;
+  transition: all 0.5s;
 }
 
 .breadcrumb-enter,
@@ -397,11 +390,10 @@ body {
 }
 
 .breadcrumb-move {
-  transition: all .5s;
+  transition: all 0.5s;
 }
 
 .breadcrumb-leave-active {
   position: absolute;
 }
-
 </style>

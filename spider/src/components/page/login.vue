@@ -29,7 +29,7 @@
                 <Input
                   v-model="user.password"
                   size="large"
-                  type="Password"
+                  type="password"
                   placeholder="Password"
                   style="width: 350px"
                 >
@@ -38,7 +38,7 @@
               </FormItem>
             </div>
             <div class="login-row">
-              <Checkbox v-model="single" size="large" style="width:300px">Remember me</Checkbox>
+              <Checkbox  size="large" style="width:300px">Remember me</Checkbox>
             </div>
             <div class="login-button">
               <Button type="primary" size="large" style="width:350px;" @click="login">Login</Button>
@@ -85,8 +85,9 @@ export default {
   methods: {
     login() {
       this.$refs["userLoginForm"].validate(valid => {
+        debugger
         if (valid) {
-          this.$store.state.userInfo.isLogined = true;
+          // this.$store.state.userInfo.isLogined = true;
           this.$router.push({ path: "/" });
           return;
         }
