@@ -11,7 +11,20 @@ Vue.use(iview);
 
 router.beforeEach((to, from, next) => {
   iview.LoadingBar.start();
+
+  // // check logined
+  // if(!store.getters.isLogined&&to.path!="/login"){
+   
+  //   return;
+  // }
+
+  // // has page right
+  // if(!store.authorities.includes(to.path)){
+  //   return;
+  // }
+
   next();
+
 });
 
 router.afterEach(()  => {

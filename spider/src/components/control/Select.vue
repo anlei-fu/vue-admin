@@ -7,6 +7,7 @@
   </span>
 </template>
 <script>
+import {mapGetters,mapActions} from"vuex"
 export default {
   name: "Select",
   model: {
@@ -39,7 +40,7 @@ export default {
     title: {
       type: String
     },
-    enum: String
+    cache: String
   },
   data() {
     return {
@@ -52,12 +53,23 @@ export default {
   },
 
   created() {
-    if (this.enum) {
-      this.options_.source = this.options_.filtered = this.Enums.get(this.enum);
-    } else {
-      this.options_.source = this.options_.filtered = this.options || [];
-    }
     this.selectedValue_ = this.selectedValue;
+  },
+  computed:{
+        optionSource(){
+          if(this.options)
+             return this.options;
+
+          if(this.cache) {
+             var items = this.$store.getter.cache(this.cache);
+             if(items==null){
+                  console.log("get cache failed");
+                  return [];
+             }
+             
+            return items;
+          }
+        }
   },
   watch: {
     options(newVal) {

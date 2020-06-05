@@ -1,5 +1,19 @@
 <template>
   <div>
+    <div>
+      <span style="float:right">
+        <Dropdown>
+        <Icon type="md-settings" />
+        <DropdownMenu slot="list">
+            <DropdownItem>驴打滚</DropdownItem>
+            <DropdownItem>炸酱面</DropdownItem>
+            <DropdownItem>豆汁儿</DropdownItem>
+            <DropdownItem>冰糖葫芦</DropdownItem>
+            <DropdownItem>北京烤鸭</DropdownItem>
+        </DropdownMenu>
+    </Dropdown>
+      </span>
+    </div>
     <div class="filter">
       <Select style="width:200px">
         <Option value="beijing">New York</Option>
@@ -39,7 +53,8 @@ export default {
       columns1: [
         {
           title: "Name",
-          key: "name"
+          key: "name",
+         
         },
         {
           title: "Age",

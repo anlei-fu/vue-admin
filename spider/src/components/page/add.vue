@@ -2,10 +2,10 @@
   <my-modal title="open test" ref="modal" @onOk="ok">
        <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" :label-width="80">
         <FormItem label="Name" prop="name">
-            <Input v-model="formValidate.name" placeholder="Enter your name"></Input>
+            <Input v-model="formValidate.name" placeholder="Enter your name"/>
         </FormItem>
         <FormItem label="E-mail" prop="mail">
-            <Input v-model="formValidate.mail" placeholder="Enter your e-mail"></Input>
+            <Input v-model="formValidate.mail" placeholder="Enter your e-mail"/>
         </FormItem>
         <FormItem label="City" prop="city">
             <Select v-model="formValidate.city" placeholder="Select your city">
