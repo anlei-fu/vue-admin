@@ -3,7 +3,7 @@
     <div>
       <span style="float:right">
         <Dropdown>
-        <Icon type="md-settings" />
+        <Icon type="md-settings" size="24" />
         <DropdownMenu slot="list">
             <DropdownItem>驴打滚</DropdownItem>
             <DropdownItem>炸酱面</DropdownItem>

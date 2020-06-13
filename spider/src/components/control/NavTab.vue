@@ -1,9 +1,12 @@
 <template>
   <div>
     <span class="wrapper">
-      <Icon type="ios-home" class="icon-item" size="24" @click="toHome" />
+      <span class="icon-container"><Icon type="ios-home" class="icon-item" size="24" @click="toHome" />
       <Icon type="md-refresh" class="icon-item" size="24" @click="refresh" />
       <Icon v-if="tabs.length>10" class="icon-item" type="ios-arrow-back" size="24" @click="moveLeft"></Icon>
+       </span>
+      
+      <span class="tab-scroll">
       <span class="tab-container">
         <TabItem
           v-for="item in tabs"
@@ -13,8 +16,10 @@
           @close="closeTab(item,true)"
           @click="addTab(item,true)"
         />
+        </span>
       </span>
-      <Icon v-if="tabs.length>10" class="icon-item" type="ios-arrow-forward" size="24" @click="moveRight"></Icon>
+      <span class="icon-container"> <Icon v-if="tabs.length>10" class="icon-item" type="ios-arrow-forward" size="24" @click="moveRight"></Icon></span>
+     
     </span>
   </div>
 </template>
@@ -119,16 +124,32 @@ export default {
 .wrapper {
   vertical-align: middle;
 }
+ 
+ .icon-container{
+   display: inline-block;
+    /* height: 30px; */
+    transform: translateY(-12px);
+ }
+
+.tab-scroll{
+    overflow: hidden;
+    display: inline-block;
+    margin-left: 10px;
+    width: 1000px;
+}
 
 .tab-container {
-  max-width: 1400px;
-  display: inline-block;
-  overflow: hidden;
-  box-sizing: border-box;
-  white-space: nowrap;
-  vertical-align: middle;
-  transition: 0.5s;
-  margin: 0px 10px;
+    /* max-width: 1400px; */
+    display: inline-block;
+    overflow: hidden;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    white-space: nowrap;
+    vertical-align: middle;
+    -webkit-transition: 0.5s;
+    transition: 0.5s;
+    margin: 0px 10px;
+    
 }
 
 
