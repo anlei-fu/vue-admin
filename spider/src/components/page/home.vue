@@ -11,15 +11,15 @@
       </span>
       <!--nav menus-->
       <span>
-        <nav-menu :modules="modules" :activeMenu="selectedModule._name" @on-changed="changeModule"></nav-menu>
+        <NavMenu :modules="modules" :activeMenu="selectedModule._name" @on-changed="changeModule" />
       </span>
       <!-- nav search box-->
       <span class="nav-search">
-        <search-box />
+        <SearchBox />
       </span>
       <!--user dropdown menu-->
       <span class="user-dropdown-menu-container">
-        <drop-down-menu title="hello,admin"></drop-down-menu>
+        <DropdownMenu title="hello,admin" />
       </span>
     </div>
     <!--body-->
@@ -27,55 +27,57 @@
       <!--left nave menu -->
       <div class="body-left-menu-container">
         <transition name="fade-transform" mode="out-in">
-          <left-menu
+          <LeftNavMenu
             :menuGroup="selectedModule"
             :activeMenu="selectedModule.activeMenuName"
             @on-change="changeMenu"
-          ></left-menu>
+          />
         </transition>
       </div>
       <!--body content -->
       <div class="body-right-container">
         <!-- tab nav-->
         <div class="body-right-tab-nav-container">
-          <nav-tab ref="tab" @on-change="changeTab"></nav-tab>
+          <NavTab ref="tab" @on-change="changeTab" />
         </div>
         <!--router view page container-->
 
         <div class="body-right-page-container">
           <transition name="fade-transform" mode="out-in">
-            <router-view />
+            <router-view v-if="ready" />
           </transition>
         </div>
         <!--footer-->
         <div class="footer">
-          <footers :items="footers" />
+          <Footer :items="footers" />
         </div>
       </div>
     </div>
   </div>
 </template>
 <script>
-import { modules } from "./../../modules";
-import leftMenu from "./../control/LeftNavMenu";
-import navMenu from "./../control/NavMenu";
-import searchBox from "./../control/SearchBox";
-import navTab from "./../control/NavTab";
-import footers from "./../control/Footers";
-import dropdownMenu from "./../control/DropdownMenu";
+import { modules } from "./../../config/modules";
+
+import LeftNavMenu from "./../control/LeftNavMenu";
+import NavMenu from "./../control/NavMenu";
+import SearchBox from "./../control/SearchBox";
+import NavTab from "./../control/NavTab";
+import Footer from "./../control/Footer";
+import DropdownMenu from "./../control/DropdownMenu";
 
 export default {
   name: "home",
   components: {
-    "left-menu": leftMenu,
-    "nav-menu": navMenu,
-    "search-box": searchBox,
-    "nav-tab": navTab,
-    footers: footers,
-    "drop-down-menu": dropdownMenu
+    LeftNavMenu,
+    NavTab,
+    NavMenu,
+    SearchBox,
+    Footer,
+    DropdownMenu,
   },
   data: () => {
     return {
+      ready: false,
       //  mark current module
       selectedModule: {},
       // all modules
@@ -83,10 +85,11 @@ export default {
       // footers
       footers: [
         "jasmine code generator ",
-        "all rights reserved by fuanlei since 2019"
+        "all rights reserved by fuanlei since 2019",
       ],
       // use to cache all menus
-      menuMap: new Map()
+      moduleMenuMap: new Map(),
+      pathMenuMap: new Map(),
     };
   },
   methods: {
@@ -97,7 +100,7 @@ export default {
      * @param {String} menuName
      */
     changeMenu(menuName) {
-      let menu = this.findMenu(this.selectedModule._name, menuName);
+      let menu = this.findMenuByName(this.selectedModule._name, menuName);
       if (menu) {
         this.selectedModule.activeMenuName = menuName;
         this.$refs.tab.addTab(menu);
@@ -112,14 +115,7 @@ export default {
      * @param {Menu} menu
      */
     changeTab(menu) {
-      if (menu.moduleName != this.selectedModule.name) {
-        for (const module of this.modules) {
-          if (module._name == menu.moduleName) {
-            this.selectedModule = module;
-            break;
-          }
-        }
-      }
+      this.selectedModule = menu.module;
       this.selectedModule.activeMenuName = menu.path;
       this.toPage(menu);
     },
@@ -131,31 +127,30 @@ export default {
      * @param {String} moduleName
      */
     changeModule(moduleName) {
-      for (const module of this.modules) {
-        if (module._name == moduleName) {
-          this.selectedModule = module;
-          let activeMenu = this.findMenu(
-            moduleName,
-            this.selectedModule.activeMenuName
-          );
-
-          if (activeMenu) {
-            this.$refs.tab.addTab(activeMenu);
-            this.toPage(activeMenu);
-            this.selectedModule.activeMenuName=activeMenu.path;
-          }
+      let m = this.modules.filter((x) => x._name == moduleName);
+      m = m[0] || null;
+      if (m) {
+        this.selectedModule = m;
+        let activeMenu = this.findMenuByName(
+          moduleName,
+          this.selectedModule.activeMenuName
+        );
+        if (activeMenu) {
+          this.$refs.tab.addTab(activeMenu);
+          this.toPage(activeMenu);
+          this.selectedModule.activeMenuName = activeMenu.path;
         }
       }
     },
     /**
-     * find menu in menuMap
+     * find menu in moduleMenuMap
      *
      * @param {string} moduleName
      * @param {string} menuName
      * @returns {Menu}
      */
-    findMenu(moduleName, menuName) {
-      let module = this.menuMap.get(moduleName);
+    findMenuByName(moduleName, menuName) {
+      let module = this.moduleMenuMap.get(moduleName);
       let menu = module.get(menuName);
       return menu;
     },
@@ -173,15 +168,26 @@ export default {
     initModules() {
       this.modules = modules;
       this.selectedModule = modules[0];
-      this.menuMap = new Map();
-      this.modules.forEach(item => {
+      this.moduleMenuMap = new Map();
+      this.modules.forEach((item) => {
         let map = new Map();
-        item.menus.forEach(menu => {
-          this.cacheMenu(menu, map);
+        if(item.menus)
+        item.menus.forEach((menu) => {
+          this.cacheMenu(menu, map, item);
         });
 
-        this.menuMap.set(item._name, map);
+        this.moduleMenuMap.set(item._name, map);
       });
+
+      // go to default menu
+      let menu = this.findMenuByName(
+        this.selectedModule._name,
+        this.selectedModule.activeMenuName
+      );
+      if (menu) {
+        this.$refs.tab.addTab(menu);
+        this.toPage(menu);
+      }
     },
     /**
      * Cache menu
@@ -189,23 +195,63 @@ export default {
      * @param {Menu} menu
      * @param {Map} map
      */
-    cacheMenu(menu, map) {
+    cacheMenu(menu, map, module) {
+      menu.module = module;
+      this.pathMenuMap.set(menu.path, menu);
       map.set(menu.path, menu);
+
+      // recursive all submenu
       if (menu.menus) {
-        menu.menus.forEach(x => {
-          this.cacheMenu(x, map);
+        menu.menus.forEach((subMenu) => {
+          this.cacheMenu(subMenu, map);
         });
       }
-    }
+    },
+    async getAllData() {
+      const res = await this.$api.enum.getAll();
+     // let dic={};
+      if (res.code == 100) {
+       
+        // let data =res.data;
+        // data.forEach(function (item) {
+        //   // bug point
+        //   item.value = parseInt(item.value);
+        //   if (!dic[item.type]) {
+        //     dic[item.type] = [];
+        //   }
+
+        //   dic[item.type].push(item);
+        //    this.$store.dispatch("setCaches",dic);
+        // });
+        let dic = [];
+        for (let i = 0; i < res.data.length; i++) {
+          let item = res.data[i];
+          if(item.value!==undefined)
+             item.value=""+item.value;
+          dic.push(item);
+        }
+
+        this.Enums.clear();
+        this.Enums.set(dic);
+        this.ready = true;
+      }
+    },
+  },
+  created() {
+    this.getAllData();
   },
   // init all module
-  created() {
+  mounted() {
     this.initModules();
-  }
+  },
+  watch: {
+    $router() {},
+  },
 };
 </script>
 
-
+<style>
+</style>
 <style scoped>
 .container {
   margin: 0;
@@ -395,5 +441,36 @@ export default {
 
 .breadcrumb-leave-active {
   position: absolute;
+}
+</style>
+<style>
+.filter {
+  text-align: left;
+  margin-bottom: 30px;
+}
+
+.filter > span {
+  display: inline-block;
+  margin-top: 20px;
+  margin-right: 20px;
+}
+
+.pager {
+  margin-top: 15px;
+  text-align: left;
+}
+
+.control-title {
+  margin-right: 10px;
+}
+
+.ivu-scroll-container {
+  overflow-y: scroll;
+  padding-right: 10px;
+}
+.ivu-form-item {
+  /* margin-bottom: 24px; */
+  vertical-align: top;
+  zoom: 1;
 }
 </style>

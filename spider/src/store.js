@@ -7,6 +7,7 @@ Vue.use(Vuex);;
 const store = new Vuex.Store({
         state: {
                 caches: {},
+                cacheConfig:{},
                 initialized: false,
                 userInfo: {},
                 token: "",
@@ -43,12 +44,9 @@ const store = new Vuex.Store({
                 setTheme(state, theme) {
                         state.theme = theme;
                 },
-                setColorPicer(state, colorPicker) {
-                        state.colorPicker = colorPicker;
-                }
         },
         getters: {
-                cache(state, name) {
+                getCache(state, name) {
                         return state.caches[name] || [];
                 },
 

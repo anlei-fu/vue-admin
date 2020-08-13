@@ -1,49 +1,49 @@
 <template>
-  <Modal v-model="show_" draggable :title="title" :width="width" mask>
+  <Modal v-model="show_" :title="title" :width="width" mask>
     <slot></slot>
     <div slot="footer" class="footer">
-     <Button v-if="!noCancel" type="default" @click="close">{{cancelText}}</Button>  <Button type="primary" @click="onOk">{{okText}}</Button>
+      <slot name="button" />
+      <Button v-if="!noCancel" type="default" @click="close">{{ cancelText }}</Button>
+      <Button type="primary" @click="onOk">{{ okText }}</Button>
     </div>
   </Modal>
 </template>
 <script>
-export default {
-  props:{
-        title:String,
-        top:Number,
-        width:String,
-        noCancel:false,
-        okText:{
-          type:String,
-          default:"ok"
-        },
-        cancelText:{
-          type:String,
-          default:"cancel"
-        }
-  },
-  data() {
-    return {
-      show_: false
-    };
-  },
-
-  methods: {
-    show() {
-      this.show_ = true;
+  export default {
+    props: {
+      title: String,
+      width: String,
+      noCancel: false,
+      okText: {
+        type: String,
+        default: "ok",
+      },
+      cancelText: {
+        type: String,
+        default: "cancel",
+      },
     },
-    close() {
-      this.show_ = false;
+    data() {
+      return {
+        show_: false,
+      };
     },
-    onOk(){
-            this.$emit("ok");
-    }
 
-  }
-};
+    methods: {
+      show() {
+        this.show_ = true;
+      },
+      close() {
+        this.show_ = false;
+      },
+      onOk() {
+        this.$emit("ok");
+      },
+    },
+  };
 </script>
 <style scoped>
-.footer {
-  text-align: right;
-}
+  .footer {
+    text-align: right;
+  }
 </style>

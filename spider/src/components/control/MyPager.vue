@@ -1,0 +1,29 @@
+<template>
+  <Page :total="total" show-sizer show-total :current="current" @on-change="onIndexChanged" @on-page-size-change="onSizeChanged" :page-size-opts="sizes" />
+</template>
+<script>
+  export default {
+    props: {
+      total: {
+        type: Number,
+        default: 0,
+      },
+      current:{
+        type:Number,
+        default:1
+      },
+      sizes: {
+        type: Array,
+        default: () => [10, 20, 30, 50, 100],
+      },
+    },
+    methods: {
+      onSizeChanged(newSize) {
+        this.$emit("onSizeChanged", newSize);
+      },
+      onIndexChanged(newIndex) {
+        this.$emit("onIndexChanged", newIndex);
+      },
+    },
+  };
+</script>

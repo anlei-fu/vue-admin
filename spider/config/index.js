@@ -10,21 +10,10 @@ module.exports = {
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
     proxyTable: {
-      // '/signAdmin/api/dictionary':{
-      //   target: 'http://192.168.5.61:6024',//原本是192.168.5.188 本地是http://182.140.244.57:2048
-      //   changeOrigin: true
-      // },
-      '/signAdmin/api': {
-        target: 'http://192.168.5.32:6024',//原本是192.168.5.188 本地是http://182.140.244.57:2048
+      '/': {
+        target: 'http://192.168.5.32:10031',//原本是192.168.5.188 本地是http://182.140.244.57:2048
         changeOrigin: true
       },
-      '/permission/api': {
-        target: 'http://192.168.5.61:8091/',//原本是192.168.5.188 本地是http://182.140.244.57:2048
-        changeOrigin: true,
-       /* pathRewrite: {
-          '^/permission/api': ''   /permission/api 被替代为 ''
-        }*/
-      }
       
     },
 

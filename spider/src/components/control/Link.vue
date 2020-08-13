@@ -1,26 +1,30 @@
 <template>
-        <a class="link" type="text" :title="title" @click="onClick">
-           <PlainText :value="label" :color="color"/>
-        </a>
+  <a class="link" :style="{ color: color }" type="text" :path="path" :title="title" @click="click">{{ label }}</a>
 </template>
 <script>
-export default {
-        props:{
-                title:{
-                        type:String
-                },
-                path:String,
-                label:String,
-                color:String
-        },
-        methods:{
-                onClick(){
-                        if(path){
+  export default {
+    props: {
+      title: {
+        type: String,
+      },
+      path: String,
+      label: String,
+      color: String,
+    },
+    methods: {
+      click() {
+        if (this.path) {
+          if (this.$utils.isOutterUrl(this.path)) {
+            window.location.href = this.path;
+            return;
+          }
+          this.$router.push({ path: this.path });
 
-                        }
-
-                        this.$emit("click");
-                }
+          return;
         }
-}
+
+        this.$emit("click");
+      },
+    },
+  };
 </script>
