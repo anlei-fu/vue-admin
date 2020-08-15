@@ -1,5 +1,5 @@
 <template>
-  <Button style="width: 90px; margin-left: 5px; " type="error" @click="click">
+  <Button style="width: 90px; margin-left: 5px;" type="error" @click="click">
     <Icon type="ios-trash-outline" size="18" />
     {{ label }}
   </Button>

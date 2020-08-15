@@ -1,5 +1,5 @@
 <template>
-  <MyModal title="title" ref="modal" @ok="ok" width="40%">
+  <MyModal :title="title" ref="modal" @ok="ok" width="40%">
     <Form ref="form" :model="query" :rules="rules" :label-width="120">
       <FormItem label="Site" prop="siteId">
         <MySelect v-model="query.siteId" enum="Site" width="100%" />
@@ -9,7 +9,7 @@
         <MySelect v-model="query.downSystemId" enum="System" width="100%" />
       </FormItem>
 
-      <template v-if="optionalFields.length>0">
+      <template v-if="optionalFields.length > 0">
         <Divider orientation="left">Optional Filter</Divider>
         <FormItem label="Fields">
           <MyCheckBoxGroup v-model="showingOptionalFields" :options="optionalFields" />
@@ -26,15 +26,14 @@
           label="AutoDownloadPage"
           prop="crawlerAutoDownloadPage"
         >
-          <MySelect
-            v-model="query.crawlerAutoDownloadPage"
-            enum="YesNo"
-            width="100%"
-          />
+          <MySelect v-model="query.crawlerAutoDownloadPage" enum="YesNo" width="100%" />
         </FormItem>
 
         <FormItem v-if="showEnableStatus" label="EnableStatus" prop="enableStatus">
           <MySelect v-model="query.enableStatus" enum="EnableStatus" width="100%" />
+        </FormItem>
+        <FormItem v-if="showScriptPath" label="Script" prop="scriptPath">
+          <MyFileUploader v-model="query.scriptPath" />
         </FormItem>
 
         <FormItem v-if="showCrawlerPageEncoding" label="Encoding" prop="crawlerPageEncoding">
@@ -84,354 +83,229 @@
         <FormItem v-if="showTaskTimeout" label="Timeout" prop="taskTimeout">
           <Input v-model="query.taskTimeout" placeholder="Input value" />
         </FormItem>
-          <FormItem v-if="showUrlMaxDepth" label="UrlMaxDepth" prop="urlMaxDepth">
+        <FormItem v-if="showUrlMaxDepth" label="UrlMaxDepth" prop="urlMaxDepth">
           <Input v-model="query.urlMaxDepth" placeholder="Input value" />
         </FormItem>
-         <FormItem v-if="showUrlMaxCrawlCount" label="UrlMaxCrawlCount" prop="urlMaxCrawlCount">
+        <FormItem v-if="showUrlMaxCrawlCount" label="UrlMaxCrawlCount" prop="urlMaxCrawlCount">
           <Input v-model="query.urlMaxCrawlCount" placeholder="Input value" />
+        </FormItem>
+
+        <FormItem
+          v-if="showTaskUrlMaxFailCount"
+          label="TaskUrlMaxFailCount"
+          prop="taskUrlMaxFailCount"
+        >
+          <Input v-model="query.taskUrlMaxFailCount" placeholder="Input value" />
+        </FormItem>
+        <FormItem
+          v-if="showTaskUrlMaxContinuouslyFailCount"
+          label="TaskUrlMaxContinuouslyFailCount"
+          prop="taskUrlMaxContinuouslyFailCount"
+        >
+          <Input v-model="query.taskUrlMaxContinuouslyFailCount" placeholder="Input value" />
+        </FormItem>
+        <FormItem
+          v-if="showTaskUrlMaxConcurrency"
+          label="TaskUrlMaxConcurrency"
+          prop="taskUrlMaxConcurrency"
+        >
+          <Input v-model="query.taskUrlMaxConcurrency" placeholder="Input value" />
         </FormItem>
       </MyScroll>
     </Form>
   </MyModal>
 </template>
-      <script>
-export default {
-  props: {
-    model: {
-      type: Object,
-      default: () => {},
-    },
-    title: {
-      type: String,
-      default: "",
-    },
-  },
-
-  data() {
-    const validator= (rule,value,cb)=>{
-      if(!value){
-        cb(new Error("empty"));
-        return;
-      }
-
-        cb();
-    }
-    return {
-      optionalFields: [
-        {
-          label: "CrawlerCrawlType",
-          value: "CrawlerCrawlType",
-        },
-        {
-          label: "CrawlerAutoDownloadPage",
-          value: "CrawlerAutoDownloadPage",
-        },
-        {
-          label: "EnableStatus",
-          value: "EnableStatus",
-        },
-        {
-          label: "PageEncoding",
-          value: "CrawlerPageEncoding",
-        },
-        {
-          label: "MaxCacheCount",
-          value: "UrlMaxCacheCount",
-        },
-          {
-          label: "UrlMaxDepth",
-          value: "UrlMaxDepth",
-        },
-        {
-          label: "UrlMaxCrawlCount",
-          value: "UrlMaxCrawlCount",
-        },
-        {
-          label: "Encodes",
-          value: "UrlEncodes",
-        },
-        {
-          label: "MatchPatterns",
-          value: "UrlMatchPatterns",
-        },
-        {
-          label: "ExpectedUrlSize",
-          value: "BloomExpectedUrlSize",
-        },
-        {
-          label: "Fpp",
-          value: "BloomFpp",
-        },
-        {
-          label: "UrlBatchCount",
-          value: "TaskUrlBatchCount",
-        },
-        {
-          label: "MaxWaitToBindCount",
-          value: "TaskMaxWaitToBindCount",
-        },
-        {
-          label: "MaxRunningCount",
-          value: "TaskMaxRunningCount",
-        },
-        {
-          label: "Timeout",
-          value: "TaskTimeout",
-        },
-      ],
-      showingOptionalFields: [
-        "CrawlerCrawlType",
-        "TaskTimeout",
-        "TaskMaxRunningCount",
-        "BloomExpectedUrlSize",
-        "UrlEncodes",
-        "CrawlerAutoDownloadPage",
-      ],
-      rules: {
-        siteId: [
-          {
-            validator,
-            required: true,
-            message: "field can not be empty",
-            trigger: "blur",
-          },
-        ],
-        downSystemId: [
-          {
-            validator,
-            required: true,
-            message: "field can not be empty",
-            trigger: "blur",
-          },
-        ],
-        priority: [
-          {
-            min: 0,
-            max: 10,
-            message: "out of range 0-10 ",
-            trigger: "blur",
-          },
-        ],
-        crawlerPageTimeout: [
-          {
-            min: 0,
-            max: 10,
-            message: "out of range 0-10 ",
-            trigger: "blur",
-          },
-        ],
-        urlMaxCacheCount: [
-          {
-            min: 0,
-            max: 10,
-            message: "out of range 0-10 ",
-            trigger: "blur",
-          },
-        ],
-        urlMaxCrawlCount: [
-          {
-            min: 0,
-            max: 10,
-            message: "out of range 0-10 ",
-            trigger: "blur",
-          },
-        ],
-        bloomExpectedUrlSize: [
-          {
-            min: 0,
-            max: 10,
-            message: "out of range 0-10 ",
-            trigger: "blur",
-          },
-        ],
-        bloomFpp: [
-          {
-            min: 0,
-            max: 10,
-            message: "out of range 0-10 ",
-            trigger: "blur",
-          },
-        ],
-        taskUrlBatchCount: [
-          {
-            min: 0,
-            max: 10,
-            message: "out of range 0-10 ",
-            trigger: "blur",
-          },
-        ],
-        taskMaxWaitToBindCount: [
-          {
-            min: 0,
-            max: 10,
-            message: "out of range 0-10 ",
-            trigger: "blur",
-          },
-        ],
-        taskMaxRunningCount: [
-          {
-            min: 0,
-            max: 10,
-            message: "out of range 0-10 ",
-            trigger: "blur",
-          },
-        ],
-        taskTimeout: [
-          {
-            min: 0,
-            max: 10,
-            message: "out of range 0-10 ",
-            trigger: "blur",
-          },
-        ],
+<script>
+  import utils from "./../../../common";
+  export default {
+    props: {
+      model: {
+        type: Object,
+        default: () => {},
       },
-      query: {
-        siteId: null,
-        downSystemId: null,
-        crawlerCrawlType: null,
-        crawlerAutoDownloadPage: null,
-        enableStatus: null,
-        crawlerPageEncoding: null,
-        urlMaxDepth:null,
-        urlMaxCrawlCount:null,
-        urlMaxCacheCount: null,
-        urlEncodes: null,
-        urlMatchPatterns: null,
-        bloomExpectedUrlSize: null,
-        bloomFpp: null,
-        taskUrlBatchCount: null,
-        taskMaxWaitToBindCount: null,
-        taskMaxRunningCount: null,
-        taskTimeout: null,
-        id: null,
+      title: {
+        type: String,
+        default: "",
       },
-    };
-  },
-  created() {
-    this.$utils.copyFieldsFrom(this.query, this.model);
-  },
-
-  computed: {
-    
-showUrlMaxDepth() {
-      return this.$utils.arrayHas(
-        this.showingOptionalFields,
-        "UrlMaxDepth"
-      );
-    },
-    showUrlMaxCrawlCount() {
-      return this.$utils.arrayHas(
-        this.showingOptionalFields,
-        "UrlMaxCrawlCount"
-      );
-    },
-    showCrawlerCrawlType() {
-      return this.$utils.arrayHas(
-        this.showingOptionalFields,
-        "CrawlerCrawlType"
-      );
     },
 
-    showCrawlerAutoDownloadPage() {
-      return this.$utils.arrayHas(
-        this.showingOptionalFields,
-        "CrawlerAutoDownloadPage"
-      );
+    data() {
+      return {
+        optionalFields: utils.options([
+          "CrawlerCrawlType",
+          "ScriptPath",
+          "CrawlerAutoDownloadPage",
+          "EnableStatus",
+          "CrawlerPageEncoding",
+          "UrlMaxCacheCount",
+          "UrlMaxDepth",
+          "UrlMaxCrawlCount",
+          "UrlEncodes",
+          "UrlMatchPatterns",
+          "BloomExpectedUrlSize",
+          "BloomFpp",
+          "TaskUrlBatchCount",
+          "TaskMaxWaitToBindCount",
+          "TaskMaxRunningCount",
+          "TaskTimeout",
+          "TaskUrlMaxFailCount",
+          "TaskUrlMaxContinuouslyFailCount",
+          "TaskUrlMaxConcurrency",
+        ]),
+        showingOptionalFields: [
+          "CrawlerCrawlType",
+          "TaskTimeout",
+          "TaskMaxRunningCount",
+          "BloomExpectedUrlSize",
+          "UrlEncodes",
+          "CrawlerAutoDownloadPage",
+        ],
+        rules: {
+          siteId: [utils.require()],
+          downSystemId: [utils.require()],
+          priority: [utils.range(1, 10)],
+          crawlerPageTimeout: [utils.range(3000, 600000)],
+          urlMaxCacheCount: [utils.range(1000, 20000)],
+          urlMaxCrawlCount: [utils.range(1, 20)],
+          bloomExpectedUrlSize: [utils.range(3000, 20000000)],
+          bloomFpp: [utils.range(0.2, 0.7)],
+          taskUrlBatchCount: [utils.range(1, 1000)],
+          taskMaxWaitToBindCount: [utils.range(1, 20)],
+          taskMaxRunningCount: [utils.range(1, 1000)],
+          taskTimeout: [utils.range(1, 120)],
+          urlMaxDepth: [utils.range(1, 100)],
+          taskUrlMaxFailCount: [utils.range(10, 500)],
+          taskUrlMaxContinuouslyFailCount: [utils.range(1, 30)],
+          taskUrlMaxConcurrency: [utils.range(1, 1000)],
+        },
+        query: {
+          siteId: null,
+          scriptPath: null,
+          downSystemId: null,
+          crawlerCrawlType: null,
+          crawlerAutoDownloadPage: null,
+          enableStatus: null,
+          crawlerPageEncoding: null,
+          urlMaxDepth: null,
+          urlMaxCrawlCount: null,
+          urlMaxCacheCount: null,
+          urlEncodes: null,
+          urlMatchPatterns: null,
+          bloomExpectedUrlSize: null,
+          bloomFpp: null,
+          taskUrlBatchCount: null,
+          taskMaxWaitToBindCount: null,
+          taskMaxRunningCount: null,
+          taskTimeout: null,
+          taskUrlMaxFailCount: null,
+          taskUrlMaxContinuouslyFailCount: null,
+          taskUrlMaxConcurrency: null,
+        },
+      };
+    },
+    created() {
+      this.$utils.copyFieldsFrom(this.query, this.model);
     },
 
-    showEnableStatus() {
-      return this.$utils.arrayHas(this.showingOptionalFields, "EnableStatus");
+    computed: {
+      showUrlMaxDepth() {
+        return this.$utils.arrayHas(this.showingOptionalFields, "UrlMaxDepth");
+      },
+      showUrlMaxCrawlCount() {
+        return this.$utils.arrayHas(this.showingOptionalFields, "UrlMaxCrawlCount");
+      },
+      showScriptPath() {
+        return this.$utils.arrayHas(this.showingOptionalFields, "ScriptPath");
+      },
+      showCrawlerCrawlType() {
+        return this.$utils.arrayHas(this.showingOptionalFields, "CrawlerCrawlType");
+      },
+
+      showCrawlerAutoDownloadPage() {
+        return this.$utils.arrayHas(this.showingOptionalFields, "CrawlerAutoDownloadPage");
+      },
+
+      showEnableStatus() {
+        return this.$utils.arrayHas(this.showingOptionalFields, "EnableStatus");
+      },
+
+      showCrawlerPageEncoding() {
+        return this.$utils.arrayHas(this.showingOptionalFields, "CrawlerPageEncoding");
+      },
+
+      showUrlMaxCacheCount() {
+        return this.$utils.arrayHas(this.showingOptionalFields, "UrlMaxCacheCount");
+      },
+
+      showUrlEncodes() {
+        return this.$utils.arrayHas(this.showingOptionalFields, "UrlEncodes");
+      },
+
+      showUrlMatchPatterns() {
+        return this.$utils.arrayHas(this.showingOptionalFields, "UrlMatchPatterns");
+      },
+
+      showBloomExpectedUrlSize() {
+        return this.$utils.arrayHas(this.showingOptionalFields, "BloomExpectedUrlSize");
+      },
+
+      showBloomFpp() {
+        return this.$utils.arrayHas(this.showingOptionalFields, "BloomFpp");
+      },
+
+      showTaskUrlBatchCount() {
+        return this.$utils.arrayHas(this.showingOptionalFields, "TaskUrlBatchCount");
+      },
+
+      showTaskMaxWaitToBindCount() {
+        return this.$utils.arrayHas(this.showingOptionalFields, "TaskMaxWaitToBindCount");
+      },
+
+      showTaskMaxRunningCount() {
+        return this.$utils.arrayHas(this.showingOptionalFields, "TaskMaxRunningCount");
+      },
+
+      showTaskTimeout() {
+        return this.$utils.arrayHas(this.showingOptionalFields, "TaskTimeout");
+      },
+      showTaskUrlMaxFailCount() {
+        return this.$utils.arrayHas(this.showingOptionalFields, "TaskUrlMaxFailCount");
+      },
+      showTaskUrlMaxContinuouslyFailCount() {
+        return this.$utils.arrayHas(this.showingOptionalFields, "TaskUrlMaxContinuouslyFailCount");
+      },
+      showTaskUrlMaxConcurrency() {
+        return this.$utils.arrayHas(this.showingOptionalFields, "TaskUrlMaxConcurrency");
+      },
     },
 
-    showCrawlerPageEncoding() {
-      return this.$utils.arrayHas(
-        this.showingOptionalFields,
-        "CrawlerPageEncoding"
-      );
+    watch: {
+      model(newVal) {
+        this.$utils.copyFieldsFrom(this.query, newVal);
+      },
     },
 
-    showUrlMaxCacheCount() {
-      return this.$utils.arrayHas(
-        this.showingOptionalFields,
-        "UrlMaxCacheCount"
-      );
+    methods: {
+      show() {
+        this.$refs.modal.show();
+      },
+      close() {
+        this.$refs.modal.close();
+      },
+      ok() {
+        this.$refs.form.validate((valid) => {
+          if (valid) {
+            this.$utils.handleNormalRequest.call(this, async () => {
+              return this.$api.downSystemSite.add(this.query);
+            });
+          }
+        });
+      },
     },
-
-    showUrlEncodes() {
-      return this.$utils.arrayHas(this.showingOptionalFields, "UrlEncodes");
-    },
-
-    showUrlMatchPatterns() {
-      return this.$utils.arrayHas(
-        this.showingOptionalFields,
-        "UrlMatchPatterns"
-      );
-    },
-
-    showBloomExpectedUrlSize() {
-      return this.$utils.arrayHas(
-        this.showingOptionalFields,
-        "BloomExpectedUrlSize"
-      );
-    },
-
-    showBloomFpp() {
-      return this.$utils.arrayHas(this.showingOptionalFields, "BloomFpp");
-    },
-
-    showTaskUrlBatchCount() {
-      return this.$utils.arrayHas(
-        this.showingOptionalFields,
-        "TaskUrlBatchCount"
-      );
-    },
-
-    showTaskMaxWaitToBindCount() {
-      return this.$utils.arrayHas(
-        this.showingOptionalFields,
-        "TaskMaxWaitToBindCount"
-      );
-    },
-
-    showTaskMaxRunningCount() {
-      return this.$utils.arrayHas(
-        this.showingOptionalFields,
-        "TaskMaxRunningCount"
-      );
-    },
-
-    showTaskTimeout() {
-      return this.$utils.arrayHas(this.showingOptionalFields, "TaskTimeout");
-    },
-  },
-
-  watch: {
-    model(newVal) {
-      this.$utils.copyFieldsFrom(this.query, newVal);
-    },
-  },
-
-  methods: {
-    show() {
-      this.$refs.modal.show();
-    },
-    close() {
-      this.$refs.modal.close();
-    },
-    ok() {
-      this.$refs.form.validate((valid) => {
-        if (valid) {
-          this.$utils.handleNormalRequest.call(this, async () => {
-            return this.$api.downSystemSite.add(this.query);
-          });
-        }
-      });
-    },
-  },
-};
+  };
 </script>
-      <style scoped>
-.footer {
-  text-align: right;
-}
+<style scoped>
+  .footer {
+    text-align: right;
+  }
 </style>

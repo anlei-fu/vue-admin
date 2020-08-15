@@ -1,5 +1,5 @@
 <template>
-  <MyModal title="title" ref="modal" @ok="ok" width="30%">
+  <MyModal :title="title" ref="modal" @ok="ok" width="30%">
     <Form ref="form" :model="query" :rules="rules" :label-width="120">
       <FormItem label="Site">
         <MySelect v-model="siteId" enum="Site" width="100%" />
@@ -26,120 +26,87 @@
       <FormItem label="Expire" prop="expireTime">
         <MyDateTime v-model="query.expireTime" width="100%" />
       </FormItem>
-
-      <template v-if="optionalFields.length>0">
-        <Divider orientation="left">Optional Filter</Divider>
-        <FormItem label="Fields">
-          <MyCheckBoxGroup v-model="showingOptionalFields" :options="optionalFields" />
-        </FormItem>
-      </template>
-
-      <MyScroll></MyScroll>
     </Form>
   </MyModal>
 </template>
-      <script>
-export default {
-  props: {
-    model: {
-      type: Object,
-      default: () => {},
-    },
-    title: {
-      type: String,
-      default: "",
-    },
-  },
-
-  data() {
-    return {
-      optionalFields: [],
-      showingOptionalFields: [],
-      rules: {
-        siteId: [
-          {
-            required: true,
-            message: "field can not be empty",
-            trigger: "blur",
-          },
-        ],
-        siteAccountId: [
-          {
-            required: true,
-            message: "field can not be empty",
-            trigger: "blur",
-          },
-        ],
-        cookie: [
-          {
-            required: true,
-            message: "field can not be empty",
-            trigger: "blur",
-          },
-        ],
-        loginIp: [
-          {
-            required: true,
-            message: "field can not be empty",
-            trigger: "blur",
-          },
-        ],
-        expireTime: [
-          {
-            required: true,
-            message: "field can not be empty",
-            trigger: "blur",
-          },
-        ],
+<script>
+  export default {
+    props: {
+      model: {
+        type: Object,
+        default: () => {},
       },
-      siteId: null,
-      accountOptions: [],
-      query: {
-        siteAccountId: null,
-        cookie: null,
-        loginIp: null,
-        expireTime: null,
-        id: null,
+      title: {
+        type: String,
+        default: "",
       },
-    };
-  },
-  created() {
-    this.$utils.copyFieldsFrom(this.query, this.model);
-  },
+    },
 
-  watch: {
-    model(newVal) {
-      this.$utils.copyFieldsFrom(this.query, newVal);
-    },
-    async siteId(newVal) {
-      this.query.siteAccountId = null;
-      this.accountOptions = [];
-      let resp = await this.$api.siteAccount.getBySite({ siteId: this.siteId });
-      this.accountOptions = resp.data;
-    },
-  },
+    data() {
+      const validator = (rule, value, cb) => {
+        if (!value) throw new Error("failed");
 
-  methods: {
-    show() {
-      this.$refs.modal.show();
+        cb();
+      };
+      return {
+        optionalFields: [],
+        showingOptionalFields: [],
+        rules: {
+          siteAccountId: [utils.require()],
+          cookie: [utils.require()],
+          loginIp: [utils.require()],
+          expireTime: [utils.require()],
+        },
+        siteId: null,
+        accountOptions: [],
+        query: {
+          siteAccountId: null,
+          cookie: null,
+          loginIp: null,
+          expireTime: null,
+          id: null,
+        },
+      };
     },
-    close() {
-      this.$refs.modal.close();
+    created() {
+      this.$utils.copyFieldsFrom(this.query, this.model);
     },
-    ok() {
-      this.$refs.form.validate((valid) => {
-        if (valid) {
-          this.$utils.handleNormalRequest.call(this, async () => {
-            return this.$api.cookie.add(this.query);
-          });
-        }
-      });
+
+    watch: {
+      model(newVal) {
+        this.$utils.copyFieldsFrom(this.query, newVal);
+      },
+      async siteId(newVal) {
+        this.query.siteAccountId = null;
+        this.accountOptions = [];
+        let resp = await this.$api.siteAccount.getBySite({ siteId: this.siteId });
+        this.accountOptions = resp.data;
+      },
     },
-  },
-};
+
+    methods: {
+      show() {
+        this.$refs.modal.show();
+      },
+      close() {
+        this.$refs.modal.close();
+      },
+      ok() {
+        this.$refs.form.validate((valid) => {
+          if (valid) {
+            this.$utils.handleNormalRequest.call(this, async () => {
+              let data = this.$utils.clone(this.query);
+              data.expireTime = this.$utils.formatDate(new Date(data.expireTime));
+              return this.$api.cookie.add(data);
+            });
+          }
+        });
+      },
+    },
+  };
 </script>
-      <style scoped>
-.footer {
-  text-align: right;
-}
+<style scoped>
+  .footer {
+    text-align: right;
+  }
 </style>

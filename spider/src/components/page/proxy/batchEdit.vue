@@ -31,156 +31,118 @@
         <FormItem v-if="showBlockTimeout" label="BlockTimeout" prop="blockMaxCount">
           <Input v-model="query.blockTimeout" placeholder="Input value" />
         </FormItem>
-         <FormItem v-if="showBlockTimeoutTime" label="BlockTimeoutTime" prop="blockMaxCount">
+        <FormItem v-if="showBlockTimeoutTime" label="BlockTimeoutTime" prop="blockMaxCount">
           <Input v-model="query.blockTimeoutTime" placeholder="Input value" />
         </FormItem>
       </MyScroll>
     </Form>
   </MyModal>
 </template>
-      <script>
-export default {
-  props: {
-    ids: {
-      type: Array,
-      default: () => [],
-    },
-    title: {
-      type: String,
-      default: "title",
-    },
-  },
-
-  data() {
-    return {
-      optionalFields: [
-        {
-          label: "ProxyType",
-          value: "ProxyType",
-        },
-        {
-          label: "EnableStatus",
-          value: "EnableStatus",
-        },
-        {
-          label: "Protcol",
-          value: "Protocol",
-        },
-        {
-          label: "Password",
-          value: "Password",
-        },
-        {
-          label: "MaxUseCount",
-          value: "MaxUseCount",
-        },
-        {
-          label: "BlockMaxCount",
-          value: "BlockMaxCount",
-        },
-                {
-          label: "BlockTimeout",
-          value: "BlockTimeout",
-        },
-         {
-          label: "BlockTimeoutTime",
-          value: "BlockTimeoutTime",
-        },
-      ],
-      showingOptionalFields: [ "EnableStatus",],
-      rules: {
-        maxUseCount: [
-          {
-            min: 0,
-            max: 10,
-            message: "out of range 0-10 ",
-            trigger: "blur",
-          },
-        ],
-        blockMaxCount: [
-          {
-            min: 0,
-            max: 10,
-            message: "out of range 0-10 ",
-            trigger: "blur",
-          },
-        ],
+<script>
+  import utils from "./../../../common";
+  export default {
+    props: {
+      ids: {
+        type: Array,
+        default: () => [],
       },
-      query: {
-        proxyType: null,
-        enableStatus: null,
-        protocol: null,
-        account: null,
-        password: null,
-        maxUseCount: null,
-        blockMaxCount: null,
-        blockTimeout:null,
-        blockTimeoutTime:null
+      title: {
+        type: String,
+        default: "title",
       },
-    };
-  },
-  computed: {
-
-    showProxyType() {
-      return this.$utils.arrayHas(this.showingOptionalFields, "ProxyType");
     },
 
-    showEnableStatus() {
-      return this.$utils.arrayHas(this.showingOptionalFields, "EnableStatus");
+    data() {
+      return {
+        optionalFields: utils.options([
+          "ProxyType",
+          "EnableStatus",
+          "Protocol",
+          "Password",
+          "MaxUseCount",
+          "BlockMaxCount",
+          "BlockTimeout",
+          "BlockTimeoutTime",
+        ]),
+        showingOptionalFields: ["EnableStatus"],
+        rules: {
+          maxUseCount: [utils.range(1, 1000)],
+          blockMaxCount: [utils.range(1, 15)],
+        },
+        query: {
+          proxyType: null,
+          enableStatus: null,
+          protocol: null,
+          account: null,
+          password: null,
+          maxUseCount: null,
+          blockMaxCount: null,
+          blockTimeout: null,
+          blockTimeoutTime: null,
+        },
+      };
     },
+    computed: {
+      showProxyType() {
+        return this.$utils.arrayHas(this.showingOptionalFields, "ProxyType");
+      },
 
-    showProtocol() {
-      return this.$utils.arrayHas(this.showingOptionalFields, "Protocol");
-    },
+      showEnableStatus() {
+        return this.$utils.arrayHas(this.showingOptionalFields, "EnableStatus");
+      },
 
-    showBlockTimeout() {
-      return this.$utils.arrayHas(this.showingOptionalFields, "BlockTimeout");
-    },
+      showProtocol() {
+        return this.$utils.arrayHas(this.showingOptionalFields, "Protocol");
+      },
+
+      showBlockTimeout() {
+        return this.$utils.arrayHas(this.showingOptionalFields, "BlockTimeout");
+      },
       showBlockTimeoutTime() {
-      return this.$utils.arrayHas(this.showingOptionalFields, "BlockTimeoutTime");
+        return this.$utils.arrayHas(this.showingOptionalFields, "BlockTimeoutTime");
+      },
+
+      showPassword() {
+        return this.$utils.arrayHas(this.showingOptionalFields, "Password");
+      },
+
+      showMaxUseCount() {
+        return this.$utils.arrayHas(this.showingOptionalFields, "MaxUseCount");
+      },
+
+      showBlockMaxCount() {
+        return this.$utils.arrayHas(this.showingOptionalFields, "BlockMaxCount");
+      },
     },
 
-    showPassword() {
-      return this.$utils.arrayHas(this.showingOptionalFields, "Password");
-    },
+    methods: {
+      show() {
+        this.$refs.modal.show();
+      },
+      close() {
+        this.$refs.modal.close();
+      },
+      ok() {
+        this.$refs.form.validate((valid) => {
+          if (valid) {
+            this.$utils.handleNormalRequest.call(this, async () => {
+              this.query.ids = this.ids;
+              let resp = await this.$api.proxy.updateBatch(this.query);
+              if (resp.code == 100) {
+                this.$emit("success", this.query);
+                this.close();
+              }
 
-    showMaxUseCount() {
-      return this.$utils.arrayHas(this.showingOptionalFields, "MaxUseCount");
+              return resp;
+            });
+          }
+        });
+      },
     },
-
-    showBlockMaxCount() {
-      return this.$utils.arrayHas(this.showingOptionalFields, "BlockMaxCount");
-    },
-  },
-
-  methods: {
-    show() {
-      this.$refs.modal.show();
-    },
-    close() {
-      this.$refs.modal.close();
-    },
-    ok() {
-      this.$refs.form.validate((valid) => {
-        if (valid) {
-          this.$utils.handleNormalRequest.call(this, async () => {
-            this.query.ids = this.ids;
-            let resp = await this.$api.proxy.updateBatch(this.query);
-            if (resp.code == 100) {
-              this.$emit("success", this.query);
-              this.close();
-            }
-
-            return resp;
-          });
-        }
-      });
-    },
-  },
-};
+  };
 </script>
-      <style scoped>
-.footer {
-  text-align: right;
-}
+<style scoped>
+  .footer {
+    text-align: right;
+  }
 </style>

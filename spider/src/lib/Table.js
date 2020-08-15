@@ -3,7 +3,7 @@ const { expectation } = require("sinon");
 class Table {
         constructor () {
                 this.columns = [];              
-                this.defaultShowingColumns =[];              
+                this.columns =[];              
                 this.showingColumns = [];              
  
         }
@@ -54,13 +54,13 @@ class TableBuilder{
         }
 
         /**
-         * Set property defaultShowingColumns
+         * Set property columns
          * 
-         * @param {[String]} defaultShowingColumns
+         * @param {[String]} columns
          * @returns {TableBuilder}
          */
-        defaultShowingColumns(defaultShowingColumns){
-                this._config.defaultShowingColumns = defaultShowingColumns;
+        columns(columns){
+                this._config.columns = columns;
                 return this;
         }
 

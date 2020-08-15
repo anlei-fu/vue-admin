@@ -1,5 +1,5 @@
 <template>
-  <MyModal title="title" ref="modal" @ok="ok" width="40%">
+  <MyModal :title="title" ref="modal" @ok="ok" width="40%">
     <Form ref="form" :model="query" :rules="rules" :label-width="120">
       <FormItem label="name" prop="name">
         <Input v-model="query.name" placeholder="Input value" />
@@ -15,11 +15,11 @@
       <FormItem label="UniqueId" prop="uniqueId">
         <Input v-model="query.uniqueId" placeholder="Input value" />
       </FormItem>
-       <FormItem  label="ClientVersion" prop="clientVersion">
-          <Input v-model="query.clientVersion" placeholder="Input value" />
-        </FormItem>
+      <FormItem label="ClientVersion" prop="clientVersion">
+        <Input v-model="query.clientVersion" placeholder="Input value" />
+      </FormItem>
 
-      <template v-if="optionalFields.length>0">
+      <template v-if="optionalFields.length > 0">
         <Divider orientation="left">Optional Filter</Divider>
         <FormItem label="Fields">
           <MyCheckBoxGroup v-model="showingOptionalFields" :options="optionalFields" />
@@ -34,8 +34,6 @@
         <FormItem v-if="showEnableStatus" label="EnableStatus" prop="enableStatus">
           <MySelect v-model="query.enableStatus" enum="EnableStatus" width="100%" />
         </FormItem>
-
-       
 
         <FormItem v-if="showKey" label="Key" prop="key">
           <Input v-model="query.key" placeholder="Input value" />
@@ -52,160 +50,109 @@
     </Form>
   </MyModal>
 </template>
-      <script>
-export default {
-  props: {
-    model: {
-      type: Object,
-      default: () => {},
-    },
-    title: {
-      type: String,
-      default: "",
-    },
-  },
-
-  data() {
-    return {
-      optionalFields: [
-        {
-          label: "CrawlerType",
-          value: "CrawlerType",
-        },
-        {
-          label: "EnableStatus",
-          value: "EnableStatus",
-        },
-        {
-          label: "Key",
-          value: "Key",
-        },
-        {
-          label: "MaxConcurrency",
-          value: "MaxConcurrency",
-        },
-        {
-          label: "Description",
-          value: "Description",
-        },
-      ],
-      showingOptionalFields: ["CrawlerType","MaxConcurrency"],
-      rules: {
-        name: [
-          {
-            required: true,
-            message: "field can not be empty",
-            trigger: "blur",
-          },
-        ],
-        ip: [
-          {
-            required: true,
-            message: "field can not be empty",
-            trigger: "blur",
-          },
-        ],
-        port: [
-          {
-            required: true,
-            message: "field can not be empty",
-            trigger: "blur",
-          },
-        ],
-        uniqueId: [
-          {
-            required: true,
-            message: "field can not be empty",
-            trigger: "blur",
-          },
-        ],
-          clientVersion: [
-          {
-            required: true,
-            message: "field can not be empty",
-            trigger: "blur",
-          },
-        ],
-        maxConcurrency: [
-          {
-            min: 0,
-            max: 1000,
-            message: "out of range 0-10 ",
-            trigger: "blur",
-          },
-        ],
+<script>
+  import utils from "./../../../common";
+  export default {
+    props: {
+      model: {
+        type: Object,
+        default: () => {},
       },
-      query: {
-        crawlerType: null,
-        enableStatus: null,
-        clientVersion: null,
-        name: null,
-        ip: null,
-        key: null,
-        uniqueId: null,
-        port: null,
-        maxConcurrency: null,
-        description: null,
+      title: {
+        type: String,
+        default: "",
       },
-    };
-  },
-  created() {
-    this.$utils.copyFieldsFrom(this.query, this.model);
-  },
-
-  computed: {
-    showCrawlerType() {
-      return this.$utils.arrayHas(this.showingOptionalFields, "CrawlerType");
     },
 
-    showEnableStatus() {
-      return this.$utils.arrayHas(this.showingOptionalFields, "EnableStatus");
+    data() {
+      return {
+        optionalFields: utils.options([
+          "CrawlerType",
+          "EnableStatus",
+          "Key",
+          "MaxConcurrency",
+          "Description",
+        ]),
+        showingOptionalFields: ["CrawlerType", "MaxConcurrency"],
+        rules: {
+          name: [utils.require()],
+          ip: [utils.require(), utils.ip()],
+          port: [utils.require(), utils.port()],
+          uniqueId: [utils.require()],
+          clientVersion: [utils.require()],
+          maxConcurrency: [utils.range(10, 2000)],
+        },
+        query: {
+          crawlerType: null,
+          enableStatus: null,
+          clientVersion: null,
+          name: null,
+          ip: null,
+          key: null,
+          uniqueId: null,
+          port: null,
+          maxConcurrency: null,
+          description: null,
+        },
+      };
+    },
+    created() {
+      this.$utils.copyFieldsFrom(this.query, this.model);
     },
 
-    showClientVersion() {
-      return this.$utils.arrayHas(this.showingOptionalFields, "ClientVersion");
+    computed: {
+      showCrawlerType() {
+        return this.$utils.arrayHas(this.showingOptionalFields, "CrawlerType");
+      },
+
+      showEnableStatus() {
+        return this.$utils.arrayHas(this.showingOptionalFields, "EnableStatus");
+      },
+
+      showClientVersion() {
+        return this.$utils.arrayHas(this.showingOptionalFields, "ClientVersion");
+      },
+
+      showKey() {
+        return this.$utils.arrayHas(this.showingOptionalFields, "Key");
+      },
+
+      showMaxConcurrency() {
+        return this.$utils.arrayHas(this.showingOptionalFields, "MaxConcurrency");
+      },
+
+      showDescription() {
+        return this.$utils.arrayHas(this.showingOptionalFields, "Description");
+      },
     },
 
-    showKey() {
-      return this.$utils.arrayHas(this.showingOptionalFields, "Key");
+    watch: {
+      model(newVal) {
+        this.$utils.copyFieldsFrom(this.query, newVal);
+      },
     },
 
-    showMaxConcurrency() {
-      return this.$utils.arrayHas(this.showingOptionalFields, "MaxConcurrency");
+    methods: {
+      show() {
+        this.$refs.modal.show();
+      },
+      close() {
+        this.$refs.modal.close();
+      },
+      ok() {
+        this.$refs.form.validate((valid) => {
+          if (valid) {
+            this.$utils.handleNormalRequest.call(this, async () => {
+              return this.$api.crawler.add(this.query);
+            });
+          }
+        });
+      },
     },
-
-    showDescription() {
-      return this.$utils.arrayHas(this.showingOptionalFields, "Description");
-    },
-  },
-
-  watch: {
-    model(newVal) {
-      this.$utils.copyFieldsFrom(this.query, newVal);
-    },
-  },
-
-  methods: {
-    show() {
-      this.$refs.modal.show();
-    },
-    close() {
-      this.$refs.modal.close();
-    },
-    ok() {
-      this.$refs.form.validate((valid) => {
-        if (valid) {
-          this.$utils.handleNormalRequest.call(this, async () => {
-            return this.$api.crawler.add(this.query);
-          });
-        }
-      });
-    },
-  },
-};
+  };
 </script>
-      <style scoped>
-.footer {
-  text-align: right;
-}
+<style scoped>
+  .footer {
+    text-align: right;
+  }
 </style>

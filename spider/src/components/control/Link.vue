@@ -1,5 +1,7 @@
 <template>
-  <a class="link" :style="{ color: color }" type="text" :path="path" :title="title" @click="click">{{ label }}</a>
+  <a class="link" :style="{ color: color }" type="text" :path="path" :title="title" @click="click">
+    {{ label }}
+  </a>
 </template>
 <script>
   export default {

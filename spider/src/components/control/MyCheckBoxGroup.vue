@@ -3,12 +3,12 @@
     <span v-if="title" class="control-title">{{ title }}</span>
     <template v-if="orientation == 'horizontal'">
       <span class="check-item-h">
-        <Checkbox  v-model="all_">{{ allName }}</Checkbox>
+        <Checkbox v-model="all_">{{ allName }}</Checkbox>
       </span>
 
       <template v-for="item in options_">
         <span class="ckeck-item-h" :key="item[value]">
-          <Checkbox @on-change="emitChange" v-model="item.checked" >
+          <Checkbox @on-change="emitChange" v-model="item.checked">
             <Icon v-if="item.icon" :type="item.icon"></Icon>
             {{ item[label] }}
           </Checkbox>

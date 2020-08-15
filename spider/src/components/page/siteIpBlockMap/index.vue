@@ -1,323 +1,123 @@
 <template>
   <div>
-    <div>
-      <span style="float:right">
-        <Icon type="md-settings" size="20" @click="showSetting" />
-      </span>
-    </div>
-    <div class="filter">
+    <MyPageSettingButton @click="showSetting" />
+    <MyFilter>
       <MyDateRange v-model="timeRange" />
-
-      <MySelect
-        v-show="showSiteId"
-        v-model="query.siteId"
-        title="Site"
-        enum="Site"
-        width="200px"
-      />
-
+      <MySelect v-show="showSiteId" v-model="query.siteId" title="Site" enum="Site" width="200px" />
       <span v-show="showRadioGroup">
         <MyRadioGroup v-model="radioKey" :options="radioOptions" width="200px" />
-        <Input v-model="keyword" style="width:200px;" />
+        <Input v-model="keyword" style="width: 200px;" />
       </span>
-
       <span>
         <QueryButton @click="getData(true)" />
-
         <CreateButton @click="showAdd" />
         <BatchDeleteButton @click="batchDelete" />
       </span>
-    </div>
-    <ListBody
+    </MyFilter>
+    <MyTable
       ref="table"
       filter
       border
       stripe
       columnFilter
-      :columns="pageSetting.table.defaultShowingColumns"
+      :columns="pageSetting.table.columns"
       :datas="data.list"
       @delete="showDelete"
     />
-    <div class="pager">
-      <MyPager
-        :current="query.pageIndex"
-        :total="data.total"
-        @onSizeChanged="onPageSizeChanged"
-        @onIndexChanged="onPageIndexChanged"
-      />
-    </div>
-
+    <MyPager
+      :current="query.pageIndex"
+      :total="data.total"
+      @onSizeChanged="onPageSizeChanged"
+      @onIndexChanged="onPageIndexChanged"
+    />
     <add ref="add" :model="addSetting.model" :title="addSetting.title"></add>
-
     <PageSetting ref="setting" :setting="pageSetting" />
   </div>
 </template>
 <script>
-import add from "./add";
-
-export default {
-  components: {
-    add,
-  },
-  data() {
-    return {
-      pageSetting: {
-        filters: {
-          options: [
-            {
-              lable: "TimeRange",
-              value: "TimeRange",
-            },
-            {
-              lable: "SiteId",
-              value: "SiteId",
-            },
-            {
-              lable: "RadioGroup",
-              value: "RadioGroup",
-            },
-          ],
-          enabledFilters: ["TimeRange", "SiteId", "RadioGroup"],
+  import add from "./add";
+  import utils from "./../../../common";
+  export default {
+    components: {
+      add,
+    },
+    data() {
+      return {
+        pageSetting: {
+          filters: {
+            options: utils.options(["TimeRange", "SiteId", "RadioGroup"]),
+            enabledFilters: ["TimeRange", "SiteId", "RadioGroup"],
+          },
+          table: {
+            columns: [
+              utils.CHECKBOX_COLUMN,
+              utils.column("id"),
+              utils.enumColumn("siteId", "Site", "Site"),
+              utils.column("ip"),
+              utils.column("createTime", "CTime"),
+              utils.dateColumn("blockTimeout", "BlkTimeout"),
+              utils.operateColumn([utils.operation("delete")]),
+            ],
+            showingColumns: [],
+          },
         },
-        table: {
-          allColumns: [
-            {
-              title: "Id",
-              slot: "id",
-              key: "id",
-            },
-            {
-              title: "SiteId",
-              slot: "siteId",
-              key: "siteId",
-            },
-            {
-              title: "Ip",
-              slot: "ip",
-              key: "ip",
-            },
-            {
-              title: "CreateTime",
-              slot: "createTime",
-              key: "createTime",
-            },
-            {
-              title: "BlockTimeout",
-              slot: "blockTimeout",
-              key: "blockTimeout",
-            },
-          ],
-          defaultShowingColumns: [
-            {
-              key: "Checkbox",
-              title: "Checkbox",
-              type: "selection",
-              width: 60,
-              align: "center",
-            },
-            {
-              title: "Id",
-              slot: "id",
-              key: "id",
-            },
-            {
-              title: "Site",
-              slot: "siteId",
-              key: "siteId",
-              format: {
-                type: "enum",
-                pattern: "Site",
-              },
-            },
-            {
-              title: "Ip",
-              slot: "ip",
-              key: "ip",
-            },
-            {
-              title: "CreateTime",
-              slot: "createTime",
-              key: "createTime",
-            },
-            {
-              title: "BlockTimeout",
-              slot: "blockTimeout",
-              key: "blockTimeout",
-              format: {
-                type: "date",
-              },
-            },
-            {
-              title: "Operation",
-              key: "test",
-              slot: "test",
-              isOperation: true,
-              operations: [
-                {
-                  name: "delete",
-                  label: "delete",
-                },
-              ],
-            },
-          ],
-          showingColumns: [],
+        api: "siteIpBlockMap",
+        addSetting: utils.addSetting(),
+        radioKey: "ip",
+        keyword: "",
+        radioOptions: utils.radioOptions(["ip"]),
+        timeRange: [],
+        query: {
+          siteId: null,
+          ip: null,
+          createTimeStart: null,
+          createTimeEnd: null,
+          pageIndex: 1,
+          pageSize: 10,
         },
-      },
-
-      addSetting: {
-        model: {},
-        title: "add",
-      },
-
-      radioKey: "ip",
-      keyword: "",
-      radioOptions: [
-        {
-          label: "Ip",
-          value: "ip",
-        },
-      ],
-
-      timeRange: [],
-
-      query: {
-        siteId: null,
-        ip: null,
-        createTimeStart: null,
-        createTimeEnd: null,
-        pageIndex: 1,
-        pageSize: 10,
-      },
-      // data set
-      data: {
-        total: 0,
-        list: [],
-      },
-    };
-  },
-
-  created() {
-    this.getData(true);
-  },
-
-  // toggle filters show status
-  computed: {
-    showTimeRange() {
-      return this.$utils.arrayHas(
-        this.pageSetting.filters.enabledFilters,
-        "TimeRange"
-      );
+        data: utils.data(),
+      };
     },
-
-    showSiteId() {
-      return this.$utils.arrayHas(
-        this.pageSetting.filters.enabledFilters,
-        "SiteId"
-      );
-    },
-
-    showRadioGroup() {
-      return this.$utils.arrayHas(
-        this.pageSetting.filters.enabledFilters,
-        "RadioGroup"
-      );
-    },
-  },
-
-  methods: {
-    showAdd() {
-      this.addSetting.title = "add";
-      this.addSetting.model = {};
-      this.$refs.add.show();
-    },
-
-    showDelete(row) {
-      this.$utils.showComfirm.call(
-        this,
-        "Warning",
-        `are you sure to delete this data?`,
-        () => {
-          this.$utils.handleNormalRequest.call(this, async () => {
-            let resp = await this.$api.siteIpBlockMap.deleteById({
-              id: row.id,
-            });
-            if (resp.code == 100)
-               this.data.list = this.data.list.filter((x) => x.id != row.id);
-              this.data.total-=1;
-
-            return resp;
-          });
-        }
-      );
-    },
-
-    batchDelete() {
-      if (this.checkCount()) {
-        this.$utils.showComfirm.call(
-          this,
-          "Warning",
-          `are you sure to delete these data?`,
-          () => {
-            this.$utils.handleNormalRequest.call(
-              this,
-              async () => this.$api.siteIpBlockMap.deleteBatch(this.getIds()),
-              true
-            );
-          }
-        );
-      }
-    },
-
-    checkCount() {
-      let items = this.$refs.table.getSelection();
-      if (items.length == 0) {
-                this.$Message.info("no data selected");return false;
-
-      }
-      return true;
-    },
-
-    getIds() {
-      return this.$utils.pickObjectArrayFileds(
-        this.$refs.table.getSelection(),
-        "id"
-      );
-    },
-
-    showSetting() {
-      this.$refs.setting.show();
-    },
-
-    onPageSizeChanged(newSize) {
-      this.query.pageSize = newSize;
+    beforeMount() {
+      utils.initFilterOptionShow.call(this);
       this.getData(true);
     },
-
-    onPageIndexChanged(newIndex) {
-      this.query.pageIndex = newIndex;
-      this.getData();
+    watch: {
+      "pageSetting.filters.enabledFilters"(newVal) {
+        let set = new Set(newVal);
+        this.pageSetting.filters.options.forEach((op) => {
+          if (set.has(op.value)) {
+            this["show" + op.value] = true;
+          } else {
+            this["show" + op.value] = false;
+          }
+        });
+      },
     },
-
-    getData(reset) {
-      if (reset) {
-        this.query.pageIndex = 1;
-      }
-
-      this.$utils.resetFields(
-        this.query,
-        null,
-        this.$utils.pickObjectArrayFileds(this.radioOptions, "value")
-      );
-
-      this.query[this.radioKey] = this.keyword;
-
-      this.query.createTimeStart = this.timeRange[0];
-      this.query.createTimeEnd = this.timeRange[1];
-
-      this.$utils.getListData.call(this, () =>
-        this.$api.siteIpBlockMap.getList(this.query)
-      );
+    methods: {
+      showAdd() {
+        utils.showAdd.call(this);
+      },
+      batchDelete() {
+        utils.batchDelete.call(this);
+      },
+      showDelete(row) {
+        utils.showDelete.call(this, row);
+      },
+      showSetting() {
+        this.$refs.setting.show();
+      },
+      onPageSizeChanged(newSize) {
+        this.query.pageSize = newSize;
+        this.getData(true);
+      },
+      onPageIndexChanged(newIndex) {
+        this.query.pageIndex = newIndex;
+        this.getData();
+      },
+      getData(reset) {
+        utils.getData.call(this, reset, true, true);
+      },
     },
-  },
-};
+  };
 </script>

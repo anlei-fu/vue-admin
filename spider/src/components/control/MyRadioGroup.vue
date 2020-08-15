@@ -1,7 +1,7 @@
 <template>
   <RadioGroup v-model="selectedValue_">
     <Radio v-for="item in options_" :key="item.value" :label="item.value">
-      <Icon v-if="item.icon" :type="item.icon"/>
+      <Icon v-if="item.icon" :type="item.icon" />
       {{ item.label }}
     </Radio>
   </RadioGroup>
@@ -18,8 +18,8 @@
         type: Array,
         default: () => [],
       },
-      selectedValue:{
-          type:String|Number
+      selectedValue: {
+        type: String | Number,
       },
       label: {
         type: String,
@@ -49,7 +49,7 @@
 
     watch: {
       selectedValue_(newVal) {
-         this.$emit("change", newVal);
+        this.$emit("change", newVal);
       },
       selectedValue(newVal) {
         this.selectedValue_ = newVal;

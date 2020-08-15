@@ -28,131 +28,110 @@
     </Form>
   </MyModal>
 </template>
-      <script>
-export default {
-  props: {
-    ids: {
-      type: Array,
-      default: () => [],
-    },
-    title: {
-      type: String,
-      default: "title",
-    },
-  },
-
-  data() {
-    return {
-      optionalFields: [
-        {
-          label: "EnableStatus",
-          value: "EnableStatus",
-        },
-
-        {
-          label: "IpHourSpeedLimit",
-          value: "IpHourSpeedLimit",
-        },
-        {
-          label: "IpMinuteSpeedLimit",
-          value: "IpMinuteSpeedLimit",
-        },
-        {
-          label: "IpDaySpeedLimit",
-          value: "IpDaySpeedLimit",
-        },
-      ],
-      showingOptionalFields: ["EnableStatus"],
-      rules: {
-        ipHourSpeedLimit: [
-          {
-            min: 0,
-            max: 10,
-            message: "out of range 0-10 ",
-            trigger: "blur",
-          },
-        ],
-        ipMinuteSpeedLimit: [
-          {
-            min: 0,
-            max: 10,
-            message: "out of range 0-10 ",
-            trigger: "blur",
-          },
-        ],
-        ipDaySpeedLimit: [
-          {
-            min: 0,
-            max: 10,
-            message: "out of range 0-10 ",
-            trigger: "blur",
-          },
-        ],
+<script>
+  import utils from "./../../../common";
+  export default {
+    props: {
+      ids: {
+        type: Array,
+        default: () => [],
       },
-      query: {
-        enableStatus: null,
-
-        ipHourSpeedLimit: null,
-        ipMinuteSpeedLimit: null,
-        ipDaySpeedLimit: null,
+      title: {
+        type: String,
+        default: "title",
       },
-    };
-  },
-  computed: {
-    showEnableStatus() {
-      return this.$utils.arrayHas(this.showingOptionalFields, "EnableStatus");
     },
 
-    showIpHourSpeedLimit() {
-      return this.$utils.arrayHas(
-        this.showingOptionalFields,
-        "IpHourSpeedLimit"
-      );
+    data() {
+      return {
+        optionalFields: utils.options([
+          "EnableStatus",
+          "IpHourSpeedLimit",
+          "IpMinuteSpeedLimit",
+          "IpDaySpeedLimit",
+        ]),
+        showingOptionalFields: ["EnableStatus"],
+        rules: {
+          ipHourSpeedLimit: [
+            {
+              min: 0,
+              max: 10,
+              message: "out of range 0-10 ",
+              trigger: "blur",
+            },
+          ],
+          ipMinuteSpeedLimit: [
+            {
+              min: 0,
+              max: 10,
+              message: "out of range 0-10 ",
+              trigger: "blur",
+            },
+          ],
+          ipDaySpeedLimit: [
+            {
+              min: 0,
+              max: 10,
+              message: "out of range 0-10 ",
+              trigger: "blur",
+            },
+          ],
+        },
+        query: {
+          enableStatus: null,
+
+          ipHourSpeedLimit: null,
+          ipMinuteSpeedLimit: null,
+          ipDaySpeedLimit: null,
+        },
+      };
+    },
+    computed: {
+      showEnableStatus() {
+        return this.$utils.arrayHas(this.showingOptionalFields, "EnableStatus");
+      },
+
+      showIpHourSpeedLimit() {
+        return this.$utils.arrayHas(this.showingOptionalFields, "IpHourSpeedLimit");
+      },
+
+      showIpMinuteSpeedLimit() {
+        return this.$utils.arrayHas(this.showingOptionalFields, "IpMinuteSpeedLimit");
+      },
+
+      showIpDaySpeedLimit() {
+        return this.$utils.arrayHas(this.showingOptionalFields, "IpDaySpeedLimit");
+      },
     },
 
-    showIpMinuteSpeedLimit() {
-      return this.$utils.arrayHas(
-        this.showingOptionalFields,
-        "IpMinuteSpeedLimit"
-      );
-    },
+    methods: {
+      show() {
+        this.$refs.modal.show();
+      },
+      close() {
+        this.$refs.modal.close();
+      },
+      ok() {
+        this.$refs.form.validate((valid) => {
+          if (valid) {
+            this.$utils.handleNormalRequest.call(this, async () => {
+              this.query.ids = this.ids;
+              let resp = await this.$api.site.updateBatch(this.query);
+              if (resp.code == 100) {
+                this.$emit("success", this.query);
+                this.close();
+              }
 
-    showIpDaySpeedLimit() {
-      return this.$utils.arrayHas(
-        this.showingOptionalFields,
-        "IpDaySpeedLimit"
-      );
+              return resp;
+            });
+          }
+        });
+      },
     },
-  },
-
-  methods: {
-    show() {
-      this.$refs.modal.show();
-    },
-    close() {
-      this.$refs.modal.close();
-    },
-    ok() {
-      this.$refs.form.validate((valid) => {
-        if (valid) {
-          this.$utils.handleNormalRequest.call(this, async () => {
-            this.query.ids = this.ids;
-            let resp = await this.$api.site.updateBatch(this.query);
-            if (resp.code == 100) {
-              this.$emit("success", this.query);
-              this.close();
-            }
-
-            return resp;
-          });
-        }
-      });
-    },
-  },
-};
+  };
 </script>
-      <style scoped>
-.footer {
-  text-align: right;
-}
+<style scoped>
+  .footer {
+    text-align: right;
+  }
 </style>

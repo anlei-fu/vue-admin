@@ -2,7 +2,10 @@
   <div>
     <div class="login-container">
       <div class="login-header">
-        <img class="login-banner" src="https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png" />
+        <img
+          class="login-banner"
+          src="https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png"
+        />
         <span class="login-lable">Jasmine code generator</span>
       </div>
       <div class="login-item-container">
@@ -16,14 +19,25 @@
           <Form ref="userLoginForm" :rules="rules" :model="user" inline>
             <div class="login-row">
               <FormItem prop="name">
-                <Input v-model="user.name" size="large" placeholder="Username" style="width: 350px;">
+                <Input
+                  v-model="user.name"
+                  size="large"
+                  placeholder="Username"
+                  style="width: 350px;"
+                >
                   <Icon type="ios-contact" slot="prefix" />
                 </Input>
               </FormItem>
             </div>
             <div class="login-row">
               <FormItem prop="password">
-                <Input v-model="user.password" size="large" type="password" placeholder="Password" style="width: 350px;">
+                <Input
+                  v-model="user.password"
+                  size="large"
+                  type="password"
+                  placeholder="Password"
+                  style="width: 350px;"
+                >
                   <Icon type="ios-keypad" slot="prefix" />
                 </Input>
               </FormItem>
@@ -32,7 +46,9 @@
               <Checkbox size="large" style="width: 300px;">Remember me</Checkbox>
             </div>
             <div class="login-button">
-              <Button type="primary" size="large" style="width: 350px;" @click="login">Login</Button>
+              <Button type="primary" size="large" style="width: 350px;" @click="login">
+                Login
+              </Button>
             </div>
           </Form>
         </div>

@@ -1,5 +1,5 @@
 <template>
-  <MyModal title="title" ref="modal" @ok="ok" width="40%">
+  <MyModal :title="title" ref="modal" @ok="ok" width="40%">
     <Form ref="form" :model="query" :rules="rules" :label-width="100">
       <FormItem label="Ip" prop="ip">
         <Input v-model="query.ip" placeholder="Input value" />
@@ -9,7 +9,7 @@
         <Input v-model="query.port" placeholder="Input value" />
       </FormItem>
 
-      <template v-if="optionalFields.length>0">
+      <template v-if="optionalFields.length > 0">
         <Divider orientation="left">Optional Filter</Divider>
         <FormItem label="Fields">
           <MyCheckBoxGroup v-model="showingOptionalFields" :options="optionalFields" />
@@ -50,174 +50,123 @@
     </Form>
   </MyModal>
 </template>
-      <script>
-export default {
-  props: {
-    model: {
-      type: Object,
-      default: () => {},
-    },
-    title: {
-      type: String,
-      default: "",
-    },
-  },
-
-  data() {
-    return {
-      optionalFields: [
-        {
-          label: "ProxyType",
-          value: "ProxyType",
-        },
-        {
-          label: "EnableStatus",
-          value: "EnableStatus",
-        },
-        {
-          label: "Protocol",
-          value: "Protocol",
-        },
-        {
-          label: "Account",
-          value: "Account",
-        },
-        {
-          label: "Password",
-          value: "Password",
-        },
-        {
-          label: "MaxUseCount",
-          value: "MaxUseCount",
-        },
-        {
-          label: "BlockMaxCount",
-          value: "BlockMaxCount",
-        },
-          {
-          label: "BlockTimeout",
-          value: "BlockTimeout",
-        },
-      ],
-      showingOptionalFields: ["Protocol","MaxUseCount","BlockMaxCount","EnableStatus","ProxyType"],
-      rules: {
-        ip: [
-          {
-            required: true,
-            message: "field can not be empty",
-            trigger: "blur",
-          },
-        ],
-        port: [
-          {
-            required: true,
-            message: "field can not be empty",
-            trigger: "blur",
-          },
-          {
-            min: 0,
-            max: 63000,
-            message: "incorrect port number",
-            trigger: "blur",
-          },
-        ],
-        maxUseCount: [
-          {
-            min: 0,
-            max: 10,
-            message: "out of range 0-10 ",
-            trigger: "blur",
-          },
-        ],
-        blockMaxCount: [
-          {
-            min: 0,
-            max: 10,
-            message: "out of range 0-10 ",
-            trigger: "blur",
-          },
-        ],
+<script>
+  import utils from "./../../../common";
+  export default {
+    props: {
+      model: {
+        type: Object,
+        default: () => {},
       },
-      query: {
-        proxyType: null,
-        blockTimeoutTime:null,
-        enableStatus: null,
-        protocol: null,
-        ip: null,
-        port: null,
-        account: null,
-        password: null,
-        maxUseCount: null,
-        blockMaxCount: null,
+      title: {
+        type: String,
+        default: "",
       },
-    };
-  },
-  created() {
-    this.$utils.copyFieldsFrom(this.query, this.model);
-  },
-
-  computed: {
-    
-
-    showProxyType() {
-      return this.$utils.arrayHas(this.showingOptionalFields, "ProxyType");
     },
 
-    showEnableStatus() {
-      return this.$utils.arrayHas(this.showingOptionalFields, "EnableStatus");
+    data() {
+      return {
+        optionalFields: utils.options([
+          "ProxyType",
+          "EnableStatus",
+          "Protocol",
+          "Account",
+          "Password",
+          "MaxUseCount",
+          "BlockMaxCount",
+          "BlockTimeout",
+        ]),
+        showingOptionalFields: [
+          "Protocol",
+          "MaxUseCount",
+          "BlockMaxCount",
+          "EnableStatus",
+          "ProxyType",
+        ],
+        rules: {
+          ip: [utils.require(), utils.ip()],
+          port: [utils.require(), utils.port()],
+          maxUseCount: [utils.range(1, 1000)],
+          blockMaxCount: [utils.range(1, 15)],
+        },
+        query: {
+          proxyType: null,
+          blockTimeoutTime: null,
+          enableStatus: null,
+          protocol: null,
+          ip: null,
+          port: null,
+          account: null,
+          password: null,
+          maxUseCount: null,
+          blockMaxCount: null,
+        },
+      };
     },
+    created() {
+      this.$utils.copyFieldsFrom(this.query, this.model);
+    },
+
+    computed: {
+      showProxyType() {
+        return this.$utils.arrayHas(this.showingOptionalFields, "ProxyType");
+      },
+
+      showEnableStatus() {
+        return this.$utils.arrayHas(this.showingOptionalFields, "EnableStatus");
+      },
       showBlockTimeout() {
-      return this.$utils.arrayHas(this.showingOptionalFields, "BlockTimeout");
+        return this.$utils.arrayHas(this.showingOptionalFields, "BlockTimeout");
+      },
+
+      showProtocol() {
+        return this.$utils.arrayHas(this.showingOptionalFields, "Protocol");
+      },
+
+      showAccount() {
+        return this.$utils.arrayHas(this.showingOptionalFields, "Account");
+      },
+
+      showPassword() {
+        return this.$utils.arrayHas(this.showingOptionalFields, "Password");
+      },
+
+      showMaxUseCount() {
+        return this.$utils.arrayHas(this.showingOptionalFields, "MaxUseCount");
+      },
+
+      showBlockMaxCount() {
+        return this.$utils.arrayHas(this.showingOptionalFields, "BlockMaxCount");
+      },
     },
 
-    showProtocol() {
-      return this.$utils.arrayHas(this.showingOptionalFields, "Protocol");
+    watch: {
+      model(newVal) {
+        this.$utils.copyFieldsFrom(this.query, newVal);
+      },
     },
 
-    showAccount() {
-      return this.$utils.arrayHas(this.showingOptionalFields, "Account");
+    methods: {
+      show() {
+        this.$refs.modal.show();
+      },
+      close() {
+        this.$refs.modal.close();
+      },
+      ok() {
+        this.$refs.form.validate((valid) => {
+          if (valid) {
+            this.$utils.handleNormalRequest.call(this, async () => {
+              return this.$api.proxy.add(this.query);
+            });
+          }
+        });
+      },
     },
-
-    showPassword() {
-      return this.$utils.arrayHas(this.showingOptionalFields, "Password");
-    },
-
-    showMaxUseCount() {
-      return this.$utils.arrayHas(this.showingOptionalFields, "MaxUseCount");
-    },
-
-    showBlockMaxCount() {
-      return this.$utils.arrayHas(this.showingOptionalFields, "BlockMaxCount");
-    },
-  },
-
-  watch: {
-    model(newVal) {
-      this.$utils.copyFieldsFrom(this.query, newVal);
-    },
-  },
-
-  methods: {
-    show() {
-      this.$refs.modal.show();
-    },
-    close() {
-      this.$refs.modal.close();
-    },
-    ok() {
-      this.$refs.form.validate((valid) => {
-        if (valid) {
-          this.$utils.handleNormalRequest.call(this, async () => {
-            return this.$api.proxy.add(this.query);
-          });
-        }
-      });
-    },
-  },
-};
+  };
 </script>
-      <style scoped>
-.footer {
-  text-align: right;
-}
+<style scoped>
+  .footer {
+    text-align: right;
+  }
 </style>

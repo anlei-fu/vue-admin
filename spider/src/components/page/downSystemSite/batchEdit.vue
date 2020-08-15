@@ -44,194 +44,114 @@
     </Form>
   </MyModal>
 </template>
-      <script>
-export default {
-  props: {
-    ids: {
-      type: Array,
-      default: () => [],
-    },
-    title: {
-      type: String,
-      default: "title",
-    },
-  },
-
-  data() {
-    return {
-      optionalFields: [
-        {
-          label: "EnableStatus",
-          value: "EnableStatus",
-        },
-
-        {
-          label: "UrlMaxCacheCount",
-          value: "UrlMaxCacheCount",
-        },
-        {
-          label: "Priority",
-          value: "Priority",
-        },
-
-        {
-          label: "TaskUrlBatchCount",
-          value: "TaskUrlBatchCount",
-        },
-        {
-          label: "TaskMaxWaitToBindCount",
-          value: "TaskMaxWaitToBindCount",
-        },
-        {
-          label: "TaskMaxRunningCount",
-          value: "TaskMaxRunningCount",
-        },
-        {
-          label: "TaskTimeout",
-          value: "TaskTimeout",
-        },
-      ],
-      showingOptionalFields: ["EnableStatus"],
-      rules: {
-        priority: [
-          {
-            min: 0,
-            max: 10,
-            message: "out of range 0-10 ",
-            trigger: "blur",
-          },
-        ],
-
-        urlMaxCacheCount: [
-          {
-            min: 0,
-            max: 10,
-            message: "out of range 0-10 ",
-            trigger: "blur",
-          },
-        ],
-        urlMaxCrawlCount: [
-          {
-            min: 0,
-            max: 10,
-            message: "out of range 0-10 ",
-            trigger: "blur",
-          },
-        ],
-
-        taskUrlBatchCount: [
-          {
-            min: 0,
-            max: 10,
-            message: "out of range 0-10 ",
-            trigger: "blur",
-          },
-        ],
-        taskMaxWaitToBindCount: [
-          {
-            min: 0,
-            max: 10,
-            message: "out of range 0-10 ",
-            trigger: "blur",
-          },
-        ],
-        taskMaxRunningCount: [
-          {
-            min: 0,
-            max: 10,
-            message: "out of range 0-10 ",
-            trigger: "blur",
-          },
-        ],
-        taskTimeout: [
-          {
-            min: 0,
-            max: 10,
-            message: "out of range 0-10 ",
-            trigger: "blur",
-          },
-        ],
+<script>
+  import utils from "./../../../common";
+  export default {
+    props: {
+      ids: {
+        type: Array,
+        default: () => [],
       },
-      query: {
-        enableStatus: null,
-        priority: null,
-        taskUrlBatchCount: null,
-        taskMaxWaitToBindCount: null,
-        taskMaxRunningCount: null,
-        taskTimeout: null,
-        ids: null,
+      title: {
+        type: String,
+        default: "title",
       },
-    };
-  },
-  computed: {
-    showEnableStatus() {
-      return this.$utils.arrayHas(this.showingOptionalFields, "EnableStatus");
-    },
-    showPriority() {
-      return this.$utils.arrayHas(this.showingOptionalFields, "Priority");
     },
 
-    showUrlMaxCacheCount() {
-      return this.$utils.arrayHas(
-        this.showingOptionalFields,
-        "UrlMaxCacheCount"
-      );
+    data() {
+      return {
+        optionalFields: utils.options([
+          "EnableStatus",
+          "UrlMaxCacheCount",
+          "Priority",
+          "TaskUrlBatchCount",
+          "TaskMaxWaitToBindCount",
+          "TaskMaxRunningCount",
+          "TaskTimeout",
+        ]),
+        showingOptionalFields: ["EnableStatus"],
+        rules: {
+          priority: [utils.range(1, 10)],
+          crawlerPageTimeout: [utils.range(3000, 600000)],
+          urlMaxCacheCount: [utils.range(1000, 20000)],
+          urlMaxCrawlCount: [utils.range(1, 20)],
+          taskUrlBatchCount: [utils.range(1, 1000)],
+          taskMaxWaitToBindCount: [utils.range(1, 20)],
+          taskMaxRunningCount: [utils.range(1, 1000)],
+          taskTimeout: [utils.range(1, 120)],
+          urlMaxDepth: [utils.range(1, 100)],
+          taskUrlMaxFailCount: [utils.range(10, 500)],
+          taskUrlMaxContinuouslyFailCount: [utils.range(1, 30)],
+          taskUrlMaxConcurrency: [utils.range(1, 1000)],
+        },
+        query: {
+          enableStatus: null,
+          priority: null,
+          taskUrlBatchCount: null,
+          taskMaxWaitToBindCount: null,
+          taskMaxRunningCount: null,
+          taskTimeout: null,
+          ids: null,
+        },
+      };
+    },
+    computed: {
+      showEnableStatus() {
+        return this.$utils.arrayHas(this.showingOptionalFields, "EnableStatus");
+      },
+      showPriority() {
+        return this.$utils.arrayHas(this.showingOptionalFields, "Priority");
+      },
+
+      showUrlMaxCacheCount() {
+        return this.$utils.arrayHas(this.showingOptionalFields, "UrlMaxCacheCount");
+      },
+
+      showTaskUrlBatchCount() {
+        return this.$utils.arrayHas(this.showingOptionalFields, "TaskUrlBatchCount");
+      },
+
+      showTaskMaxWaitToBindCount() {
+        return this.$utils.arrayHas(this.showingOptionalFields, "TaskMaxWaitToBindCount");
+      },
+
+      showTaskMaxRunningCount() {
+        return this.$utils.arrayHas(this.showingOptionalFields, "TaskMaxRunningCount");
+      },
+
+      showTaskTimeout() {
+        return this.$utils.arrayHas(this.showingOptionalFields, "TaskTimeout");
+      },
     },
 
-    showTaskUrlBatchCount() {
-      return this.$utils.arrayHas(
-        this.showingOptionalFields,
-        "TaskUrlBatchCount"
-      );
-    },
+    methods: {
+      show() {
+        this.$refs.modal.show();
+      },
+      close() {
+        this.$refs.modal.close();
+      },
+      ok() {
+        this.$refs.form.validate((valid) => {
+          if (valid) {
+            this.$utils.handleNormalRequest.call(this, async () => {
+              this.query.ids = this.ids;
+              let resp = await this.$api.downSystemSite.updateBatch(this.query);
+              if (resp.code == 100) {
+                this.$emit("success", this.query);
+                this.close();
+              }
 
-    showTaskMaxWaitToBindCount() {
-      return this.$utils.arrayHas(
-        this.showingOptionalFields,
-        "TaskMaxWaitToBindCount"
-      );
+              return resp;
+            });
+          }
+        });
+      },
     },
-
-    showTaskMaxRunningCount() {
-      return this.$utils.arrayHas(
-        this.showingOptionalFields,
-        "TaskMaxRunningCount"
-      );
-    },
-
-    showTaskTimeout() {
-      return this.$utils.arrayHas(this.showingOptionalFields, "TaskTimeout");
-    },
-  },
-
-  methods: {
-    show() {
-      this.$refs.modal.show();
-    },
-    close() {
-      this.$refs.modal.close();
-    },
-    ok() {
-      this.$refs.form.validate((valid) => {
-        if (valid) {
-          this.$utils.handleNormalRequest.call(this, async () => {
-            this.query.ids = this.ids;
-            let resp = await this.$api.downSystemSite.updateBatch(this.query);
-            if (resp.code == 100) {
-              this.$emit("success", this.query);
-              this.close();
-            }
-
-            return resp;
-          });
-        }
-      });
-    },
-  },
-};
+  };
 </script>
-      <style scoped>
-.footer {
-  text-align: right;
-}
+<style scoped>
+  .footer {
+    text-align: right;
+  }
 </style>

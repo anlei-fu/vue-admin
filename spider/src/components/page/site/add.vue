@@ -1,11 +1,11 @@
 <template>
-  <MyModal title="title" ref="modal" @ok="ok" width="60%">
+  <MyModal :title="title" ref="modal" @ok="ok" width="60%">
     <Form ref="form" :model="query" :rules="rules" :label-width="120">
       <FormItem label="Name" prop="name">
         <Input v-model="query.name" placeholder="Input value" />
       </FormItem>
 
-      <template v-if="optionalFields.length>0">
+      <template v-if="optionalFields.length > 0">
         <Divider orientation="left">Optional Filter</Divider>
         <FormItem label="Fields">
           <MyCheckBoxGroup v-model="showingOptionalFields" :options="optionalFields" />
@@ -17,11 +17,7 @@
           <MySelect v-model="query.parentSiteId" enum="parentSiteId" width="100%" />
         </FormItem>
 
-        <FormItem
-          v-if="showCrawlNeedUseCookie"
-          label="NeedUseCookie"
-          prop="YesNo"
-        >
+        <FormItem v-if="showCrawlNeedUseCookie" label="NeedUseCookie" prop="YesNo">
           <MySelect v-model="query.crawlNeedUseCookie" enum="YesNo" width="100%" />
         </FormItem>
 
@@ -175,476 +171,246 @@
     </Form>
   </MyModal>
 </template>
-      <script>
-export default {
-  props: {
-    model: {
-      type: Object,
-      default: () => {},
-    },
-    title: {
-      type: String,
-      default: "",
-    },
-  },
-
-  data() {
-    return {
-      optionalFields: [
-        {
-          label: "ParentSite",
-          value: "ParentSiteId",
-        },
-        {
-          label: "NeedUseCookie",
-          value: "CrawlNeedUseCookie",
-        },
-        {
-          label: "NeedVcode",
-          value: "LoginNeedVcode",
-        },
-        {
-          label: "CaptaType",
-          value: "LoginCaptaType",
-        },
-        {
-          label: "NeedUseProxy",
-          value: "NeedUseProxy",
-        },
-        {
-          label: "EnableStatus",
-          value: "EnableStatus",
-        },
-        {
-          label: "Domain",
-          value: "Domain",
-        },
-        {
-          label: "HomePageUrl",
-          value: "HomePageUrl",
-        },
-        {
-          label: "IpDelayTimeout",
-          value: "IpDelayTimeout",
-        },
-        {
-          label: "IpBlockTimeout",
-          value: "IpBlockTimeout",
-        },
-        {
-          label: "IpHourSpeedLimit",
-          value: "IpHourSpeedLimit",
-        },
-        {
-          label: "IpMinuteSpeedLimit",
-          value: "IpMinuteSpeedLimit",
-        },
-        {
-          label: "IpDaySpeedLimit",
-          value: "IpDaySpeedLimit",
-        },
-        {
-          label: "AccountAllowCrossIp",
-          value: "AccountAllowCrossIp",
-        },
-        {
-          label: "AccountAllowMultiple",
-          value: "AccountAllowMultiple",
-        },
-        {
-          label: "AccountMinuteSpeedLimit",
-          value: "AccountMinuteSpeedLimit",
-        },
-        {
-          label: "AccountHourSpeedLimit",
-          value: "AccountHourSpeedLimit",
-        },
-        {
-          label: "AccountDaySpeedLimit",
-          value: "AccountDaySpeedLimit",
-        },
-        {
-          label: "AccountMaxBlockCount",
-          value: "AccountMaxBlockCount",
-        },
-        {
-          label: "AccountBlockTimeout",
-          value: "AccountBlockTimeout",
-        },
-        {
-          label: "AccountMaxCookieCount",
-          value: "AccountMaxCookieCount",
-        },
-        {
-          label: "AccountDelayTimeout",
-          value: "AccountDelayTimeout",
-        },
-        {
-          label: "CookieMaxBlockCount",
-          value: "CookieMaxBlockCount",
-        },
-        {
-          label: "CookieExpireTimeout",
-          value: "CookieExpireTimeout",
-        },
-        {
-          label: "CookieDelayTimeout",
-          value: "CookieDelayTimeout",
-        },
-        {
-          label: "Description",
-          value: "Description",
-        },
-      ],
-      showingOptionalFields: ["HomePageUrl","NeedUseProxy","CrawlNeedUseCookie","CrawlerAutoDownloadPage","IpMinuteSpeedLimit","CookieExpireTimeout",],
-      rules: {
-        name: [
-          {
-            required: true,
-            message: "field can not be empty",
-            trigger: "blur",
-          },
-        ],
-        ipDelayTimeout: [
-          {
-            min: 0,
-            max: 10,
-            message: "out of range 0-10 ",
-            trigger: "blur",
-          },
-        ],
-        ipBlockTimeout: [
-          {
-            min: 0,
-            max: 10,
-            message: "out of range 0-10 ",
-            trigger: "blur",
-          },
-        ],
-        ipHourSpeedLimit: [
-          {
-            min: 0,
-            max: 10,
-            message: "out of range 0-10 ",
-            trigger: "blur",
-          },
-        ],
-        ipMinuteSpeedLimit: [
-          {
-            min: 0,
-            max: 10,
-            message: "out of range 0-10 ",
-            trigger: "blur",
-          },
-        ],
-        ipDaySpeedLimit: [
-          {
-            min: 0,
-            max: 10,
-            message: "out of range 0-10 ",
-            trigger: "blur",
-          },
-        ],
-        accountMinuteSpeedLimit: [
-          {
-            min: 0,
-            max: 10,
-            message: "out of range 0-10 ",
-            trigger: "blur",
-          },
-        ],
-        accountHourSpeedLimit: [
-          {
-            min: 0,
-            max: 10,
-            message: "out of range 0-10 ",
-            trigger: "blur",
-          },
-        ],
-        accountDaySpeedLimit: [
-          {
-            min: 0,
-            max: 10,
-            message: "out of range 0-10 ",
-            trigger: "blur",
-          },
-        ],
-        accountMaxBlockCount: [
-          {
-            min: 0,
-            max: 10,
-            message: "out of range 0-10 ",
-            trigger: "blur",
-          },
-        ],
-        accountBlockTimeout: [
-          {
-            min: 0,
-            max: 10,
-            message: "out of range 0-10 ",
-            trigger: "blur",
-          },
-        ],
-        accountMaxCookieCount: [
-          {
-            min: 0,
-            max: 10,
-            message: "out of range 0-10 ",
-            trigger: "blur",
-          },
-        ],
-        accountDelayTimeout: [
-          {
-            min: 0,
-            max: 10,
-            message: "out of range 0-10 ",
-            trigger: "blur",
-          },
-        ],
-        cookieMaxBlockCount: [
-          {
-            min: 0,
-            max: 10,
-            message: "out of range 0-10 ",
-            trigger: "blur",
-          },
-        ],
-        cookieExpireTimeout: [
-          {
-            min: 0,
-            max: 10,
-            message: "out of range 0-10 ",
-            trigger: "blur",
-          },
-        ],
-        cookieDelayTimeout: [
-          {
-            min: 0,
-            max: 10,
-            message: "out of range 0-10 ",
-            trigger: "blur",
-          },
-        ],
+<script>
+  import utils from "./../../../common";
+  export default {
+    props: {
+      model: {
+        type: Object,
+        default: () => {},
       },
-      query: {
-        parentSiteId: null,
-        crawlNeedUseCookie: null,
-        loginNeedVcode: null,
-        loginCaptaType: null,
-        needUseProxy: null,
-        enableStatus: null,
-        name: null,
-        domain: null,
-        homePageUrl: null,
-        ipDelayTimeout: null,
-        ipBlockTimeout: null,
-        ipHourSpeedLimit: null,
-        ipMinuteSpeedLimit: null,
-        ipDaySpeedLimit: null,
-        accountAllowCrossIp: null,
-        accountAllowMultiple: null,
-        accountMinuteSpeedLimit: null,
-        accountHourSpeedLimit: null,
-        accountDaySpeedLimit: null,
-        accountMaxBlockCount: null,
-        accountBlockTimeout: null,
-        accountMaxCookieCount: null,
-        accountDelayTimeout: null,
-        cookieMaxBlockCount: null,
-        cookieExpireTimeout: null,
-        cookieDelayTimeout: null,
-        description: null,
-        id: null,
+      title: {
+        type: String,
+        default: "",
       },
-    };
-  },
-  created() {
-    this.$utils.copyFieldsFrom(this.query, this.model);
-  },
-
-  computed: {
-    
-
-    showParentSiteId() {
-      return this.$utils.arrayHas(this.showingOptionalFields, "ParentSiteId");
     },
 
-    showCrawlNeedUseCookie() {
-      return this.$utils.arrayHas(
-        this.showingOptionalFields,
-        "CrawlNeedUseCookie"
-      );
+    data() {
+      return {
+        optionalFields: utils.options([
+          "ParentSiteId",
+          "CrawlNeedUseCookie",
+          "LoginNeedVcode",
+          "LoginCaptaType",
+          "NeedUseProxy",
+          "EnableStatus",
+          "Domain",
+          "HomePageUrl",
+          "IpDelayTimeout",
+          "IpBlockTimeout",
+          "IpHourSpeedLimit",
+          "IpMinuteSpeedLimit",
+          "IpDaySpeedLimit",
+          "AccountAllowCrossIp",
+          "AccountAllowMultiple",
+          "AccountMinuteSpeedLimit",
+          "AccountHourSpeedLimit",
+          "AccountDaySpeedLimit",
+          "AccountMaxBlockCount",
+          "AccountBlockTimeout",
+          "AccountMaxCookieCount",
+          "AccountDelayTimeout",
+          "CookieMaxBlockCount",
+          "CookieExpireTimeout",
+          "CookieDelayTimeout",
+          "Description",
+        ]),
+        showingOptionalFields: [
+          "HomePageUrl",
+          "NeedUseProxy",
+          "CrawlNeedUseCookie",
+          "CrawlerAutoDownloadPage",
+          "IpMinuteSpeedLimit",
+          "CookieExpireTimeout",
+        ],
+        rules: {
+          name: [utils.require()],
+          ipDelayTimeout: [utils.require(), utils.range(0, 100000000)],
+          ipBlockTimeout: [utils.range(5, 100000)],
+          ipHourSpeedLimit: [utils.range(1, 1000000)],
+          ipMinuteSpeedLimit: [utils.range(1, 100000)],
+          ipDaySpeedLimit: [utils.range(1, 10000000)],
+          accountMinuteSpeedLimit: [utils.range(1, 100)],
+          accountHourSpeedLimit: [utils.range(1, 3000)],
+          accountDaySpeedLimit: [utils.range(1, 30000)],
+          accountMaxBlockCount: [utils.range(1, 20)],
+          accountBlockTimeout: [utils.range(1, 3000)],
+          accountMaxCookieCount: [utils.range(1, 3000)],
+          accountDelayTimeout: [utils.range(1, 3000)],
+          cookieMaxBlockCount: [utils.range(1, 20)],
+          cookieExpireTimeout: [utils.range(1, 3000)],
+          cookieDelayTimeout: [utils.range(1, 3000)],
+          homePageUrl: [utils.url()],
+        },
+        query: {
+          parentSiteId: null,
+          crawlNeedUseCookie: null,
+          loginNeedVcode: null,
+          loginCaptaType: null,
+          needUseProxy: null,
+          enableStatus: null,
+          name: null,
+          domain: null,
+          homePageUrl: null,
+          ipDelayTimeout: null,
+          ipBlockTimeout: null,
+          ipHourSpeedLimit: null,
+          ipMinuteSpeedLimit: null,
+          ipDaySpeedLimit: null,
+          accountAllowCrossIp: null,
+          accountAllowMultiple: null,
+          accountMinuteSpeedLimit: null,
+          accountHourSpeedLimit: null,
+          accountDaySpeedLimit: null,
+          accountMaxBlockCount: null,
+          accountBlockTimeout: null,
+          accountMaxCookieCount: null,
+          accountDelayTimeout: null,
+          cookieMaxBlockCount: null,
+          cookieExpireTimeout: null,
+          cookieDelayTimeout: null,
+          description: null,
+          id: null,
+        },
+      };
+    },
+    created() {
+      this.$utils.copyFieldsFrom(this.query, this.model);
     },
 
-    showLoginNeedVcode() {
-      return this.$utils.arrayHas(this.showingOptionalFields, "LoginNeedVcode");
+    computed: {
+      showParentSiteId() {
+        return this.$utils.arrayHas(this.showingOptionalFields, "ParentSiteId");
+      },
+
+      showCrawlNeedUseCookie() {
+        return this.$utils.arrayHas(this.showingOptionalFields, "CrawlNeedUseCookie");
+      },
+
+      showLoginNeedVcode() {
+        return this.$utils.arrayHas(this.showingOptionalFields, "LoginNeedVcode");
+      },
+
+      showLoginCaptaType() {
+        return this.$utils.arrayHas(this.showingOptionalFields, "LoginCaptaType");
+      },
+
+      showNeedUseProxy() {
+        return this.$utils.arrayHas(this.showingOptionalFields, "NeedUseProxy");
+      },
+
+      showEnableStatus() {
+        return this.$utils.arrayHas(this.showingOptionalFields, "EnableStatus");
+      },
+
+      showDomain() {
+        return this.$utils.arrayHas(this.showingOptionalFields, "Domain");
+      },
+
+      showHomePageUrl() {
+        return this.$utils.arrayHas(this.showingOptionalFields, "HomePageUrl");
+      },
+
+      showIpDelayTimeout() {
+        return this.$utils.arrayHas(this.showingOptionalFields, "IpDelayTimeout");
+      },
+
+      showIpBlockTimeout() {
+        return this.$utils.arrayHas(this.showingOptionalFields, "IpBlockTimeout");
+      },
+
+      showIpHourSpeedLimit() {
+        return this.$utils.arrayHas(this.showingOptionalFields, "IpHourSpeedLimit");
+      },
+
+      showIpMinuteSpeedLimit() {
+        return this.$utils.arrayHas(this.showingOptionalFields, "IpMinuteSpeedLimit");
+      },
+
+      showIpDaySpeedLimit() {
+        return this.$utils.arrayHas(this.showingOptionalFields, "IpDaySpeedLimit");
+      },
+
+      showAccountAllowCrossIp() {
+        return this.$utils.arrayHas(this.showingOptionalFields, "AccountAllowCrossIp");
+      },
+
+      showAccountAllowMultiple() {
+        return this.$utils.arrayHas(this.showingOptionalFields, "AccountAllowMultiple");
+      },
+
+      showAccountMinuteSpeedLimit() {
+        return this.$utils.arrayHas(this.showingOptionalFields, "AccountMinuteSpeedLimit");
+      },
+
+      showAccountHourSpeedLimit() {
+        return this.$utils.arrayHas(this.showingOptionalFields, "AccountHourSpeedLimit");
+      },
+
+      showAccountDaySpeedLimit() {
+        return this.$utils.arrayHas(this.showingOptionalFields, "AccountDaySpeedLimit");
+      },
+
+      showAccountMaxBlockCount() {
+        return this.$utils.arrayHas(this.showingOptionalFields, "AccountMaxBlockCount");
+      },
+
+      showAccountBlockTimeout() {
+        return this.$utils.arrayHas(this.showingOptionalFields, "AccountBlockTimeout");
+      },
+
+      showAccountMaxCookieCount() {
+        return this.$utils.arrayHas(this.showingOptionalFields, "AccountMaxCookieCount");
+      },
+
+      showAccountDelayTimeout() {
+        return this.$utils.arrayHas(this.showingOptionalFields, "AccountDelayTimeout");
+      },
+
+      showCookieMaxBlockCount() {
+        return this.$utils.arrayHas(this.showingOptionalFields, "CookieMaxBlockCount");
+      },
+
+      showCookieExpireTimeout() {
+        return this.$utils.arrayHas(this.showingOptionalFields, "CookieExpireTimeout");
+      },
+
+      showCookieDelayTimeout() {
+        return this.$utils.arrayHas(this.showingOptionalFields, "CookieDelayTimeout");
+      },
+
+      showDescription() {
+        return this.$utils.arrayHas(this.showingOptionalFields, "Description");
+      },
     },
 
-    showLoginCaptaType() {
-      return this.$utils.arrayHas(this.showingOptionalFields, "LoginCaptaType");
+    watch: {
+      model(newVal) {
+        this.$utils.copyFieldsFrom(this.query, newVal);
+      },
     },
 
-    showNeedUseProxy() {
-      return this.$utils.arrayHas(this.showingOptionalFields, "NeedUseProxy");
+    methods: {
+      show() {
+        this.$refs.modal.show();
+      },
+      close() {
+        this.$refs.modal.close();
+      },
+      ok() {
+        this.$refs.form.validate((valid) => {
+          if (valid) {
+            this.$utils.handleNormalRequest.call(this, async () => {
+              return this.$api.site.add(this.query);
+            });
+          }
+        });
+      },
     },
-
-    showEnableStatus() {
-      return this.$utils.arrayHas(this.showingOptionalFields, "EnableStatus");
-    },
-
-    showDomain() {
-      return this.$utils.arrayHas(this.showingOptionalFields, "Domain");
-    },
-
-    showHomePageUrl() {
-      return this.$utils.arrayHas(this.showingOptionalFields, "HomePageUrl");
-    },
-
-    showIpDelayTimeout() {
-      return this.$utils.arrayHas(this.showingOptionalFields, "IpDelayTimeout");
-    },
-
-    showIpBlockTimeout() {
-      return this.$utils.arrayHas(this.showingOptionalFields, "IpBlockTimeout");
-    },
-
-    showIpHourSpeedLimit() {
-      return this.$utils.arrayHas(
-        this.showingOptionalFields,
-        "IpHourSpeedLimit"
-      );
-    },
-
-    showIpMinuteSpeedLimit() {
-      return this.$utils.arrayHas(
-        this.showingOptionalFields,
-        "IpMinuteSpeedLimit"
-      );
-    },
-
-    showIpDaySpeedLimit() {
-      return this.$utils.arrayHas(
-        this.showingOptionalFields,
-        "IpDaySpeedLimit"
-      );
-    },
-
-    showAccountAllowCrossIp() {
-      return this.$utils.arrayHas(
-        this.showingOptionalFields,
-        "AccountAllowCrossIp"
-      );
-    },
-
-    showAccountAllowMultiple() {
-      return this.$utils.arrayHas(
-        this.showingOptionalFields,
-        "AccountAllowMultiple"
-      );
-    },
-
-    showAccountMinuteSpeedLimit() {
-      return this.$utils.arrayHas(
-        this.showingOptionalFields,
-        "AccountMinuteSpeedLimit"
-      );
-    },
-
-    showAccountHourSpeedLimit() {
-      return this.$utils.arrayHas(
-        this.showingOptionalFields,
-        "AccountHourSpeedLimit"
-      );
-    },
-
-    showAccountDaySpeedLimit() {
-      return this.$utils.arrayHas(
-        this.showingOptionalFields,
-        "AccountDaySpeedLimit"
-      );
-    },
-
-    showAccountMaxBlockCount() {
-      return this.$utils.arrayHas(
-        this.showingOptionalFields,
-        "AccountMaxBlockCount"
-      );
-    },
-
-    showAccountBlockTimeout() {
-      return this.$utils.arrayHas(
-        this.showingOptionalFields,
-        "AccountBlockTimeout"
-      );
-    },
-
-    showAccountMaxCookieCount() {
-      return this.$utils.arrayHas(
-        this.showingOptionalFields,
-        "AccountMaxCookieCount"
-      );
-    },
-
-    showAccountDelayTimeout() {
-      return this.$utils.arrayHas(
-        this.showingOptionalFields,
-        "AccountDelayTimeout"
-      );
-    },
-
-    showCookieMaxBlockCount() {
-      return this.$utils.arrayHas(
-        this.showingOptionalFields,
-        "CookieMaxBlockCount"
-      );
-    },
-
-    showCookieExpireTimeout() {
-      return this.$utils.arrayHas(
-        this.showingOptionalFields,
-        "CookieExpireTimeout"
-      );
-    },
-
-    showCookieDelayTimeout() {
-      return this.$utils.arrayHas(
-        this.showingOptionalFields,
-        "CookieDelayTimeout"
-      );
-    },
-
-    showDescription() {
-      return this.$utils.arrayHas(this.showingOptionalFields, "Description");
-    },
-  },
-
-  watch: {
-    model(newVal) {
-      this.$utils.copyFieldsFrom(this.query, newVal);
-    },
-  },
-
-  methods: {
-    show() {
-      this.$refs.modal.show();
-    },
-    close() {
-      this.$refs.modal.close();
-    },
-    ok() {
-      this.$refs.form.validate((valid) => {
-        if (valid) {
-          this.$utils.handleNormalRequest.call(this, async () => {
-            return this.$api.site.add(this.query);
-          });
-        }
-      });
-    },
-  },
-};
+  };
 </script>
-      <style scoped>
-.footer {
-  text-align: right;
-}
+<style scoped>
+  .footer {
+    text-align: right;
+  }
 </style>

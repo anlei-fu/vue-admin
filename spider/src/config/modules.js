@@ -4,7 +4,7 @@ exports.modules = [
                 _name: "module1",
                 icon: "navicon-round",
                 label: "Config",
-                activeMenuName: "/script",
+                activeMenuName: "/task",
                 menus: [{
                         path: "/task",
                         icon: "",
@@ -18,6 +18,17 @@ exports.modules = [
                         moduleName: "module1",
                 },
                 {
+                        path: "/site",
+                        icon: "",
+                        label: "Site",
+                        moduleName: "module1",
+                },{
+                        path: "/downSystemSite",
+                        icon: "",
+                        label: "SystemSite",
+                        moduleName: "module1",
+                },
+                {
                         path: "/crawler",
                         icon: "",
                         label: "Crawler",
@@ -28,12 +39,7 @@ exports.modules = [
                         label: "Proxy",
                         moduleName: "module1",
                 },
-                {
-                        path: "/site",
-                        icon: "",
-                        label: "Site",
-                        moduleName: "module1",
-                }, {
+               {
                         path: "/siteAccount",
                         icon: "",
                         label: "Account",
@@ -43,22 +49,20 @@ exports.modules = [
                         icon: "",
                         label: "Cookie",
                         moduleName: "module1",
-                }, {
-                        path: "/downSystemSite",
-                        icon: "",
-                        label: "SystemSite",
-                        moduleName: "module1",
-                }, {
+                },  {
                         path: "/dictionary",
                         icon: "",
                         label: "Dictionary",
                         moduleName: "module1",
-                }, {
-                        path: "/script",
-                        icon: "",
-                        label: "Script",
-                        moduleName: "module1",
-                }, {
+                }, 
+                // {
+                //         path: "/script",
+                //         icon: "",
+                //         label: "Script",
+                //         moduleName: "module1",
+                // },
+                
+                {
                         path: "/siteIpBlockMap",
                         icon: "",
                         label: "BlockMap",

@@ -23,112 +23,82 @@
     </Form>
   </MyModal>
 </template>
-      <script>
-export default {
-  props: {
-    ids: {
-      type: Array,
-      default: () => [],
-    },
-    title: {
-      type: String,
-      default: "title",
-    },
-  },
-
-  data() {
-    return {
-      optionalFields: [
-        {
-          label: "EnableStatus",
-          value: "EnableStatus",
-        },
-        {
-          label: "Priority",
-          value: "Priority",
-        },
-
-        {
-          label: "TaskMaxRunningCount",
-          value: "TaskMaxRunningCount",
-        },
-      ],
-      showingOptionalFields: ["Priority", "EnableStatus"],
-      rules: {
-        priority: [
-          {
-            min: 0,
-            max: 10,
-            message: "out of range 0-10 ",
-            trigger: "blur",
-          },
-        ],
-        taskMaxRunningCount: [
-          {
-            min: 0,
-            max: 10,
-            message: "out of range 0-10 ",
-            trigger: "blur",
-          },
-        ],
+<script>
+  import utils from "./../../../common";
+  export default {
+    props: {
+      ids: {
+        type: Array,
+        default: () => [],
       },
-      query: {
-        enableStatus: null,
-        priority: null,
-        taskMaxRunningCount: null,
-        ids: null,
+      title: {
+        type: String,
+        default: "title",
       },
-    };
-  },
-  computed: {
-    showEnableStatus() {
-      return this.$utils.arrayHas(this.showingOptionalFields, "EnableStatus");
     },
 
-    showPriority() {
-      return this.$utils.arrayHas(this.showingOptionalFields, "Priority");
+    data() {
+      return {
+        optionalFields: utils.options(["EnableStatus", "Priority", "TaskMaxRunningCount"]),
+        showingOptionalFields: ["Priority", "EnableStatus"],
+        rules: {
+          priority: [utils.range(1, 10)],
+          taskMaxRunningCount: [utils.range(0, 1000)],
+        },
+        query: {
+          enableStatus: null,
+          priority: null,
+          taskMaxRunningCount: null,
+          ids: null,
+        },
+      };
+    },
+    computed: {
+      showEnableStatus() {
+        return this.$utils.arrayHas(this.showingOptionalFields, "EnableStatus");
+      },
+
+      showPriority() {
+        return this.$utils.arrayHas(this.showingOptionalFields, "Priority");
+      },
+
+      showDescription() {
+        return this.$utils.arrayHas(this.showingOptionalFields, "Description");
+      },
+
+      showTaskMaxRunningCount() {
+        return this.$utils.arrayHas(this.showingOptionalFields, "TaskMaxRunningCount");
+      },
     },
 
-    showDescription() {
-      return this.$utils.arrayHas(this.showingOptionalFields, "Description");
-    },
+    methods: {
+      show() {
+        this.$refs.modal.show();
+      },
+      close() {
+        this.$refs.modal.close();
+      },
+      ok() {
+        this.$refs.form.validate((valid) => {
+          if (valid) {
+            this.$utils.handleNormalRequest.call(this, async () => {
+              this.query.ids = this.ids;
+              let resp = await this.$api.downSystem.updateBatch(this.query);
+              if (resp.code == 100) {
+                this.$emit("success", this.query);
+                this.close();
+              }
 
-    showTaskMaxRunningCount() {
-      return this.$utils.arrayHas(
-        this.showingOptionalFields,
-        "TaskMaxRunningCount"
-      );
+              return resp;
+            });
+          }
+        });
+      },
     },
-  },
-
-  methods: {
-    show() {
-      this.$refs.modal.show();
-    },
-    close() {
-      this.$refs.modal.close();
-    },
-    ok() {
-      this.$refs.form.validate((valid) => {
-        if (valid) {
-          this.$utils.handleNormalRequest.call(this, async () => {
-            this.query.ids = this.ids;
-            let resp = await this.$api.downSystem.updateBatch(this.query);
-            if (resp.code == 100) {
-              this.$emit("success", this.query);
-              this.close();
-            }
-
-            return resp;
-          });
-        }
-      });
-    },
-  },
-};
+  };
 </script>
-      <style scoped>
-.footer {
-  text-align: right;
-}
+<style scoped>
+  .footer {
+    text-align: right;
+  }
 </style>

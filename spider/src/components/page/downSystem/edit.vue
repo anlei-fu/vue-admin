@@ -1,5 +1,5 @@
 <template>
-  <MyModal title="title" ref="modal" @ok="ok" width="40%">
+  <MyModal :title="title" ref="modal" @ok="ok" width="40%">
     <Form ref="form" :model="query" :rules="rules" :label-width="100">
       <FormItem label="Fields">
         <MyCheckBoxGroup v-model="showingOptionalFields" :options="optionalFields" />
@@ -13,8 +13,6 @@
         <FormItem v-if="showPriority" label="Priority" prop="priority">
           <Input v-model="query.priority" placeholder="Input value" />
         </FormItem>
-
-    
 
         <FormItem v-if="showAppKey" label="AppKey" prop="appKey">
           <Input v-model="query.appKey" placeholder="Input value" />
@@ -32,202 +30,130 @@
           <Input v-model="query.dataQueue" placeholder="Input value" />
         </FormItem>
 
-        <FormItem
-          v-if="showTaskMaxRunningCount"
-          label="TMaxCon"
-          prop="taskMaxRunningCount"
-        >
+        <FormItem v-if="showTaskMaxRunningCount" label="TMaxCon" prop="taskMaxRunningCount">
           <Input v-model="query.taskMaxRunningCount" placeholder="Input value" />
         </FormItem>
-
-    
       </MyScroll>
     </Form>
   </MyModal>
 </template>
-      <script>
-export default {
-  props: {
-    model: {
-      type: Object,
-      default: () => {},
-    },
-    title: {
-      type: String,
-      default: "",
-    },
-  },
-
-  data() {
-     const rangeValidator= (rule,value,cb)=>{
-      if(value>=rule.max){
-        cb(new Error("over max value"));
-        return;
-      }
-
-      if(value<rule.min){
-        cb(new Error("less than min value"));
-        return;
-      }
-
-
-        cb();
-    }
-    return {
-          optionalFields: [
-        {
-          label: "EnableStatus",
-          value: "EnableStatus",
-        },
-        {
-          label: "Priority",
-          value: "Priority",
-        },
-        {
-          label: "Description",
-          value: "Description",
-        },
-        {
-          label: "AppKey",
-          value: "AppKey",
-        },
-        {
-          label: "AppSecret",
-          value: "AppSecret",
-        },
-        {
-          label: "DataUrl",
-          value: "DataUrl",
-        },
-        {
-          label: "DataQueue",
-          value: "DataQueue",
-        },
-        {
-          label: "MaxRunningCount",
-          value: "TaskMaxRunningCount",
-        },
-      ],
-      showingOptionalFields: ["EnableStatus","DataQueue","TaskMaxRunningCount","Priority"],
-      rules: {
-        name: [
-          {
-            required: true,
-            message: "field can not be empty",
-            trigger: "blur",
-          },
-        ],
-        priority: [
-          {
-            validator:rangeValidator,
-            min: 0,
-            max: 10,
-            message: "out of range 0-10 ",
-            trigger: "blur",
-          },
-        ],
-        taskMaxRunningCount: [
-          {
-               validator:rangeValidator,
-            min: 0,
-            max: 10,
-            message: "out of range 0-10 ",
-            trigger: "blur",
-          },
-        ],
+<script>
+  import utils from "./../../../common";
+  export default {
+    props: {
+      model: {
+        type: Object,
+        default: () => {},
       },
-      query: {
-         id:null,
-        enableStatus: null,
-        name: null,
-        priority: null,
-        description: null,
-        appKey: null,
-        appSecret: null,
-        dataUrl: null,
-        dataQueue: null,
-        taskMaxRunningCount: null,
+      title: {
+        type: String,
+        default: "",
       },
-    };
-  },
-  created() {
-    this.$utils.copyFieldsFrom(this.query, this.model);
-  },
-  watch: {
-    model(newVal) {
-      this.$utils.copyFieldsFrom(this.query, newVal);
-    },
-  },
-  computed: {
-    
-
-    showEnableStatus() {
-      return this.$utils.arrayHas(this.showingOptionalFields, "EnableStatus");
     },
 
-    showPriority() {
-      return this.$utils.arrayHas(this.showingOptionalFields, "Priority");
+    data() {
+      return {
+        optionalFields: utils.options([
+          "EnableStatus",
+          "Priority",
+          "Description",
+          "AppKey",
+          "AppSecret",
+          "DataUrl",
+          "DataQueue",
+          "TaskMaxRunningCount",
+        ]),
+        showingOptionalFields: ["EnableStatus", "DataQueue", "TaskMaxRunningCount", "Priority"],
+        rules: {
+          priority: [utils.range(1, 10)],
+          taskMaxRunningCount: [utils.range(0, 1000)],
+          dataUrl: [utils.url()],
+        },
+        query: {
+          id: null,
+          enableStatus: null,
+          name: null,
+          priority: null,
+          description: null,
+          appKey: null,
+          appSecret: null,
+          dataUrl: null,
+          dataQueue: null,
+          taskMaxRunningCount: null,
+        },
+      };
     },
+    created() {
+      this.$utils.copyFieldsFrom(this.query, this.model);
+    },
+    watch: {
+      model(newVal) {
+        this.$utils.copyFieldsFrom(this.query, newVal);
+      },
+    },
+    computed: {
+      showEnableStatus() {
+        return this.$utils.arrayHas(this.showingOptionalFields, "EnableStatus");
+      },
 
-    showDescription() {
-      return this.$utils.arrayHas(this.showingOptionalFields, "Description");
-    },
+      showPriority() {
+        return this.$utils.arrayHas(this.showingOptionalFields, "Priority");
+      },
 
-    showAppKey() {
-      return this.$utils.arrayHas(this.showingOptionalFields, "AppKey");
-    },
+      showDescription() {
+        return this.$utils.arrayHas(this.showingOptionalFields, "Description");
+      },
 
-    showAppSecret() {
-      return this.$utils.arrayHas(this.showingOptionalFields, "AppSecret");
-    },
+      showAppKey() {
+        return this.$utils.arrayHas(this.showingOptionalFields, "AppKey");
+      },
 
-    showDataUrl() {
-      return this.$utils.arrayHas(this.showingOptionalFields, "DataUrl");
-    },
+      showAppSecret() {
+        return this.$utils.arrayHas(this.showingOptionalFields, "AppSecret");
+      },
 
-    showDataQueue() {
-      return this.$utils.arrayHas(this.showingOptionalFields, "DataQueue");
-    },
+      showDataUrl() {
+        return this.$utils.arrayHas(this.showingOptionalFields, "DataUrl");
+      },
 
-    showTaskMaxRunningCount() {
-      return this.$utils.arrayHas(
-        this.showingOptionalFields,
-        "TaskMaxRunningCount"
-      );
-    },
+      showDataQueue() {
+        return this.$utils.arrayHas(this.showingOptionalFields, "DataQueue");
+      },
 
-    showDescription() {
-      return this.$utils.arrayHas(this.showingOptionalFields, "Description");
+      showTaskMaxRunningCount() {
+        return this.$utils.arrayHas(this.showingOptionalFields, "TaskMaxRunningCount");
+      },
+
+      showDescription() {
+        return this.$utils.arrayHas(this.showingOptionalFields, "Description");
+      },
     },
-  },
-  methods: {
-    show() {
-      this.$refs.modal.show();
+    methods: {
+      show() {
+        this.$refs.modal.show();
+      },
+      close() {
+        this.$refs.modal.close();
+      },
+      ok() {
+        this.$refs.form.validate((valid) => {
+          if (valid) {
+            this.$utils.handleNormalRequest.call(this, async () => {
+              let resp = await this.$api.downSystem.updateById(this.query);
+              if (resp.code == 100) {
+                this.$emit("success", this.query);
+                this.close();
+              }
+              return resp;
+            });
+          }
+        });
+      },
     },
-    close() {
-      this.$refs.modal.close();
-    },
-    ok() {
-      this.$refs.form.validate((valid) => {
-       
-        if (valid) {
-          this.$utils.handleNormalRequest.call(this, async () => {
-            let resp = await this.$api.downSystem.updateById(this.query);
-            if (resp.code == 100) {
-              this.$emit("success", this.query);
-              this.close();
-            }
-            return resp;
-          });
-         
-        }
-      });
-    },
-  },
-};
+  };
 </script>
-      <style scoped>
-.footer {
-  text-align: right;
-}
+<style scoped>
+  .footer {
+    text-align: right;
+  }
 </style>

@@ -12,6 +12,7 @@ import ruleFactory from "./validateUtils"
 import  api from "./api"
 import { format } from "./formatter";
 import { Enums } from "./Enums";
+import {ToString} from "./DateUtil"
 // import { config } from "./configs/config";
 // import { Formatter } from "./libs/Formatter";
 // import { ApiClientFactory } from "./libs/ApiClientFactory";
@@ -33,6 +34,7 @@ Vue.filter("formatter", (value, config) => {
 //---------- extends Vue-------------------------------
 //api
 // Vue.api = Vue.prototype.api = ApiClientFactory.create(config.apis);
+utils.formatDate=val=>ToString(val);
 Vue.$utils = Vue.prototype.$utils = utils;
 Vue.$ruleFactory = Vue.prototype.$ruleFactory = ruleFactory;
 Vue.$api = Vue.prototype.$api = api;

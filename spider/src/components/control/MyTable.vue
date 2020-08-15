@@ -1,17 +1,46 @@
 <template>
   <div>
     <div v-show="columnFilter" style="text-align: left; padding: 10px; padding-bottom: 15px;">
-      <MyCheckBoxGroup v-model="selectedColumns_" label="title" value="key" :options="columns" />
+      <MyCheckBoxGroup v-model="selectedColumns_" label="title" value="slot" :options="columns" />
     </div>
     <div>
-      <Table ref="table" :border="border" :stripe="stripe" size="small" :columns="contentColumn.filtered" :data="datas">
-        <template v-for="column in contentColumn.filtered" slot-scope="{ row }" :slot="column.key">
-          <span v-if="column.isOperation" :key="column.key">
+      <Table
+        ref="table"
+        :border="border"
+        :stripe="stripe"
+        size="small"
+        :columns="contentColumn.filtered"
+        :data="datas"
+      >
+        <template v-for="column in contentColumn.filtered" slot-scope="{ row }" :slot="column.slot">
+          <span v-if="column.isOperation" :key="column.slot">
             <template v-for="item in column.operations">
-              <Link style="margin-left:10px" :key="item.name" v-if="item.match(row)" :label="item.label" @click="emit(item.name, row)" />
+              <Link
+                style="margin-left: 10px;"
+                :key="item.name"
+                v-if="item.match(row)"
+                :label="item.label"
+                @click="emit(item.name, row)"
+              />
             </template>
           </span>
-          <PlainText v-else :key="column.key" :format="column.format" :value="row[column.key]"  />
+          <MyPositiveProgress
+            v-else-if="column.isPositiveProgress"
+            :percent="
+              (row[column.currentField] / (row[column.maxField] == 0 ? 1 : row[column.maxField])) *
+              100
+            "
+            :key="column.slot"
+          />
+          <MyNegativeProgress
+            v-else-if="column.isNegativeProgress"
+            :percent="
+              (row[column.currentField] / (row[column.maxField] == 0 ? 1 : row[column.maxField])) *
+              100
+            "
+            :key="column.slot"
+          />
+          <PlainText v-else :key="column.slot" :format="column.format" :value="row[column.slot]" />
         </template>
       </Table>
     </div>
@@ -63,12 +92,12 @@
 
       doFilter() {
         let set = new Set(this.selectedColumns_);
-        this.contentColumn.filtered = this.contentColumn.source.filter((x) => set.has(x.key));
+        this.contentColumn.filtered = this.contentColumn.source.filter((x) => set.has(x.slot));
       },
       getAllColumns() {
         let columns = [];
         this.contentColumn.source.forEach((x) => {
-          columns.push(x.key);
+          columns.push(x.slot);
         });
 
         return columns;

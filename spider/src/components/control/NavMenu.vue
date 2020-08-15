@@ -1,5 +1,11 @@
 <template>
-  <Menu mode="horizontal" class="nav-left-menu" style :activeName="activeMenu" @on-select="changeModule">
+  <Menu
+    mode="horizontal"
+    class="nav-left-menu"
+    style
+    :activeName="activeMenu"
+    @on-select="changeModule"
+  >
     <template v-for="item in modules">
       <MenuItem :key="item._name" :name="item._name" class="nav-left-menu-item">
         {{ item.label }}

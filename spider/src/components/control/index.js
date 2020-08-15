@@ -12,7 +12,7 @@ import ImportExcelButton from "./ImportExcelButton";
 import PlainText from "./PlainText";
 import Link from "./Link";
 
-import ListBody from "./ListBody";
+import MyTable from "./MyTable";
 
 import MyModal from "./MyModal";
 
@@ -25,7 +25,12 @@ import MyDateRange from "./MyDateRange";
 import MyDateTime from "./MyDateTime";
 
 import MyScroll from "./MyScroll";
-
+import MyFileUploader from "./MyFileUploader";
+import MyColorPicker from "./MyColorPicker";
+import MyPositiveProgress from "./MyPositiveProgress";
+import MyNegativeProgress from "./MyNegativeProgress";
+import MyPageSettingButton from "./MyPageSettingButton";
+import MyFilter from "./MyFilter";
 
 import Footer from "./Footer";
 
@@ -46,7 +51,7 @@ export default{
                
                 vue.component("PlainText",PlainText);
                 vue.component("Link",Link);
-                vue.component("ListBody",ListBody);
+                vue.component("MyTable",MyTable);
                 vue.component("MyModal",MyModal);
                 vue.component("MySelect",MySelect);
                 vue.component("MyRadioGroup",MyRadioGroup);
@@ -58,5 +63,11 @@ export default{
                 vue.component("MyPager",MyPager);
                 vue.component("MyScroll",MyScroll);
                 vue.component("MyDateTime",MyDateTime);
+                vue.component("MyFileUploader",MyFileUploader);
+                vue.component("MyColorPicker",MyColorPicker);
+                vue.component("MyPositiveProgress",MyPositiveProgress);
+                vue.component("MyNegativeProgress",MyNegativeProgress);
+                vue.component("MyPageSettingButton",MyPageSettingButton);
+                vue.component("MyFilter",MyFilter);
         }
 }

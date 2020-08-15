@@ -4,15 +4,34 @@
       <span class="icon-container">
         <Icon type="ios-home" class="icon-item" size="24" @click="toHome" />
         <Icon type="md-refresh" class="icon-item" size="24" @click="refresh" />
-        <Icon v-if="tabs.length > 10" class="icon-item" type="ios-arrow-back" size="24" @click="moveLeft"></Icon>
+        <Icon
+          v-if="tabs.length > 10"
+          class="icon-item"
+          type="ios-arrow-back"
+          size="24"
+          @click="moveLeft"
+        ></Icon>
       </span>
       <span class="tab-scroll">
         <span class="tab-container" :style="{ transform: offset }">
-          <TabItem v-for="item in tabs" :key="item.path" :tab="item" :selected="item.selected" @close="closeTab(item, true)" @click="addTab(item, true)" />
+          <TabItem
+            v-for="item in tabs"
+            :key="item.path"
+            :tab="item"
+            :selected="item.selected"
+            @close="closeTab(item, true)"
+            @click="addTab(item, true)"
+          />
         </span>
       </span>
       <span class="icon-container">
-        <Icon v-if="tabs.length > 10" class="icon-item" type="ios-arrow-forward" size="24" @click="moveRight"></Icon>
+        <Icon
+          v-if="tabs.length > 10"
+          class="icon-item"
+          type="ios-arrow-forward"
+          size="24"
+          @click="moveRight"
+        ></Icon>
       </span>
     </span>
   </div>

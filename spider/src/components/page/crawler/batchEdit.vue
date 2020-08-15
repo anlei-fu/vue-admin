@@ -9,7 +9,7 @@
           <MySelect v-model="query.crawlerType" enum="CrawlerType" width="100%" />
         </FormItem>
         <FormItem v-if="showIp" label="Ip" prop="ip">
-          <Input v-model="query.OPe"  width="100%" />
+          <Input v-model="query.OPe" width="100%" />
         </FormItem>
         <FormItem v-if="showEnableStatus" label="enableStatus" prop="enableStatus">
           <MySelect v-model="query.enableStatus" enum="EnableStatus" width="100%" />
@@ -30,128 +30,97 @@
     </Form>
   </MyModal>
 </template>
-      <script>
-export default {
-  props: {
-    ids: {
-      type: Array,
-      default: () => [],
-    },
-    title: {
-      type: String,
-      default: "title",
-    },
-  },
-
-  data() {
-    return {
-      optionalFields: [
-        {
-          label: "CrawlerType",
-          value: "CrawlerType",
-        },
-        {
-          label: "EnableStatus",
-          value: "EnableStatus",
-        },
-        {
-          label: "clientVersion",
-          value: "ClientVersion",
-        },
-        {
-          label: "Ip",
-          value: "Ip",
-        },
-
-        {
-          label: "MaxConcurrency",
-          value: "MaxConcurrency",
-        },
-        {
-          label: "Description",
-          value: "Description",
-        },
-      ],
-      showingOptionalFields: ["MaxConcurrency", "EnableStatus"],
-      rules: {
-        ip: [
-          {
-            type: "ip",
-            message: "incorrect ip",
-            trigger: "blur",
-          },
-        ],
-        maxConcurrency: [
-          {
-            min: 0,
-            max: 10,
-            message: "out of range 0-10 ",
-            trigger: "blur",
-          },
-        ],
+<script>
+  import utils from "./../../../common";
+  export default {
+    props: {
+      ids: {
+        type: Array,
+        default: () => [],
       },
-      query: {
-        crawlerType: null,
-        enableStatus: null,
-        clientVersion: null,
-        ip: null,
-        maxConcurrency: null,
-        description: null,
-        ids: null,
+      title: {
+        type: String,
+        default: "title",
       },
-    };
-  },
-  computed: {
-    showIp() {
-      return this.$utils.arrayHas(this.showingOptionalFields, "Ip");
     },
 
-    showCrawlerType() {
-      return this.$utils.arrayHas(this.showingOptionalFields, "CrawlerType");
+    data() {
+      return {
+        optionalFields: utils.options([
+          "CrawlerType",
+          "EnableStatus",
+          "ClientVersion",
+          "Ip",
+          "MaxConcurrency",
+          "Description",
+        ]),
+        showingOptionalFields: ["MaxConcurrency", "EnableStatus"],
+        rules: {
+          ip: [utils.ip()],
+          maxConcurrency: [utils.range(10, 2000)],
+        },
+        query: {
+          crawlerType: null,
+          enableStatus: null,
+          clientVersion: null,
+          ip: null,
+          maxConcurrency: null,
+          description: null,
+          ids: null,
+        },
+      };
     },
+    computed: {
+      showIp() {
+        return this.$utils.arrayHas(this.showingOptionalFields, "Ip");
+      },
 
-    showEnableStatus() {
-      return this.$utils.arrayHas(this.showingOptionalFields, "EnableStatus");
-    },
+      showCrawlerType() {
+        return this.$utils.arrayHas(this.showingOptionalFields, "CrawlerType");
+      },
 
-    showClientVersion() {
-      return this.$utils.arrayHas(this.showingOptionalFields, "ClientVersion");
-    },
-    showMaxConcurrency() {
-      return this.$utils.arrayHas(this.showingOptionalFields, "MaxConcurrency");
-    },
+      showEnableStatus() {
+        return this.$utils.arrayHas(this.showingOptionalFields, "EnableStatus");
+      },
 
-    showDescription() {
-      return this.$utils.arrayHas(this.showingOptionalFields, "Description");
+      showClientVersion() {
+        return this.$utils.arrayHas(this.showingOptionalFields, "ClientVersion");
+      },
+      showMaxConcurrency() {
+        return this.$utils.arrayHas(this.showingOptionalFields, "MaxConcurrency");
+      },
+
+      showDescription() {
+        return this.$utils.arrayHas(this.showingOptionalFields, "Description");
+      },
     },
-  },
-  methods: {
-    show() {
-      this.$refs.modal.show();
+    methods: {
+      show() {
+        this.$refs.modal.show();
+      },
+      close() {
+        this.$refs.modal.close();
+      },
+      ok() {
+        this.query.ids = this.ids;
+        this.$refs.form.validate((valid) => {
+          if (valid) {
+            this.$utils.handleNormalRequest.call(this, async () => {
+              let resp = await this.$api.crawler.updateBatch(this.query);
+              if (resp.code == 100) {
+                this.$emit("success", this.query);
+                this.close();
+              }
+              return resp;
+            });
+          }
+        });
+      },
     },
-    close() {
-      this.$refs.modal.close();
-    },
-    ok() {
-       this.query.ids=this.ids;
-      this.$refs.form.validate((valid) => {
-        if (valid) {
-          this.$utils.handleNormalRequest.call(this,async () => {
-            let resp = await this.$api.crawler.updateBatch(this.query);
-            if (resp.code == 100) {
-              this.$emit("success", this.query);
-              this.close();
-            }
-            return resp;
-          });
-        }
-      });
-    },
-  },
-};
+  };
 </script>
-      <style scoped>
-.footer {
-  text-align: right;
-}
+<style scoped>
+  .footer {
+    text-align: right;
+  }
 </style>

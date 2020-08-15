@@ -1,5 +1,5 @@
 <template>
-  <MyModal title="title" ref="modal" @ok="ok" width="40%">
+  <MyModal :title="title" ref="modal" @ok="ok" width="40%">
     <Form ref="form" :model="query" :rules="rules" :label-width="90">
       <FormItem label="Type" prop="type">
         <Input v-model="query.type" placeholder="Input value" />
@@ -12,104 +12,83 @@
       <FormItem label="Label" prop="label">
         <Input v-model="query.label" placeholder="Input value" />
       </FormItem>
-       <FormItem label="Color" prop="color">
-        <Input v-model="query.color" placeholder="Input value" />
+      <FormItem label="Color" prop="color">
+        <MyColorPicker v-model="query.color" />
       </FormItem>
 
-      <template v-if="optionalFields.length>0">
+      <template v-if="optionalFields.length > 0">
         <Divider orientation="left">Optional Filter</Divider>
         <FormItem label="Fields">
           <MyCheckBoxGroup v-model="showingOptionalFields" :options="optionalFields" />
         </FormItem>
       </template>
-
-     
     </Form>
   </MyModal>
 </template>
-      <script>
-export default {
-  props: {
-    model: {
-      type: Object,
-      default: () => {},
-    },
-    title: {
-      type: String,
-      default: "",
-    },
-  },
-
-  data() {
-    return {
-      optionalFields: [],
-      showingOptionalFields: [],
-      rules: {
-        type: [
-          {
-            required: true,
-            message: "field can not be empty",
-            trigger: "blur",
-          },
-        ],
-        value: [
-          {
-            required: true,
-            message: "field can not be empty",
-            trigger: "blur",
-          },
-        ],
-        label: [
-          {
-            required: true,
-            message: "field can not be empty",
-            trigger: "blur",
-          },
-        ],
+<script>
+  import utils from "./../../../common";
+  export default {
+    props: {
+      model: {
+        type: Object,
+        default: () => {},
       },
-      query: {
-        type: null,
-        value: null,
-        label: null,
-        color:null,
+      title: {
+        type: String,
+        default: "",
       },
-    };
-  },
-  created() {
-    this.$utils.copyFieldsFrom(this.query, this.model);
-  },
+    },
 
-  computed: {
-    
-  },
+    data() {
+      return {
+        optionalFields: [],
+        showingOptionalFields: [],
+        rules: {
+          type: [utils.require()],
+          value: [utils.require(), utils.range(-1, 1000)],
+          label: [utils.require()],
+        },
+        query: {
+          type: null,
+          value: null,
+          label: null,
+          color: null,
+        },
+      };
+    },
+    created() {
+      this.$utils.copyFieldsFrom(this.query, this.model);
+    },
 
-  watch: {
-    model(newVal) {
-      this.$utils.copyFieldsFrom(this.query, newVal);
-    },
-  },
+    computed: {},
 
-  methods: {
-    show() {
-      this.$refs.modal.show();
+    watch: {
+      model(newVal) {
+        this.$utils.copyFieldsFrom(this.query, newVal);
+      },
     },
-    close() {
-      this.$refs.modal.close();
+
+    methods: {
+      show() {
+        this.$refs.modal.show();
+      },
+      close() {
+        this.$refs.modal.close();
+      },
+      ok() {
+        this.$refs.form.validate((valid) => {
+          if (valid) {
+            this.$utils.handleNormalRequest.call(this, async () => {
+              return this.$api.dictionary.add(this.query);
+            });
+          }
+        });
+      },
     },
-    ok() {
-      this.$refs.form.validate((valid) => {
-        if (valid) {
-          this.$utils.handleNormalRequest.call(this, async () => {
-            return this.$api.dictionary.add(this.query);
-          });
-        }
-      });
-    },
-  },
-};
+  };
 </script>
-      <style scoped>
-.footer {
-  text-align: right;
-}
+<style scoped>
+  .footer {
+    text-align: right;
+  }
 </style>

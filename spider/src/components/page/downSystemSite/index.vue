@@ -1,11 +1,7 @@
 <template>
   <div>
-    <div>
-      <span style="float:right">
-        <Icon type="md-settings" size="20" @click="showSetting" />
-      </span>
-    </div>
-    <div class="filter">
+    <MyPageSettingButton @click="showSetting" />
+    <MyFilter>
       <MyDateRange v-model="timeRange" />
       <MySelect
         v-show="showDownSystemId"
@@ -15,7 +11,6 @@
         width="200px"
       />
       <MySelect v-show="showSiteId" v-model="query.siteId" title="Site" enum="Site" width="200px" />
-
       <MySelect
         v-show="showCrawlerCrawlType"
         v-model="query.crawlerCrawlType"
@@ -23,7 +18,6 @@
         enum="CrawlType"
         width="200px"
       />
-
       <MySelect
         v-show="showCrawlerAutoDownloadPage"
         v-model="query.crawlerAutoDownloadPage"
@@ -31,7 +25,6 @@
         enum="YesNo"
         width="200px"
       />
-
       <MySelect
         v-show="showEnableStatus"
         v-model="query.enableStatus"
@@ -39,642 +32,200 @@
         enum="EnableStatus"
         width="200px"
       />
-
-
       <span>
         <QueryButton @click="getData(true)" />
-
         <CreateButton @click="showAdd" />
-
         <BatchEditButton @click="batchEdit" />
-
         <BatchDeleteButton @click="batchDelete" />
       </span>
-    </div>
-    <ListBody
+    </MyFilter>
+    <MyTable
       ref="table"
       filter
       border
       stripe
       columnFilter
-      :columns="pageSetting.table.defaultShowingColumns"
+      :columns="pageSetting.table.columns"
       :datas="data.list"
       @delete="showDelete"
       @edit="showEdit"
       :selectedColumns="pageSetting.table.showingColumns"
     />
-    <div class="pager">
-      <MyPager
-        :current="query.pageIndex"
-        :total="data.total"
-        @onSizeChanged="onPageSizeChanged"
-        @onIndexChanged="onPageIndexChanged"
-      />
-    </div>
-
+    <MyPager
+      :current="query.pageIndex"
+      :total="data.total"
+      @onSizeChanged="onPageSizeChanged"
+      @onIndexChanged="onPageIndexChanged"
+    />
     <add ref="add" :model="addSetting.model" :title="addSetting.title"></add>
-
     <edit
       ref="edit"
       :model="editSetting.model"
       :title="editSetting.title"
       @success="onEditSuccess"
     />
-
     <batchEdit ref="batchEdit" :ids="batchEditSetting.ids" @success="onBatchEditSuccess" />
-
     <PageSetting ref="setting" :setting="pageSetting" />
   </div>
 </template>
 <script>
-import add from "./add";
-
-import edit from "./edit";
-
-import batchEdit from "./batchEdit";
-
-export default {
-  components: {
-    edit,
-
-    add,
-
-    batchEdit,
-  },
-  data() {
-    return {
-      pageSetting: {
-        filters: {
-          options: [
-            {
-              lable: "TimeRange",
-              value: "TimeRange",
-            },
-            {
-              lable: "SiteId",
-              value: "SiteId",
-            },
-            {
-              lable: "DownSystemId",
-              value: "DownSystemId",
-            },
-            {
-              lable: "CrawlerCrawlType",
-              value: "CrawlerCrawlType",
-            },
-            {
-              lable: "CrawlerAutoDownloadPage",
-              value: "CrawlerAutoDownloadPage",
-            },
-            {
-              lable: "EnableStatus",
-              value: "EnableStatus",
-            },
-          ],
-          enabledFilters: [
-            "TimeRange",
-            "SiteId",
-            "DownSystemId",
-            "CrawlerCrawlType",
-            "CrawlerAutoDownloadPage",
-            "EnableStatus",
-          ],
+  import add from "./add";
+  import edit from "./edit";
+  import batchEdit from "./batchEdit";
+  import utils from "./../../../common";
+  export default {
+    components: {
+      edit,
+      add,
+      batchEdit,
+    },
+    data() {
+      return {
+        pageSetting: {
+          filters: {
+            options: utils.options([
+              "TimeRange",
+              "SiteId",
+              "DownSystemId",
+              "CrawlerCrawlType",
+              "CrawlerAutoDownloadPage",
+              "EnableStatus",
+            ]),
+            enabledFilters: [
+              "TimeRange",
+              "SiteId",
+              "DownSystemId",
+              "CrawlerCrawlType",
+              "CrawlerAutoDownloadPage",
+              "EnableStatus",
+            ],
+          },
+          table: {
+            columns: [
+              utils.CHECKBOX_COLUMN,
+              utils.enumColumn("downSystemId", "System", "System"),
+              utils.enumColumn("siteId", "Site", "Site"),
+              utils.column("priority"),
+              utils.column("scriptPath", "Script"),
+              utils.column("crawlerPageEncoding", "Encoding"),
+              utils.column("crawlerPageTimeout", "PageTut"),
+              utils.enumColumn("crawlerCrawlType", "CrawlType", "CrawlType"),
+              utils.enumColumn("crawlerAutoDownloadPage", "YesNo", "DldPage"),
+              utils.column("urlMaxCacheCount", "MaxCache"),
+              utils.column("urlFinishedCount", "UrlFinished"),
+              utils.column("urlBadCount", "UrlBad"),
+              utils.column("urlTotalCount", "UrlTotal"),
+              utils.column("urlEncodes", "Encodes"),
+              utils.column("urlMaxCrawlCount", "MaxTry"),
+              utils.column("urlMaxDepth", "MaxDepth"),
+              utils.column("urlMatchPatterns", "Patterns"),
+              utils.column("bloomExpectedUrlSize", "EptUrlSe"),
+              utils.column("bloomFpp", "Fpp"),
+              utils.column("taskUrlBatchCount", "BatchCnt"),
+              utils.negativeProgress("bindRate", "taskMaxWaitToBindCount", "taskCurrentBindCount"),
+              utils.column("taskMaxWaitToBindCount", "MaxBd"),
+              utils.column("taskCurrentBindCount", "CurBd"),
+              utils.negativeProgress(
+                "concurrency",
+                "taskMaxRunningCount",
+                "taskCurrentRunningCount"
+              ),
+              utils.column("taskMaxRunningCount", "MaxCon"),
+              utils.column("taskCurrentRunningCount", "CurCon"),
+              utils.column("taskTimeout", "TaskTut"),
+              utils.column("taskUrlMaxFailCount", "TUMaxFail"),
+              utils.column("taskUrlMaxContinuouslyFailCount", "TUMCFail"),
+              utils.column("taskUrlMaxConcurrency", "TUMaxCon"),
+              utils.enumColumn("enableStatus", null, "Status"),
+              utils.dateColumn("createTime", "CTime"),
+              utils.operateColumn([utils.operation("edit"), utils.operation("delete")]),
+            ],
+            showingColumns: [
+              "Checkbox",
+              "siteId",
+              "downSystemId",
+              "priority",
+              "crawlerCrawlType",
+              "bindRate",
+              "concurrency",
+              "taskTimeout",
+              "enableStatus",
+              "createTime",
+              "test",
+            ],
+          },
         },
-        table: {
-          allColumns: [
-            {
-              title: "Id",
-              slot: "id",
-              key: "id",
-            },
-            {
-              title: "SiteId",
-              slot: "siteId",
-              key: "siteId",
-            },
-            {
-              title: "ScriptId",
-              slot: "scriptId",
-              key: "scriptId",
-            },
-            {
-              title: "DownSystemId",
-              slot: "downSystemId",
-              key: "downSystemId",
-            },
-            {
-              title: "Priority",
-              slot: "priority",
-              key: "priority",
-            },
-            {
-              title: "CrawlerPageEncoding",
-              slot: "crawlerPageEncoding",
-              key: "crawlerPageEncoding",
-            },
-            {
-              title: "CrawlerPageTimeout",
-              slot: "crawlerPageTimeout",
-              key: "crawlerPageTimeout",
-            },
-            {
-              title: "CrawlerCrawlType",
-              slot: "crawlerCrawlType",
-              key: "crawlerCrawlType",
-            },
-            {
-              title: "CrawlerAutoDownloadPage",
-              slot: "crawlerAutoDownloadPage",
-              key: "crawlerAutoDownloadPage",
-            },
-            {
-              title: "UrlMaxCacheCount",
-              slot: "urlMaxCacheCount",
-              key: "urlMaxCacheCount",
-            },
-            {
-              title: "UrlFinishedCount",
-              slot: "urlFinishedCount",
-              key: "urlFinishedCount",
-            },
-            {
-              title: "UrlBadCount",
-              slot: "urlBadCount",
-              key: "urlBadCount",
-            },
-            {
-              title: "UrlTotalCount",
-              slot: "urlTotalCount",
-              key: "urlTotalCount",
-            },
-            {
-              title: "UrlEncodes",
-              slot: "urlEncodes",
-              key: "urlEncodes",
-            },
-            {
-              title: "UrlMaxCrawlCount",
-              slot: "urlMaxCrawlCount",
-              key: "urlMaxCrawlCount",
-            },
-            {
-              title: "UrlMatchPatterns",
-              slot: "urlMatchPatterns",
-              key: "urlMatchPatterns",
-            },
-            {
-              title: "BloomExpectedUrlSize",
-              slot: "bloomExpectedUrlSize",
-              key: "bloomExpectedUrlSize",
-            },
-            {
-              title: "BloomFpp",
-              slot: "bloomFpp",
-              key: "bloomFpp",
-            },
-            {
-              title: "BloomLastLoadingTime",
-              slot: "bloomLastLoadingTime",
-              key: "bloomLastLoadingTime",
-            },
-            {
-              title: "TaskUrlBatchCount",
-              slot: "taskUrlBatchCount",
-              key: "taskUrlBatchCount",
-            },
-            {
-              title: "TaskMaxWaitToBindCount",
-              slot: "taskMaxWaitToBindCount",
-              key: "taskMaxWaitToBindCount",
-            },
-            {
-              title: "TaskCurrentBindCount",
-              slot: "taskCurrentBindCount",
-              key: "taskCurrentBindCount",
-            },
-            {
-              title: "TaskMaxRunningCount",
-              slot: "taskMaxRunningCount",
-              key: "taskMaxRunningCount",
-            },
-            {
-              title: "TaskCurrentRunningCount",
-              slot: "taskCurrentRunningCount",
-              key: "taskCurrentRunningCount",
-            },
-            {
-              title: "TaskTimeout",
-              slot: "taskTimeout",
-              key: "taskTimeout",
-            },
-            {
-              title: "EnableStatus",
-              slot: "enableStatus",
-              key: "enableStatus",
-            },
-            {
-              title: "CreateTime",
-              slot: "createTime",
-              key: "createTime",
-            },
-          ],
-          defaultShowingColumns: [
-            {
-              key: "Checkbox",
-              title: "Ckbox",
-              type: "selection",
-              width: 60,
-              align: "center",
-            },
-            {
-              title: "System",
-              slot: "downSystemId",
-              key: "downSystemId",
-              format: {
-                type: "enum",
-                pattern: "System",
-              },
-            },
-            {
-              title: "Site",
-              slot: "siteId",
-              key: "siteId",
-              format: {
-                type: "enum",
-                pattern: "Site",
-              },
-            },
-
-            {
-              title: "Priority",
-              slot: "priority",
-              key: "priority",
-            },
-            {
-              title: "Script",
-              slot: "scriptPath",
-              key: "scriptPath",
-            },
-            {
-              title: "Encoding",
-              slot: "crawlerPageEncoding",
-              key: "crawlerPageEncoding",
-            },
-            {
-              title: "PageTut",
-              slot: "crawlerPageTimeout",
-              key: "crawlerPageTimeout",
-            },
-            {
-              title: "CrawlType",
-              slot: "crawlerCrawlType",
-              key: "crawlerCrawlType",
-              format: {
-                type: "enum",
-                pattern: "CrawlType",
-              },
-            },
-            {
-              title: "DldPage",
-              slot: "crawlerAutoDownloadPage",
-              key: "crawlerAutoDownloadPage",
-                format: {
-                type: "enum",
-                pattern: "YesNo",
-              },
-            },
-            {
-              title: "MaxCache",
-              slot: "urlMaxCacheCount",
-              key: "urlMaxCacheCount",
-            },
-            {
-              title: "UrlFinished",
-              slot: "urlFinishedCount",
-              key: "urlFinishedCount",
-            },
-            {
-              title: "UrlBad",
-              slot: "urlBadCount",
-              key: "urlBadCount",
-            },
-            {
-              title: "UrlTotal",
-              slot: "urlTotalCount",
-              key: "urlTotalCount",
-            },
-            {
-              title: "Encodes",
-              slot: "urlEncodes",
-              key: "urlEncodes",
-            },
-            {
-              title: "MaxTry",
-              slot: "urlMaxCrawlCount",
-              key: "urlMaxCrawlCount",
-            },
-              {
-              title: "MaxDepth",
-              slot: "urlMaxDepth",
-              key: "urlMaxDepth",
-            },
-            {
-              title: "Patterns",
-              slot: "urlMatchPatterns",
-              key: "urlMatchPatterns",
-            },
-            {
-              title: "EptUrlSe",
-              slot: "bloomExpectedUrlSize",
-              key: "bloomExpectedUrlSize",
-            },
-            {
-              title: "Fpp",
-              slot: "bloomFpp",
-              key: "bloomFpp",
-            },
-            {
-              title: "BatchCnt",
-              slot: "taskUrlBatchCount",
-              key: "taskUrlBatchCount",
-            },
-            {
-              title: "MaxBd",
-              slot: "taskMaxWaitToBindCount",
-              key: "taskMaxWaitToBindCount",
-            },
-            {
-              title: "CurBd",
-              slot: "taskCurrentBindCount",
-              key: "taskCurrentBindCount",
-            },
-            {
-              title: "MaxCon",
-              slot: "taskMaxRunningCount",
-              key: "taskMaxRunningCount",
-            },
-            {
-              title: "CurCon",
-              slot: "taskCurrentRunningCount",
-              key: "taskCurrentRunningCount",
-            },
-            {
-              title: "TaskTut",
-              slot: "taskTimeout",
-              key: "taskTimeout",
-            },
-            {
-              title: "Status",
-              slot: "enableStatus",
-              key: "enableStatus",
-              format: {
-                type: "enum",
-                pattern: "EnableStatus",
-              },
-            },
-            {
-              title: "CTime",
-              slot: "createTime",
-              key: "createTime",
-              format: {
-                type: "date",
-              },
-            },
-            {
-              title: "Op",
-              key: "test",
-              slot: "test",
-              isOperation: true,
-              width: "120px",
-              operations: [
-                {
-                  name: "edit",
-                  label: "Edit",
-                  match: (row) => true,
-                },
-                {
-                  name: "delete",
-                  label: "Delete",
-                  match: (row) => true,
-                },
-              ],
-            },
-          ],
-          showingColumns: [
-            "Checkbox",
-            "siteId",
-            "downSystemId",
-            "priority",
-            "crawlerCrawlType",
-            "taskMaxWaitToBindCount",
-            "taskCurrentBindCount",
-            "taskMaxRunningCount",
-            "taskCurrentRunningCount",
-            "taskTimeout",
-            "enableStatus",
-            "createTime",
-            "test",
-          ],
+        editSetting: utils.editSetting(),
+        addSetting: utils.addSetting(),
+        batchEditSetting: utils.batchEditSetting(),
+        api: "downSystemSite",
+        timeRange: [],
+        query: {
+          siteId: null,
+          downSystemId: null,
+          crawlerCrawlType: null,
+          crawlerAutoDownloadPage: null,
+          enableStatus: null,
+          createTimeStart: null,
+          createTimeEnd: null,
+          pageIndex: 1,
+          pageSize: 10,
         },
-      },
-
-      editSetting: {
-        model: {},
-        title: "edit",
-      },
-
-      addSetting: {
-        model: {},
-        title: "add",
-      },
-
-      batchEditSetting: {
-        model: "",
-        title: "batch edit",
-        ids: [],
-      },
-
-
-      timeRange: [],
-
-      query: {
-        siteId: null,
-        downSystemId: null,
-        crawlerCrawlType: null,
-        crawlerAutoDownloadPage: null,
-        enableStatus: null,
-        createTimeStart: null,
-        createTimeEnd: null,
-        pageIndex: 1,
-        pageSize: 10,
-      },
-      // data set
-      data: {
-        total: 0,
-        list: [],
-      },
-    };
-  },
-
-  created() {
-    this.getData(true);
-  },
-
-  // toggle filters show status
-  computed: {
-    showTimeRange() {
-      return this.$utils.arrayHas(
-        this.pageSetting.filters.enabledFilters,
-        "TimeRange"
-      );
+        data: utils.data(),
+      };
     },
-
-    showSiteId() {
-      return this.$utils.arrayHas(
-        this.pageSetting.filters.enabledFilters,
-        "SiteId"
-      );
-    },
-
-    showDownSystemId() {
-      return this.$utils.arrayHas(
-        this.pageSetting.filters.enabledFilters,
-        "DownSystemId"
-      );
-    },
-
-    showCrawlerCrawlType() {
-      return this.$utils.arrayHas(
-        this.pageSetting.filters.enabledFilters,
-        "CrawlerCrawlType"
-      );
-    },
-
-    showCrawlerAutoDownloadPage() {
-      return this.$utils.arrayHas(
-        this.pageSetting.filters.enabledFilters,
-        "CrawlerAutoDownloadPage"
-      );
-    },
-
-    showEnableStatus() {
-      return this.$utils.arrayHas(
-        this.pageSetting.filters.enabledFilters,
-        "EnableStatus"
-      );
-    },
-  },
-
-  methods: {
-    showAdd() {
-      this.addSetting.title = "add";
-      this.addSetting.model = {};
-      this.$refs.add.show();
-    },
-
-    showEdit(row) {
-      this.editSetting.title = "edit";
-      this.editSetting.model = row;
-      this.$refs.edit.show();
-    },
-    onEditSuccess(row) {
-      let data = this.data.list.filter((x) => x.id == row.id);
-      if (data.length > 0) this.$utils.copyFieldsFrom(data[0], row);
-    },
-
-    batchEdit() {
-      if (this.checkCount()) {
-        this.batchEditSetting.ids = this.getIds();
-        this.$refs.batchEdit.show();
-      }
-    },
-    onBatchEditSuccess(data) {
-      let set = new Set(data.ids);
-      this.data.list.forEach((x) => {
-        if (set.has(x.id)) this.$utils.copyFieldsFrom(x, data);
-      });
-    },
-
-    showDelete(row) {
-      this.$utils.showComfirm.call(
-        this,
-        "Warning",
-        `are you sure to delete this data?`,
-        () => {
-          this.$utils.handleNormalRequest.call(this, async () => {
-            let resp = await this.$api.downSystemSite.deleteById({
-              id: row.id,
-            });
-            if (resp.code == 100)
-              this.data.list = this.data.list.filter((x) => x.id != row.id);
-            this.data.total -= 1;
-
-            return resp;
-          });
-        }
-      );
-    },
-
-    batchDelete() {
-      if (this.checkCount()) {
-        this.$utils.showComfirm.call(
-          this,
-          "Warning",
-          `are you sure to delete these data?`,
-          () => {
-            this.$utils.handleNormalRequest.call(
-              this,
-              async () => this.$api.downSystemSite.deleteBatch(this.getIds()),
-              true
-            );
-          }
-        );
-      }
-    },
-
-    checkCount() {
-      let items = this.$refs.table.getSelection();
-      if (items.length == 0) {
-        this.$Message.info("no data selected");
-        return false;
-      }
-      return true;
-    },
-
-    getIds() {
-      return this.$utils.pickObjectArrayFileds(
-        this.$refs.table.getSelection(),
-        "id"
-      );
-    },
-
-    showSetting() {
-      this.$refs.setting.show();
-    },
-
-    onPageSizeChanged(newSize) {
-      this.query.pageSize = newSize;
+    beforeMount() {
+      utils.initFilterOptionShow.call(this);
       this.getData(true);
     },
-
-    onPageIndexChanged(newIndex) {
-      this.query.pageIndex = newIndex;
-      this.getData();
+    watch: {
+      "pageSetting.filters.enabledFilters"(newVal) {
+        let set = new Set(newVal);
+        this.pageSetting.filters.options.forEach((op) => {
+          if (set.has(op.value)) {
+            this["show" + op.value] = true;
+          } else {
+            this["show" + op.value] = false;
+          }
+        });
+      },
     },
-
-    getData(reset) {
-      if (reset) {
-        this.query.pageIndex = 1;
-      }
-
-
-      this.query.createTimeStart = this.timeRange[0];
-      this.query.createTimeEnd = this.timeRange[1];
-
-      this.$utils.getListData.call(this, () =>
-        this.$api.downSystemSite.getList(this.query)
-      );
+    methods: {
+      showAdd() {
+        utils.showAdd.call(this);
+      },
+      showEdit(row) {
+        utils.showEdit.call(this, row);
+      },
+      onEditSuccess(row) {
+        utils.onEditSuccess.call(this, row);
+      },
+      batchEdit() {
+        utils.batchEdit.call(this);
+      },
+      onBatchEditSuccess(data) {
+        utils.onBatchEditSuccess.call(this, data);
+      },
+      batchDelete() {
+        utils.batchDelete.call(this);
+      },
+      showDelete(row) {
+        utils.showDelete.call(this, row);
+      },
+      showSetting() {
+        this.$refs.setting.show();
+      },
+      onPageSizeChanged(newSize) {
+        this.query.pageSize = newSize;
+        this.getData(true);
+      },
+      onPageIndexChanged(newIndex) {
+        this.query.pageIndex = newIndex;
+        this.getData();
+      },
+      getData(reset) {
+        utils.getData.call(this, reset, false, true);
+      },
     },
-  },
-};
+  };
 </script>

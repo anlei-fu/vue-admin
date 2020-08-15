@@ -47,11 +47,7 @@ export default new Router({
         path: 'crawler',
         name: 'crawler',
         component:()=> import("@/components/page/crawler/index"),
-      }, {
-        path: 'script',
-        name: 'script',
-        component:()=> import("@/components/page/script/index"),
-      }, {
+      },{
         path: 'task',
         name: 'task',
         component:()=> import("@/components/page/crawlTask/index"),

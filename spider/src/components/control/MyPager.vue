@@ -1,5 +1,15 @@
 <template>
-  <Page :total="total" show-sizer show-total :current="current" @on-change="onIndexChanged" @on-page-size-change="onSizeChanged" :page-size-opts="sizes" />
+  <div class="pager">
+    <Page
+      :total="total"
+      show-sizer
+      show-total
+      :current="current"
+      @on-change="onIndexChanged"
+      @on-page-size-change="onSizeChanged"
+      :page-size-opts="sizes"
+    />
+  </div>
 </template>
 <script>
   export default {
@@ -8,9 +18,9 @@
         type: Number,
         default: 0,
       },
-      current:{
-        type:Number,
-        default:1
+      current: {
+        type: Number,
+        default: 1,
       },
       sizes: {
         type: Array,

@@ -27,7 +27,7 @@ class WebClient {
                                         throw new Error(`url(${url})'s varible(${property}) not found in params`, params)
 
                                 url = url.replace(new RegExp(variable, "g"), params[property]);
-                                delete params[variable]
+                                delete params[property]
                         });
                 }
 

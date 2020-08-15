@@ -16,78 +16,69 @@
     </Form>
   </MyModal>
 </template>
-      <script>
-export default {
-  props: {
-    ids: {
-      type: Array,
-      default: () => [],
-    },
-    title: {
-      type: String,
-      default: "title",
-    },
-  },
-
-  data() {
-    return {
-      optionalFields: [
-        {
-          label: "EnableStatus",
-          value: "EnableStatus",
-        },
-
-        {
-          label: "Password",
-          value: "Password",
-        },
-      ],
-      showingOptionalFields: ["Password", "EnableStatus"],
-      rules: {},
-      query: {
-        enableStatus: null,
-        password: null,
+<script>
+  import utils from "./../../../common";
+  export default {
+    props: {
+      ids: {
+        type: Array,
+        default: () => [],
       },
-    };
-  },
-  computed: {
-    showEnableStatus() {
-      return this.$utils.arrayHas(this.showingOptionalFields, "EnableStatus");
+      title: {
+        type: String,
+        default: "title",
+      },
     },
 
-    showPassword() {
-      return this.$utils.arrayHas(this.showingOptionalFields, "Password");
+    data() {
+      return {
+        optionalFields: utils.options(["EnableStatus", "Password"]),
+        showingOptionalFields: ["Password", "EnableStatus"],
+        rules: {},
+        query: {
+          enableStatus: null,
+          password: null,
+        },
+      };
     },
-  },
+    computed: {
+      showEnableStatus() {
+        return this.$utils.arrayHas(this.showingOptionalFields, "EnableStatus");
+      },
 
-  methods: {
-    show() {
-      this.$refs.modal.show();
+      showPassword() {
+        return this.$utils.arrayHas(this.showingOptionalFields, "Password");
+      },
     },
-    close() {
-      this.$refs.modal.close();
-    },
-    ok() {
-      this.$refs.form.validate((valid) => {
-        if (valid) {
-          this.$utils.handleNormalRequest.call(this, async () => {
-            this.query.ids = this.ids;
-            let resp = await this.$api.siteAccount.updateBatch(this.query);
-            if (resp.code == 100) {
-              this.close();
-              this.$emit("success", this.query);
-            }
 
-            return resp;
-          });
-        }
-      });
+    methods: {
+      show() {
+        this.$refs.modal.show();
+      },
+      close() {
+        this.$refs.modal.close();
+      },
+      ok() {
+        this.$refs.form.validate((valid) => {
+          if (valid) {
+            this.$utils.handleNormalRequest.call(this, async () => {
+              this.query.ids = this.ids;
+              let resp = await this.$api.siteAccount.updateBatch(this.query);
+              if (resp.code == 100) {
+                this.close();
+                this.$emit("success", this.query);
+              }
+
+              return resp;
+            });
+          }
+        });
+      },
     },
-  },
-};
+  };
 </script>
-      <style scoped>
-.footer {
-  text-align: right;
-}
+<style scoped>
+  .footer {
+    text-align: right;
+  }
 </style>

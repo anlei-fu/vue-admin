@@ -3,11 +3,20 @@
     <div class="container">
       <template v-if="setting_.filters.options.length > 0">
         <Divider orientation="left">Basic Filter</Divider>
-        <MyCheckBoxGroup orientation="vertical" v-model="enbaledFilters_" :options="setting_.filters.options" />
+        <MyCheckBoxGroup
+          orientation="vertical"
+          v-model="enbaledFilters_"
+          :options="setting_.filters.options"
+        />
       </template>
-      <template v-if="setting_.table.allColumns.length > 0">
+      <template v-if="setting_.table.columns.length > 0">
         <Divider orientation="left">Columns</Divider>
-        <MyCheckBoxGroup v-model="defaultShowingColumns_" :options="setting_.table.allColumns" value="key" label="key" />
+        <MyCheckBoxGroup
+          v-model="columns_"
+          :options="setting_.table.columns"
+          value="key"
+          label="key"
+        />
       </template>
     </div>
   </MyModal>
@@ -28,7 +37,7 @@
             },
             table: {
               allColumns: [],
-              defaultShowingColumns: [],
+              columns: [],
             },
           };
         },
@@ -38,7 +47,7 @@
     data() {
       return {
         enbaledFilters_: [],
-        defaultShowingColumns_: [],
+        columns_: [],
         setting_: {},
       };
     },
@@ -57,7 +66,7 @@
 
         this.setting_.table = this.setting_.table || {};
         this.setting_.table.allColumns = this.setting_.table.allColumns || [];
-        this.defaultShowingColumns_ = this.setting_.table.defaultShowingColumns || [];
+        this.columns_ = this.setting_.table.columns || [];
       },
 
       show() {
@@ -68,7 +77,7 @@
       update() {
         this.$emit("updated", {
           filters: this.enbaledFilters_,
-          defaultShowingColumns: this.chechedColumns_,
+          columns: this.chechedColumns_,
         });
       },
     },

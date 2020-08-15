@@ -57,26 +57,7 @@ const apiConfig = {
                         url: "/crawler/{id}"
                 }
         },
-        script: {
-                add: {
-                        method: "post",
-                        url: "/script"
-                },
-                getList: {
-                        method: "get",
-                        url: "/script/page"
-                }, updateById: {
-                        method: "put",
-                        url: "/script/{id}"
-                }, deleteById: {
-                        method: "delete",
-                        url: "/script/{id}"
-                },
-                deleteBatch: {
-                        method: "delete",
-                        url: "/script/delete/batch"
-                }
-        },
+     
         downSystem: {
                 add: {
                         method: "post",
@@ -264,6 +245,18 @@ const apiConfig = {
                         url: "/enum/all"
                 }
         },
+        dispatchRecord:{
+                getByTaskId:{
+                        method:"get",
+                        url:"/dispatchRecord/getByTaskId/{taskId}"
+                }
+        },
+        bindRecord:{
+                getByTaskId:{
+                        method:"get",
+                        url:"/bindRecord/getByTaskId/{taskId}"
+                }
+        }
 
 }
 
