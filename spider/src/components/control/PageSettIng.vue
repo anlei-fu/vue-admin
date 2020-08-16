@@ -43,7 +43,6 @@
         },
       },
     },
-
     data() {
       return {
         enbaledFilters_: [],
@@ -51,29 +50,23 @@
         setting_: {},
       };
     },
-
     created() {
       this.init();
     },
-
     methods: {
       init() {
         this.setting_ = this.$utils.clone(this.setting);
-
         this.setting_.filters = this.setting_.filters || {};
         this.setting_.filters.options = this.setting_.filters.options || [];
         this.enbaledFilters_ = this.setting_.filters.enabledFilters || [];
-
         this.setting_.table = this.setting_.table || {};
         this.setting_.table.allColumns = this.setting_.table.allColumns || [];
         this.columns_ = this.setting_.table.columns || [];
       },
-
       show() {
         this.init();
         this.$refs.model.show();
       },
-
       update() {
         this.$emit("updated", {
           filters: this.enbaledFilters_,

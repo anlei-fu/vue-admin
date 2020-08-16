@@ -107,38 +107,41 @@
               utils.enumColumn("siteId", "Site", "Site"),
               utils.column("priority"),
               utils.column("scriptPath", "Script"),
-              utils.column("crawlerPageEncoding", "Encoding"),
-              utils.column("crawlerPageTimeout", "PageTut"),
-              utils.enumColumn("crawlerCrawlType", "CrawlType", "CrawlType"),
-              utils.enumColumn("crawlerAutoDownloadPage", "YesNo", "DldPage"),
-              utils.column("urlMaxCacheCount", "MaxCache"),
-              utils.column("urlFinishedCount", "UrlFinished"),
-              utils.column("urlBadCount", "UrlBad"),
-              utils.column("urlTotalCount", "UrlTotal"),
-              utils.column("urlEncodes", "Encodes"),
-              utils.column("urlMaxCrawlCount", "MaxTry"),
-              utils.column("urlMaxDepth", "MaxDepth"),
-              utils.column("urlMatchPatterns", "Patterns"),
-              utils.column("bloomExpectedUrlSize", "EptUrlSe"),
+              utils.column("crawlerPageEncoding", "Encd"),
+              utils.column("crawlerPageTimeout", "PgTmt"),
+              utils.enumColumn("crawlerCrawlType", "CrawlType", "CrlTp"),
+              utils.enumColumn("crawlerAutoDownloadPage", "YesNo", "AtDldPg"),
+             
+              utils.column("bloomExpectedUrlSize", "EptUrlSz"),
               utils.column("bloomFpp", "Fpp"),
-              utils.column("taskUrlBatchCount", "BatchCnt"),
-              utils.negativeProgress("bindRate", "taskMaxWaitToBindCount", "taskCurrentBindCount"),
-              utils.column("taskMaxWaitToBindCount", "MaxBd"),
-              utils.column("taskCurrentBindCount", "CurBd"),
+              utils.column("taskUrlBatchCount", "BchCnt"),
+              utils.negativeProgress("tskRate", "taskMaxCount", "taskCurrentCount"),
+              utils.column("taskMaxCount", "MxTsk"),
+              utils.column("taskCurrentCount", "CrtTsk"),
               utils.negativeProgress(
-                "concurrency",
+                "concur",
                 "taskMaxRunningCount",
                 "taskCurrentRunningCount"
               ),
-              utils.column("taskMaxRunningCount", "MaxCon"),
-              utils.column("taskCurrentRunningCount", "CurCon"),
+              utils.column("taskMaxRunningCount", "MxCon"),
+              utils.column("taskCurrentRunningCount", "CrtCon"),
               utils.column("taskTimeout", "TaskTut"),
-              utils.column("taskUrlMaxFailCount", "TUMaxFail"),
-              utils.column("taskUrlMaxContinuouslyFailCount", "TUMCFail"),
-              utils.column("taskUrlMaxConcurrency", "TUMaxCon"),
+              utils.column("taskUrlMaxFailCount", "TskUMxF"),
+              utils.column("taskUrlMaxContinuouslyFailCount", "TskUMxCF"),
+              utils.column("taskUrlMaxConcurrency", "TskUMxCon"),
+               utils.negativeProgress("urlCplt", "urlTotalCount", "urlFinishedCount"),
+              utils.positiveProgress("urlBdRt", "urlTotalCount", "urlBadCount"),
+               utils.column("urlMaxCacheCount", "MxCache"),
+              utils.column("urlFinishedCount", "FnshdUrl"),
+              utils.column("urlBadCount", "BadUrl"),
+              utils.column("urlTotalCount", "TtlUrl"),
+              utils.column("urlEncodes", "Encodes"),
+              utils.column("urlMaxCrawlCount", "MxTry"),
+              utils.column("urlMaxDepth", "MxDep"),
+              utils.column("urlMatchPatterns", "Patterns"),
               utils.enumColumn("enableStatus", null, "Status"),
               utils.dateColumn("createTime", "CTime"),
-              utils.operateColumn([utils.operation("edit"), utils.operation("delete")]),
+              utils.operateColumn([utils.operation("edit"), utils.operation("delete")],{width:"150px"}),
             ],
             showingColumns: [
               "Checkbox",
@@ -146,11 +149,13 @@
               "downSystemId",
               "priority",
               "crawlerCrawlType",
-              "bindRate",
-              "concurrency",
+              "tskRate",
+              "concur",
               "taskTimeout",
+              "urlCplt",
+              "urlBdRt",
               "enableStatus",
-              "createTime",
+              // "createTime",
               "test",
             ],
           },
@@ -180,14 +185,7 @@
     },
     watch: {
       "pageSetting.filters.enabledFilters"(newVal) {
-        let set = new Set(newVal);
-        this.pageSetting.filters.options.forEach((op) => {
-          if (set.has(op.value)) {
-            this["show" + op.value] = true;
-          } else {
-            this["show" + op.value] = false;
-          }
-        });
+        utils.changeShowingFilters.call(this, newVal);
       },
     },
     methods: {

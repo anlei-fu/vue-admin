@@ -21,10 +21,8 @@
             return;
           }
           this.$router.push({ path: this.path });
-
           return;
         }
-
         this.$emit("click");
       },
     },

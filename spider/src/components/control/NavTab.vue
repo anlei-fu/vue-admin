@@ -60,7 +60,6 @@
         return this.index > 10 ? `translateX(${(this.index - 10) * -105}px)` : `translateX(0px)`;
       },
     },
-
     methods: {
       /**
        * Callback of tab close button click
@@ -70,14 +69,12 @@
        */
       closeTab(tab, emitChange) {
         if (this.tabs.length == 1) return;
-
         let index = this.findTabIndex(tab.path);
         if (index != -1) {
           this.tabs = this.tabs.filter((x) => x.path != tab.path);
           this.index = index;
           if (this.tabs.length != 0 && emitChange) this.emitChange(this.tabs[index], true);
         }
-
         if (index > 10) {
           this.leftNavigateEnabled = true;
           if (index != this.tabs.length) {
@@ -106,7 +103,6 @@
         } else {
           // not change
           if (index == this.index) return;
-
           if (index > 10) {
             this.leftNavigateEnabled = true;
             if (index != this.tabs.length) {
@@ -120,7 +116,6 @@
           }
           // click tab to change
           this.emitChange(tab, emit);
-
           this.index = index;
         }
       },
@@ -159,7 +154,6 @@
           this.leftNavigateEnabled = true;
         }
       },
-
       /**
        * Callback of refresh current page
        */
@@ -169,7 +163,6 @@
        */
       moveLeft() {
         if (this.index == 10) return;
-
         this.index = this.index - 1;
       },
       /**
@@ -177,10 +170,8 @@
        */
       moveRight() {
         if (this.index == this.tabs.length) return;
-
         this.index = this.index + 1;
       },
-
       findTabIndex(path) {
         let index = -1;
         for (let i = 0; i < this.tabs.length; i++) {
@@ -193,25 +184,21 @@
     },
   };
 </script>
-
 <style scoped>
   .wrapper {
     vertical-align: middle;
   }
-
   .icon-container {
     display: inline-block;
     /* height: 30px; */
     transform: translateY(-12px);
   }
-
   .tab-scroll {
     overflow: hidden;
     display: inline-block;
     margin-left: 10px;
     width: 1040px;
   }
-
   .tab-container {
     /* max-width: 1400px; */
     display: inline-block;
@@ -224,7 +211,6 @@
     transition: 0.5s;
     margin: 0px 10px;
   }
-
   .icon-item {
     transition: 0.6s;
   }

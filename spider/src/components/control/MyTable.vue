@@ -46,7 +46,6 @@
     </div>
   </div>
 </template>
-
 <script>
   export default {
     props: {
@@ -72,7 +71,6 @@
         },
       };
     },
-
     created() {
       this.init();
     },
@@ -85,11 +83,9 @@
       emit(event, row) {
         this.$emit(event, row);
       },
-
       getSelection() {
         return this.$refs.table.getSelection();
       },
-
       doFilter() {
         let set = new Set(this.selectedColumns_);
         this.contentColumn.filtered = this.contentColumn.source.filter((x) => set.has(x.slot));
@@ -99,11 +95,9 @@
         this.contentColumn.source.forEach((x) => {
           columns.push(x.slot);
         });
-
         return columns;
       },
     },
-
     watch: {
       selectedColumns_: {
         deep: true,

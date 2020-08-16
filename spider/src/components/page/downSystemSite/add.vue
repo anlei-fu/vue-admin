@@ -1,26 +1,32 @@
 <template>
   <MyModal :title="title" ref="modal" @ok="ok" width="40%">
     <Form ref="form" :model="query" :rules="rules" :label-width="120">
+        <FormItem label="DownSystem" prop="downSystemId">
+        <MySelect v-model="query.downSystemId" enum="System" width="100%" />
+      </FormItem>
       <FormItem label="Site" prop="siteId">
         <MySelect v-model="query.siteId" enum="Site" width="100%" />
       </FormItem>
-
-      <FormItem label="DownSystem" prop="downSystemId">
-        <MySelect v-model="query.downSystemId" enum="System" width="100%" />
-      </FormItem>
-
+      <FormItem
+          label="ExpectedUrlSize"
+          prop="bloomExpectedUrlSize"
+        >
+          <Input v-model="query.bloomExpectedUrlSize" placeholder="Input value" />
+        </FormItem>
+        <FormItem label="Fpp" prop="bloomFpp">
+          <Input v-model="query.bloomFpp" placeholder="Input value" />
+        </FormItem>
+    
       <template v-if="optionalFields.length > 0">
         <Divider orientation="left">Optional Filter</Divider>
         <FormItem label="Fields">
           <MyCheckBoxGroup v-model="showingOptionalFields" :options="optionalFields" />
         </FormItem>
       </template>
-
       <MyScroll>
         <FormItem v-if="showCrawlerCrawlType" label="CrawlType" prop="crawlerCrawlType">
           <MySelect v-model="query.crawlerCrawlType" enum="CrawlType" width="100%" />
         </FormItem>
-
         <FormItem
           v-if="showCrawlerAutoDownloadPage"
           label="AutoDownloadPage"
@@ -28,58 +34,38 @@
         >
           <MySelect v-model="query.crawlerAutoDownloadPage" enum="YesNo" width="100%" />
         </FormItem>
-
         <FormItem v-if="showEnableStatus" label="EnableStatus" prop="enableStatus">
           <MySelect v-model="query.enableStatus" enum="EnableStatus" width="100%" />
         </FormItem>
         <FormItem v-if="showScriptPath" label="Script" prop="scriptPath">
           <MyFileUploader v-model="query.scriptPath" />
         </FormItem>
-
         <FormItem v-if="showCrawlerPageEncoding" label="Encoding" prop="crawlerPageEncoding">
           <Input v-model="query.crawlerPageEncoding" placeholder="Input value" />
         </FormItem>
-
         <FormItem v-if="showUrlMaxCacheCount" label="UrlMaxCacheCount" prop="urlMaxCacheCount">
           <Input v-model="query.urlMaxCacheCount" placeholder="Input value" />
         </FormItem>
-
         <FormItem v-if="showUrlEncodes" label="Encodes" prop="urlEncodes">
           <Input v-model="query.urlEncodes" placeholder="Input value" />
         </FormItem>
-
         <FormItem v-if="showUrlMatchPatterns" label="MatchPatterns" prop="urlMatchPatterns">
           <Input v-model="query.urlMatchPatterns" placeholder="Input value" />
         </FormItem>
-
-        <FormItem
-          v-if="showBloomExpectedUrlSize"
-          label="ExpectedUrlSize"
-          prop="bloomExpectedUrlSize"
-        >
-          <Input v-model="query.bloomExpectedUrlSize" placeholder="Input value" />
-        </FormItem>
-
-        <FormItem v-if="showBloomFpp" label="Fpp" prop="bloomFpp">
-          <Input v-model="query.bloomFpp" placeholder="Input value" />
-        </FormItem>
-
+        
         <FormItem v-if="showTaskUrlBatchCount" label="UrlBatchCount" prop="taskUrlBatchCount">
           <Input v-model="query.taskUrlBatchCount" placeholder="Input value" />
         </FormItem>
-
         <FormItem
-          v-if="showTaskMaxWaitToBindCount"
+          v-if="showTaskMaxCount"
           label="MaxWaitToBindCount"
-          prop="taskMaxWaitToBindCount"
+          prop="taskMaxCount"
         >
-          <Input v-model="query.taskMaxWaitToBindCount" placeholder="Input value" />
+          <Input v-model="query.taskMaxCount" placeholder="Input value" />
         </FormItem>
-
         <FormItem v-if="showTaskMaxRunningCount" label="MaxRunningCount" prop="taskMaxRunningCount">
           <Input v-model="query.taskMaxRunningCount" placeholder="Input value" />
         </FormItem>
-
         <FormItem v-if="showTaskTimeout" label="Timeout" prop="taskTimeout">
           <Input v-model="query.taskTimeout" placeholder="Input value" />
         </FormItem>
@@ -89,7 +75,6 @@
         <FormItem v-if="showUrlMaxCrawlCount" label="UrlMaxCrawlCount" prop="urlMaxCrawlCount">
           <Input v-model="query.urlMaxCrawlCount" placeholder="Input value" />
         </FormItem>
-
         <FormItem
           v-if="showTaskUrlMaxFailCount"
           label="TaskUrlMaxFailCount"
@@ -118,17 +103,7 @@
 <script>
   import utils from "./../../../common";
   export default {
-    props: {
-      model: {
-        type: Object,
-        default: () => {},
-      },
-      title: {
-        type: String,
-        default: "",
-      },
-    },
-
+    props: utils.addProps(),
     data() {
       return {
         optionalFields: utils.options([
@@ -142,10 +117,8 @@
           "UrlMaxCrawlCount",
           "UrlEncodes",
           "UrlMatchPatterns",
-          "BloomExpectedUrlSize",
-          "BloomFpp",
           "TaskUrlBatchCount",
-          "TaskMaxWaitToBindCount",
+          "TaskMaxCount",
           "TaskMaxRunningCount",
           "TaskTimeout",
           "TaskUrlMaxFailCount",
@@ -167,10 +140,10 @@
           crawlerPageTimeout: [utils.range(3000, 600000)],
           urlMaxCacheCount: [utils.range(1000, 20000)],
           urlMaxCrawlCount: [utils.range(1, 20)],
-          bloomExpectedUrlSize: [utils.range(3000, 20000000)],
-          bloomFpp: [utils.range(0.2, 0.7)],
+          bloomExpectedUrlSize: [utils.range(3000, 2000000000),utils.require()],
+          bloomFpp: [utils.range(0.2, 0.7),utils.require()],
           taskUrlBatchCount: [utils.range(1, 1000)],
-          taskMaxWaitToBindCount: [utils.range(1, 20)],
+          taskMaxCount: [utils.range(1, 20)],
           taskMaxRunningCount: [utils.range(1, 1000)],
           taskTimeout: [utils.range(1, 120)],
           urlMaxDepth: [utils.range(1, 100)],
@@ -178,6 +151,7 @@
           taskUrlMaxContinuouslyFailCount: [utils.range(1, 30)],
           taskUrlMaxConcurrency: [utils.range(1, 1000)],
         },
+        api: "downSystemSite",
         query: {
           siteId: null,
           scriptPath: null,
@@ -194,7 +168,7 @@
           bloomExpectedUrlSize: null,
           bloomFpp: null,
           taskUrlBatchCount: null,
-          taskMaxWaitToBindCount: null,
+          taskMaxCount: null,
           taskMaxRunningCount: null,
           taskTimeout: null,
           taskUrlMaxFailCount: null,
@@ -203,88 +177,18 @@
         },
       };
     },
-    created() {
-      this.$utils.copyFieldsFrom(this.query, this.model);
+    beforeMount() {
+      utils.initOptionsShow.call(this);
+      utils.copyFieldsFrom(this.query, this.model);
     },
-
-    computed: {
-      showUrlMaxDepth() {
-        return this.$utils.arrayHas(this.showingOptionalFields, "UrlMaxDepth");
-      },
-      showUrlMaxCrawlCount() {
-        return this.$utils.arrayHas(this.showingOptionalFields, "UrlMaxCrawlCount");
-      },
-      showScriptPath() {
-        return this.$utils.arrayHas(this.showingOptionalFields, "ScriptPath");
-      },
-      showCrawlerCrawlType() {
-        return this.$utils.arrayHas(this.showingOptionalFields, "CrawlerCrawlType");
-      },
-
-      showCrawlerAutoDownloadPage() {
-        return this.$utils.arrayHas(this.showingOptionalFields, "CrawlerAutoDownloadPage");
-      },
-
-      showEnableStatus() {
-        return this.$utils.arrayHas(this.showingOptionalFields, "EnableStatus");
-      },
-
-      showCrawlerPageEncoding() {
-        return this.$utils.arrayHas(this.showingOptionalFields, "CrawlerPageEncoding");
-      },
-
-      showUrlMaxCacheCount() {
-        return this.$utils.arrayHas(this.showingOptionalFields, "UrlMaxCacheCount");
-      },
-
-      showUrlEncodes() {
-        return this.$utils.arrayHas(this.showingOptionalFields, "UrlEncodes");
-      },
-
-      showUrlMatchPatterns() {
-        return this.$utils.arrayHas(this.showingOptionalFields, "UrlMatchPatterns");
-      },
-
-      showBloomExpectedUrlSize() {
-        return this.$utils.arrayHas(this.showingOptionalFields, "BloomExpectedUrlSize");
-      },
-
-      showBloomFpp() {
-        return this.$utils.arrayHas(this.showingOptionalFields, "BloomFpp");
-      },
-
-      showTaskUrlBatchCount() {
-        return this.$utils.arrayHas(this.showingOptionalFields, "TaskUrlBatchCount");
-      },
-
-      showTaskMaxWaitToBindCount() {
-        return this.$utils.arrayHas(this.showingOptionalFields, "TaskMaxWaitToBindCount");
-      },
-
-      showTaskMaxRunningCount() {
-        return this.$utils.arrayHas(this.showingOptionalFields, "TaskMaxRunningCount");
-      },
-
-      showTaskTimeout() {
-        return this.$utils.arrayHas(this.showingOptionalFields, "TaskTimeout");
-      },
-      showTaskUrlMaxFailCount() {
-        return this.$utils.arrayHas(this.showingOptionalFields, "TaskUrlMaxFailCount");
-      },
-      showTaskUrlMaxContinuouslyFailCount() {
-        return this.$utils.arrayHas(this.showingOptionalFields, "TaskUrlMaxContinuouslyFailCount");
-      },
-      showTaskUrlMaxConcurrency() {
-        return this.$utils.arrayHas(this.showingOptionalFields, "TaskUrlMaxConcurrency");
-      },
-    },
-
     watch: {
       model(newVal) {
-        this.$utils.copyFieldsFrom(this.query, newVal);
+        utils.copyFieldsFrom(this.query, newVal);
+      },
+      showingOptionalFields(newVal) {
+        utils.changeShowOptionalFields.call(this, newVal);
       },
     },
-
     methods: {
       show() {
         this.$refs.modal.show();
@@ -293,19 +197,8 @@
         this.$refs.modal.close();
       },
       ok() {
-        this.$refs.form.validate((valid) => {
-          if (valid) {
-            this.$utils.handleNormalRequest.call(this, async () => {
-              return this.$api.downSystemSite.add(this.query);
-            });
-          }
-        });
+        utils.add.call(this);
       },
     },
   };
 </script>
-<style scoped>
-  .footer {
-    text-align: right;
-  }
-</style>

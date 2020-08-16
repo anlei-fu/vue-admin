@@ -14,15 +14,12 @@
         <FormItem v-if="showEnableStatus" label="enableStatus" prop="enableStatus">
           <MySelect v-model="query.enableStatus" enum="EnableStatus" width="100%" />
         </FormItem>
-
         <FormItem v-if="showClientVersion" label="clientVersion" prop="clientVersion">
           <Input v-model="query.clientVersion" placeholder="Input value" />
         </FormItem>
-
         <FormItem v-if="showMaxConcurrency" label="maxConcurrency" prop="maxConcurrency">
           <Input v-model="query.maxConcurrency" placeholder="Input value" />
         </FormItem>
-
         <FormItem v-if="showDescription" label="description" prop="description">
           <Input v-model="query.description" placeholder="Input value" />
         </FormItem>
@@ -33,17 +30,7 @@
 <script>
   import utils from "./../../../common";
   export default {
-    props: {
-      ids: {
-        type: Array,
-        default: () => [],
-      },
-      title: {
-        type: String,
-        default: "title",
-      },
-    },
-
+    props: utils.batchEditProps(),
     data() {
       return {
         optionalFields: utils.options([
@@ -59,6 +46,7 @@
           ip: [utils.ip()],
           maxConcurrency: [utils.range(10, 2000)],
         },
+        api: "crawler",
         query: {
           crawlerType: null,
           enableStatus: null,
@@ -70,28 +58,12 @@
         },
       };
     },
-    computed: {
-      showIp() {
-        return this.$utils.arrayHas(this.showingOptionalFields, "Ip");
-      },
-
-      showCrawlerType() {
-        return this.$utils.arrayHas(this.showingOptionalFields, "CrawlerType");
-      },
-
-      showEnableStatus() {
-        return this.$utils.arrayHas(this.showingOptionalFields, "EnableStatus");
-      },
-
-      showClientVersion() {
-        return this.$utils.arrayHas(this.showingOptionalFields, "ClientVersion");
-      },
-      showMaxConcurrency() {
-        return this.$utils.arrayHas(this.showingOptionalFields, "MaxConcurrency");
-      },
-
-      showDescription() {
-        return this.$utils.arrayHas(this.showingOptionalFields, "Description");
+    beforeMount() {
+      utils.initOptionsShow.call(this);
+    },
+    watch: {
+      showingOptionalFields(newVal) {
+        utils.changeShowOptionalFields.call(this, newVal);
       },
     },
     methods: {
@@ -102,25 +74,8 @@
         this.$refs.modal.close();
       },
       ok() {
-        this.query.ids = this.ids;
-        this.$refs.form.validate((valid) => {
-          if (valid) {
-            this.$utils.handleNormalRequest.call(this, async () => {
-              let resp = await this.$api.crawler.updateBatch(this.query);
-              if (resp.code == 100) {
-                this.$emit("success", this.query);
-                this.close();
-              }
-              return resp;
-            });
-          }
-        });
+        utils.batchEdit.call(this);
       },
     },
   };
 </script>
-<style scoped>
-  .footer {
-    text-align: right;
-  }
-</style>

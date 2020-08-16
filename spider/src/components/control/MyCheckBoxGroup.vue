@@ -5,7 +5,6 @@
       <span class="check-item-h">
         <Checkbox v-model="all_">{{ allName }}</Checkbox>
       </span>
-
       <template v-for="item in options_">
         <span class="ckeck-item-h" :key="item[value]">
           <Checkbox @on-change="emitChange" v-model="item.checked">
@@ -36,7 +35,6 @@
       prop: "checkedItems",
       event: "change",
     },
-
     props: {
       options: {
         type: Array,
@@ -110,11 +108,9 @@
         this.options_.forEach((option) => {
           if (option.checked) this._checkItems.push(option[this.value]);
         });
-
         this.$emit("change", this._checkItems);
       },
     },
-
     watch: {
       options() {
         this.init();
@@ -124,10 +120,8 @@
         this.options_.forEach((option) => {
           option.checked = newVal;
         });
-
         this.emitChange();
       },
-
       cache() {
         this.init();
       },

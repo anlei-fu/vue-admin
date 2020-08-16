@@ -7,15 +7,12 @@
           <MyCheckBoxGroup v-model="showingOptionalFields" :options="optionalFields" />
         </FormItem>
       </template>
-
       <FormItem label="Site" prop="siteId">
         <MySelect v-model="query.siteId" enum="Site" width="100%" />
       </FormItem>
-
       <FormItem label="Ip" prop="ip">
         <Input v-model="query.ip" enum="ip" width="100%" />
       </FormItem>
-
       <FormItem label="BlockTimeoutTime" prop="blockTimeoutTime">
         <MySelect v-model="query.blockTimeoutTime" enum="blockTimeoutTimeTime" width="100%" />
       </FormItem>
@@ -24,19 +21,8 @@
 </template>
 <script>
   import utils from "./../../../common";
-
   export default {
-    props: {
-      model: {
-        type: Object,
-        default: () => {},
-      },
-      title: {
-        type: String,
-        default: "",
-      },
-    },
-
+    props: utils.addProps(),
     data() {
       return {
         optionalFields: [],
@@ -44,9 +30,9 @@
         rules: {
           siteId: [utils.require()],
           ip: [utils.ip(), utils.require()],
-
           blockTimeoutTime: [utils.require()],
         },
+        api: "siteIpBlockMap",
         query: {
           id: null,
           siteId: null,
@@ -56,18 +42,18 @@
         },
       };
     },
-    created() {
-      this.$utils.copyFieldsFrom(this.query, this.model);
+    beforeMount() {
+      utils.initOptionsShow.call(this);
+      utils.copyFieldsFrom(this.query, this.model);
     },
-
-    computed: {},
-
     watch: {
       model(newVal) {
-        this.$utils.copyFieldsFrom(this.query, newVal);
+        utils.copyFieldsFrom(this.query, newVal);
+      },
+      showingOptionalFields(newVal) {
+        utils.changeShowOptionalFields.call(this, newVal);
       },
     },
-
     methods: {
       show() {
         this.$refs.modal.show();
@@ -76,19 +62,8 @@
         this.$refs.modal.close();
       },
       ok() {
-        this.$refs.form.validate((valid) => {
-          if (valid) {
-            this.$utils.handleNormalRequest.call(this, async () => {
-              return this.$api.siteIpBlockMap.add(this.query);
-            });
-          }
-        });
+        utils.add.call(this);
       },
     },
   };
 </script>
-<style scoped>
-  .footer {
-    text-align: right;
-  }
-</style>

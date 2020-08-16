@@ -7,14 +7,12 @@
       <FormItem label="Account" prop="account">
         <Input v-model="query.account" placeholder="Input value" />
       </FormItem>
-
       <template v-if="optionalFields.length > 0">
         <Divider orientation="left">Optional Filter</Divider>
         <FormItem label="Fields">
           <MyCheckBoxGroup v-model="showingOptionalFields" :options="optionalFields" />
         </FormItem>
       </template>
-
       <MyScroll>
         <FormItem v-if="showNickName" label="NickName" prop="nickName">
           <Input v-model="query.nickName" placeholder="Input value" />
@@ -28,27 +26,18 @@
         <FormItem v-if="showValidated" label="Validated" prop="enableStatus">
           <MySelect v-model="query.validated" enum="YesNo" width="100%" />
         </FormItem>
-
         <FormItem v-if="showEnableStatus" label="EnableStatus" prop="enableStatus">
           <MySelect v-model="query.enableStatus" enum="EnableStatus" width="100%" />
         </FormItem>
-
-        <FormItem v-if="showAccount" label="Account" prop="account">
-          <Input v-model="query.account" placeholder="Input value" />
-        </FormItem>
-
         <FormItem v-if="showPhone" label="Phone" prop="phone">
           <Input v-model="query.phone" placeholder="Input value" />
         </FormItem>
-
         <FormItem v-if="showEmail" label="Email" prop="email">
           <Input v-model="query.email" placeholder="Input value" />
         </FormItem>
-
         <FormItem v-if="showPassword" label="Password" prop="password">
           <Input v-model="query.password" placeholder="Input value" />
         </FormItem>
-
         <FormItem v-if="showDescription" label="Description" prop="description">
           <Input v-model="query.description" placeholder="Input value" />
         </FormItem>
@@ -59,17 +48,7 @@
 <script>
   import utils from "./../../../common";
   export default {
-    props: {
-      model: {
-        type: Object,
-        default: () => {},
-      },
-      title: {
-        type: String,
-        default: "",
-      },
-    },
-
+    props: utils.addProps(),
     data() {
       return {
         optionalFields: utils.options([
@@ -90,6 +69,7 @@
           emial: [utils.email()],
           phone: [utils.phone],
         },
+        api: "siteAccount",
         query: {
           accountType: null,
           validated: null,
@@ -107,56 +87,18 @@
         },
       };
     },
-    created() {
-      this.$utils.copyFieldsFrom(this.query, this.model);
+    beforeMount() {
+      utils.initOptionsShow.call(this);
+      utils.copyFieldsFrom(this.query, this.model);
     },
-
-    computed: {
-      showAccountType() {
-        return this.$utils.arrayHas(this.showingOptionalFields, "AccountType");
-      },
-
-      showValidated() {
-        return this.$utils.arrayHas(this.showingOptionalFields, "Validated");
-      },
-      showLoginType() {
-        return this.$utils.arrayHas(this.showingOptionalFields, "LoginType");
-      },
-
-      showNickName() {
-        return this.$utils.arrayHas(this.showingOptionalFields, "NickName");
-      },
-      showEnableStatus() {
-        return this.$utils.arrayHas(this.showingOptionalFields, "EnableStatus");
-      },
-
-      showAccount() {
-        return this.$utils.arrayHas(this.showingOptionalFields, "Account");
-      },
-
-      showPhone() {
-        return this.$utils.arrayHas(this.showingOptionalFields, "Phone");
-      },
-
-      showEmail() {
-        return this.$utils.arrayHas(this.showingOptionalFields, "Email");
-      },
-
-      showPassword() {
-        return this.$utils.arrayHas(this.showingOptionalFields, "Password");
-      },
-
-      showDescription() {
-        return this.$utils.arrayHas(this.showingOptionalFields, "Description");
-      },
-    },
-
     watch: {
       model(newVal) {
-        this.$utils.copyFieldsFrom(this.query, newVal);
+        utils.copyFieldsFrom(this.query, newVal);
+      },
+      showingOptionalFields(newVal) {
+        utils.changeShowOptionalFields.call(this, newVal);
       },
     },
-
     methods: {
       show() {
         this.$refs.modal.show();
@@ -165,19 +107,8 @@
         this.$refs.modal.close();
       },
       ok() {
-        this.$refs.form.validate((valid) => {
-          if (valid) {
-            this.$utils.handleNormalRequest.call(this, async () => {
-              return this.$api.siteAccount.add(this.query);
-            });
-          }
-        });
+        utils.add.call(this);
       },
     },
   };
 </script>
-<style scoped>
-  .footer {
-    text-align: right;
-  }
-</style>

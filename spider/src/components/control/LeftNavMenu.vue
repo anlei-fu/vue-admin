@@ -107,7 +107,6 @@ string parameter 'name' of selected menu
     },
   };
 </script>
-
 <style scoped>
   .module-title {
     background-color: rgb(48, 65, 86);
@@ -119,7 +118,6 @@ string parameter 'name' of selected menu
     align-items: center;
     color: rgb(191, 203, 217);
   }
-
   .top-level-menu {
     color: rgb(191, 203, 217);
     transition: all 0.5s;
@@ -132,17 +130,14 @@ string parameter 'name' of selected menu
     color: #57a3f3 !important;
     background-color: rgb(38, 52, 69) !important;
   }
-
   .second-level-menu {
     background-color: #1f2d3d;
     color: rgb(191, 203, 217);
     transition: 0.2s all;
   }
-
   .second-level-menu:hover {
     background-color: #001528 !important;
   }
-
   /* iview style override */
   .ivu-menu-horizontal.ivu-menu-light:after {
     content: "";
@@ -154,7 +149,6 @@ string parameter 'name' of selected menu
     bottom: 0;
     left: 0;
   }
-
   .ivu-menu-vertical.ivu-menu-light:after {
     content: "";
     display: block;
@@ -167,7 +161,6 @@ string parameter 'name' of selected menu
     right: 0;
     z-index: 1;
   }
-
   .ivu-menu-light.ivu-menu-vertical .ivu-menu-item-active:not(.ivu-menu-submenu):after {
     content: "";
     display: block;
@@ -178,7 +171,6 @@ string parameter 'name' of selected menu
     right: 0;
     background: #2d8cf0;
   }
-
   .ivu-menu-light.ivu-menu-vertical .ivu-menu-item-active:not(.ivu-menu-submenu):after {
     content: "";
     display: block;
@@ -189,13 +181,11 @@ string parameter 'name' of selected menu
     right: 0;
     background: #2d8cf0;
   }
-
   .menu-container {
     overflow-y: auto;
     height: 92%;
     background-color: rgb(48, 65, 86);
   }
-
   .icon-item {
     transition: 0.6s;
   }

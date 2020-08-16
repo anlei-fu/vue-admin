@@ -4,7 +4,6 @@
       <FormItem label="Fields">
         <MyCheckBoxGroup v-model="showingOptionalFields" :options="optionalFields" />
       </FormItem>
-
       <MyScroll>
         <FormItem v-if="showType" label="Type" prop="type">
           <Input v-model="query.type" placeholder="Input value" />
@@ -15,7 +14,6 @@
         <FormItem v-if="showValue" label="Value" prop="value">
           <Input v-model="query.value" placeholder="Input value" />
         </FormItem>
-
         <FormItem v-if="showColor" label="Color" prop="color">
           <MyColorPicker v-model="query.color" />
         </FormItem>
@@ -24,42 +22,17 @@
   </MyModal>
 </template>
 <script>
+  import utils from "./../../../common";
   export default {
-    props: {
-      model: {
-        type: Object,
-        default: () => {},
-      },
-      title: {
-        type: String,
-        default: "",
-      },
-    },
-
+    props: utils.editProps(),
     data() {
       return {
-        optionalFields: [
-          {
-            label: "Type",
-            value: "Type",
-          },
-          {
-            label: "Value",
-            value: "Value",
-          },
-          {
-            label: "Label",
-            value: "Label",
-          },
-          {
-            label: "Color",
-            value: "Color",
-          },
-        ],
+        optionalFields: utils.options(["Type", "Color", "Label", "Value"]),
         showingOptionalFields: ["Type", "Color", "Label", "Value"],
         rules: {
           value: [utils.range(-1, 1000)],
         },
+        api: "dictionary",
         query: {
           type: null,
           value: null,
@@ -69,30 +42,16 @@
         },
       };
     },
-    created() {
-      this.$utils.copyFieldsFrom(this.query, this.model);
+    beforeMount() {
+      utils.initOptionsShow.call(this);
+      utils.copyFieldsFrom(this.query, this.model);
     },
     watch: {
       model(newVal) {
-        debugger;
-        this.$utils.copyFieldsFrom(this.query, newVal);
+        utils.copyFieldsFrom(this.query, newVal);
       },
-    },
-    computed: {
-      showColor() {
-        return this.$utils.arrayHas(this.showingOptionalFields, "Color");
-      },
-
-      showType() {
-        return this.$utils.arrayHas(this.showingOptionalFields, "Type");
-      },
-
-      showValue() {
-        return this.$utils.arrayHas(this.showingOptionalFields, "Value");
-      },
-
-      showLabel() {
-        return this.$utils.arrayHas(this.showingOptionalFields, "Label");
+      showingOptionalFields(newVal) {
+        utils.changeShowOptionalFields.call(this, newVal);
       },
     },
     methods: {
@@ -103,24 +62,8 @@
         this.$refs.modal.close();
       },
       ok() {
-        this.$refs.form.validate((valid) => {
-          if (valid) {
-            this.$utils.handleNormalRequest.call(this, async () => {
-              let resp = await this.$api.dictionary.updateById(this.query);
-              if (resp.code == 100) {
-                this.$emit("success", this.query);
-                this.close();
-              }
-              return resp;
-            });
-          }
-        });
+        utils.edit.call(this);
       },
     },
   };
 </script>
-<style scoped>
-  .footer {
-    text-align: right;
-  }
-</style>

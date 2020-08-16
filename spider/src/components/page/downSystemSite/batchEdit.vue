@@ -8,19 +8,15 @@
         <FormItem v-if="showEnableStatus" label="EnableStatus" prop="enableStatus">
           <MySelect v-model="query.enableStatus" enum="EnableStatus" width="100%" />
         </FormItem>
-
         <FormItem v-if="showPriority" label="Priority" prop="priority">
           <Input v-model="query.priority" placeholder="Input value" />
         </FormItem>
-
         <FormItem v-if="showUrlMaxCacheCount" label="UrlMaxCacheCount" prop="urlMaxCacheCount">
           <Input v-model="query.urlMaxCacheCount" placeholder="Input value" />
         </FormItem>
-
         <FormItem v-if="showTaskUrlBatchCount" label="TaskUrlBatchCount" prop="taskUrlBatchCount">
           <Input v-model="query.taskUrlBatchCount" placeholder="Input value" />
         </FormItem>
-
         <FormItem
           v-if="showTaskMaxWaitToBindCount"
           label="TaskMaxWaitToBindCount"
@@ -28,7 +24,6 @@
         >
           <Input v-model="query.taskMaxWaitToBindCount" placeholder="Input value" />
         </FormItem>
-
         <FormItem
           v-if="showTaskMaxRunningCount"
           label="TaskMaxRunningCount"
@@ -36,7 +31,6 @@
         >
           <Input v-model="query.taskMaxRunningCount" placeholder="Input value" />
         </FormItem>
-
         <FormItem v-if="showTaskTimeout" label="TaskTimeout" prop="taskTimeout">
           <Input v-model="query.taskTimeout" placeholder="Input value" />
         </FormItem>
@@ -47,17 +41,7 @@
 <script>
   import utils from "./../../../common";
   export default {
-    props: {
-      ids: {
-        type: Array,
-        default: () => [],
-      },
-      title: {
-        type: String,
-        default: "title",
-      },
-    },
-
+    props: utils.batchEditProps(),
     data() {
       return {
         optionalFields: utils.options([
@@ -76,7 +60,7 @@
           urlMaxCacheCount: [utils.range(1000, 20000)],
           urlMaxCrawlCount: [utils.range(1, 20)],
           taskUrlBatchCount: [utils.range(1, 1000)],
-          taskMaxWaitToBindCount: [utils.range(1, 20)],
+          taskMaxWaitToBindCount: [utils.range(1, 200)],
           taskMaxRunningCount: [utils.range(1, 1000)],
           taskTimeout: [utils.range(1, 120)],
           urlMaxDepth: [utils.range(1, 100)],
@@ -84,6 +68,7 @@
           taskUrlMaxContinuouslyFailCount: [utils.range(1, 30)],
           taskUrlMaxConcurrency: [utils.range(1, 1000)],
         },
+        api: "downSystemSite",
         query: {
           enableStatus: null,
           priority: null,
@@ -95,35 +80,14 @@
         },
       };
     },
-    computed: {
-      showEnableStatus() {
-        return this.$utils.arrayHas(this.showingOptionalFields, "EnableStatus");
-      },
-      showPriority() {
-        return this.$utils.arrayHas(this.showingOptionalFields, "Priority");
-      },
-
-      showUrlMaxCacheCount() {
-        return this.$utils.arrayHas(this.showingOptionalFields, "UrlMaxCacheCount");
-      },
-
-      showTaskUrlBatchCount() {
-        return this.$utils.arrayHas(this.showingOptionalFields, "TaskUrlBatchCount");
-      },
-
-      showTaskMaxWaitToBindCount() {
-        return this.$utils.arrayHas(this.showingOptionalFields, "TaskMaxWaitToBindCount");
-      },
-
-      showTaskMaxRunningCount() {
-        return this.$utils.arrayHas(this.showingOptionalFields, "TaskMaxRunningCount");
-      },
-
-      showTaskTimeout() {
-        return this.$utils.arrayHas(this.showingOptionalFields, "TaskTimeout");
+    beforeMount() {
+      utils.initOptionsShow.call(this);
+    },
+    watch: {
+      showingOptionalFields(newVal) {
+        utils.changeShowOptionalFields.call(this, newVal);
       },
     },
-
     methods: {
       show() {
         this.$refs.modal.show();
@@ -132,26 +96,8 @@
         this.$refs.modal.close();
       },
       ok() {
-        this.$refs.form.validate((valid) => {
-          if (valid) {
-            this.$utils.handleNormalRequest.call(this, async () => {
-              this.query.ids = this.ids;
-              let resp = await this.$api.downSystemSite.updateBatch(this.query);
-              if (resp.code == 100) {
-                this.$emit("success", this.query);
-                this.close();
-              }
-
-              return resp;
-            });
-          }
-        });
+        utils.batchEdit.call(this);
       },
     },
   };
 </script>
-<style scoped>
-  .footer {
-    text-align: right;
-  }
-</style>

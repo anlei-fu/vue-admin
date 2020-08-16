@@ -63,12 +63,10 @@
         selectedValue_: null,
       };
     },
-
     created() {
       this.init();
       this.selectedValue_ = this.selectedValue;
     },
-
     watch: {
       options() {
         this.init();
@@ -83,7 +81,6 @@
         this.selectedValue_ = newVal;
       },
     },
-
     methods: {
       init() {
         this.options_ = {};

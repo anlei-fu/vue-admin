@@ -3,7 +3,6 @@
     {{ value | formatter(format) }}
   </div>
 </template>
-
 <script>
   export default {
     props: {
@@ -16,7 +15,6 @@
         default: null,
       },
     },
-
     data() {
       return {};
     },
@@ -26,7 +24,6 @@
           return this.Enums.getColor(this.format.pattern, this.value);
       },
     },
-
     methods: {
       copy() {
         let el = document.createElement("textarea");

@@ -9,7 +9,6 @@
         default: 0,
       },
     },
-
     computed: {
       color() {
         if (this.percent < 20) {

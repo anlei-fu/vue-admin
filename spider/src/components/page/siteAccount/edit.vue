@@ -4,7 +4,6 @@
       <FormItem label="Fields">
         <MyCheckBoxGroup v-model="showingOptionalFields" :options="optionalFields" />
       </FormItem>
-
       <MyScroll height="350px">
         <FormItem v-if="showLoginType" label="LoginType" prop="loginType">
           <MySelect v-model="query.loginType" enum="LoginType" width="100%" />
@@ -18,31 +17,24 @@
         <FormItem v-if="showSiteId" label="Site" prop="siteId">
           <MySelect v-model="query.siteId" enum="Site" width="100%" />
         </FormItem>
-
         <FormItem v-if="showEnableStatus" label="EnableStatus" prop="enableStatus">
           <MySelect v-model="query.enableStatus" enum="EnableStatus" width="100%" />
         </FormItem>
-
         <FormItem v-if="showAccount" label="Account" prop="account">
           <Input v-model="query.account" placeholder="Input value" />
         </FormItem>
-
         <FormItem v-if="showPhone" label="Phone" prop="phone">
           <Input v-model="query.phone" placeholder="Input value" />
         </FormItem>
-
         <FormItem v-if="showBlockTimeoutTime" label="BlockTimeoutTime" prop="blockTimeoutTime">
           <MyDateTime v-model="query.blockTimeoutTime" />
         </FormItem>
-
         <FormItem v-if="showDelayTimeoutTime" label="DelayTimeoutTime" prop="delayTimeoutTime">
           <MyDateTime v-model="query.delayTimeoutTime" />
         </FormItem>
-
         <FormItem v-if="showEmail" label="Email" prop="email">
           <Input v-model="query.email" placeholder="Input value" />
         </FormItem>
-
         <FormItem v-if="showPassword" label="Password" prop="password">
           <Input v-model="query.password" placeholder="Input value" />
         </FormItem>
@@ -56,17 +48,7 @@
 <script>
   import utils from "./../../../common";
   export default {
-    props: {
-      model: {
-        type: Object,
-        default: () => {},
-      },
-      title: {
-        type: String,
-        default: "",
-      },
-    },
-
+    props: utils.editProps(),
     data() {
       return {
         optionalFields: utils.options([
@@ -88,6 +70,7 @@
           emial: [utils.email()],
           phone: [utils.phone],
         },
+        api: "siteAccount",
         query: {
           id: null,
           accountType: null,
@@ -106,73 +89,16 @@
         },
       };
     },
-    created() {
-      this.$utils.copyFieldsFrom(this.query, this.model);
+    beforeMount() {
+      utils.initOptionsShow.call(this);
+      utils.copyFieldsFrom(this.query, this.model);
     },
     watch: {
       model(newVal) {
-        this.$utils.copyFieldsFrom(this.query, newVal);
+        utils.copyFieldsFrom(this.query, newVal);
       },
-    },
-    computed: {
-      showAccountType() {
-        return this.$utils.arrayHas(this.showingOptionalFields, "AccountType");
-      },
-
-      showValidated() {
-        return this.$utils.arrayHas(this.showingOptionalFields, "Validated");
-      },
-
-      showBlockTimeoutTime() {
-        return this.$utils.arrayHas(this.showingOptionalFields, "BlockTimeoutTime");
-      },
-
-      showDelayTimeoutTime() {
-        return this.$utils.arrayHas(this.showingOptionalFields, "DelayTimeoutTime");
-      },
-
-      showNickName() {
-        return this.$utils.arrayHas(this.showingOptionalFields, "NickName");
-      },
-
-      showLoginType() {
-        return this.$utils.arrayHas(this.showingOptionalFields, "LoginType");
-      },
-
-      showSiteId() {
-        return this.$utils.arrayHas(this.showingOptionalFields, "SiteId");
-      },
-
-      showEnableStatus() {
-        return this.$utils.arrayHas(this.showingOptionalFields, "EnableStatus");
-      },
-
-      showCreateTime() {
-        return this.$utils.arrayHas(this.showingOptionalFields, "CreateTime");
-      },
-
-      showAccount() {
-        return this.$utils.arrayHas(this.showingOptionalFields, "Account");
-      },
-
-      showPhone() {
-        return this.$utils.arrayHas(this.showingOptionalFields, "Phone");
-      },
-
-      showEmail() {
-        return this.$utils.arrayHas(this.showingOptionalFields, "Email");
-      },
-
-      showPassword() {
-        return this.$utils.arrayHas(this.showingOptionalFields, "Password");
-      },
-
-      showBlockCurrentCount() {
-        return this.$utils.arrayHas(this.showingOptionalFields, "BlockCurrentCount");
-      },
-
-      showDescription() {
-        return this.$utils.arrayHas(this.showingOptionalFields, "Description");
+      showingOptionalFields(newVal) {
+        utils.changeShowOptionalFields.call(this, newVal);
       },
     },
     methods: {
@@ -183,24 +109,8 @@
         this.$refs.modal.close();
       },
       ok() {
-        this.$refs.form.validate((valid) => {
-          if (valid) {
-            this.$utils.handleNormalRequest.call(this, async () => {
-              let resp = await this.$api.siteAccount.updateById(this.query);
-              if (resp.code == 100) {
-                this.$emit("success", this.query);
-                this.close();
-              }
-              return resp;
-            });
-          }
-        });
+        utils.edit.call(this);
       },
     },
   };
 </script>
-<style scoped>
-  .footer {
-    text-align: right;
-  }
-</style>

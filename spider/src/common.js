@@ -191,18 +191,96 @@ const addSetting = (title) => {
         };
 };
 
+const editProps = () => {
+        return {
+                model: {
+                        type: Object,
+                        default: () => { },
+                },
+                title: {
+                        type: String,
+                        default: "",
+                },
+        };
+}
+
+const batchEditProps = () => {
+        return {
+                ids: {
+                        type: Array,
+                        default: () => [],
+                },
+                title: {
+                        type: String,
+                        default: "title",
+                },
+        }
+}
+
+const addProps = () => {
+        return {
+                model: {
+                        type: Object,
+                        default: () => { },
+                },
+                title: {
+                        type: String,
+                        default: "",
+                },
+        }
+}
+
 function showAdd() {
         this.addSetting.title = "add";
         this.addSetting.model = {};
         this.$refs.add.show();
 };
 
+function add() {
+        this.$refs.form.validate((valid) => {
+                if (valid) {
+                        this.$utils.handleNormalRequest.call(this, () =>
+                                this.$api[this.api].add(this.query))
+                }
+        });
+}
+
 function showEdit(row) {
-        console.log(this.editSetting);
         this.editSetting.title = "edit";
         this.editSetting.model = row;
         this.$refs.edit.show();
 };
+
+function edit() {
+        this.$refs.form.validate((valid) => {
+                if (valid) {
+                        this.$utils.handleNormalRequest.call(this, async () => {
+                                let resp = await this.$api[this.api].updateById(this.query);
+                                if (resp.code == 100) {
+                                        this.$emit("success", this.query);
+                                        this.close();
+                                }
+                                return resp;
+                        });
+                }
+        });
+}
+
+function batchEdit() {
+        this.query.ids = this.ids;
+        this.$refs.form.validate((valid) => {
+                if (valid) {
+                        this.$utils.handleNormalRequest.call(this, async () => {
+                                let resp = await this.$api[this.api].updateBatch(this.query);
+                                if (resp.code == 100) {
+                                        this.$emit("success", this.query);
+                                        this.close();
+                                }
+                                return resp;
+                        });
+                }
+        });
+}
 
 function batchEdit() {
         if (checkCount.call(this)) {
@@ -257,22 +335,21 @@ function checkCount() {
 };
 
 function getIds(idField) {
-        debugger
         return this.$utils.pickObjectArrayFileds(
                 this.$refs.table.getSelection(),
                 idField
         );
 };
 
-function onEditSuccess(idFiled = "id") {
+function onEditSuccess(row, idFiled = "id") {
         let data = this.data.list.filter((x) => x[idFiled] == row[idFiled]);
-        if (data.length > 0) this.$utils.copyFieldsFrom(data[0], row);
+        if (data.length > 0) copyFieldsFrom(data[0], row);
 }
 
 function onBatchEditSuccess(data, idField = "id") {
         let set = new Set(data.ids);
         this.data.list.forEach((x) => {
-                if (set.has(x[idField])) this.$utils.copyFieldsFrom(x, data);
+                if (set.has(x[idField])) copyFieldsFrom(x, data);
         });
 };
 
@@ -306,16 +383,62 @@ const radioOptions = (items) => {
         return ops;
 };
 
-const data=()=>{
+const data = () => {
         return {
-                total:0,
-                list:[]
+                total: 0,
+                list: []
         };
 }
 
 function initFilterOptionShow() {
         this.pageSetting.filters.options.forEach(item => {
                 this["show" + item.value] = true;
+        });
+}
+
+function changeShowingFilters(showings) {
+        let set = new Set(showings);
+        this.pageSetting.filters.options.forEach((op) => {
+                if (set.has(op.value)) {
+                        this["show" + op.value] = true;
+                } else {
+                        this["show" + op.value] = false;
+                }
+        });
+}
+
+function initOptionsShow() {
+        let set = new Set(this.showingOptionalFields);
+        this.optionalFields.forEach(item => {
+                if (set.has(item.value)) {
+                        this["show" + item.value] = true;
+                } else {
+                        this["show" + item.value] = false;
+                }
+        });
+}
+
+function changeShowOptionalFields(showings) {
+        let set = new Set(showings);
+        this.optionalFields.forEach((op) => {
+                if (set.has(op.value)) {
+                        this["show" + op.value] = true;
+                } else {
+                        this["show" + op.value] = false;
+                }
+        });
+}
+
+/**
+ * Copy fields from source object
+ * 
+ * @param {Object} target 
+ * @param {Object} source 
+ */
+function copyFieldsFrom(target, source) {
+        Object.keys(target).forEach(x => {
+                if (source[x] != null)
+                        target[x] = source[x];
         });
 }
 
@@ -344,76 +467,83 @@ function getData(reset, radio = false, timeRange = false) {
         }
 }
 
-const validator=(value)=>{
+const validator = (rule, value, cb) => {
         if (!value) {
                 cb(new Error("empty"));
-                return;
-              }
-        
-              cb();
+        }
+
+        cb();
 };
 
-const require =(msg,trigger)=>{
+const require = (msg, trigger) => {
         return {
-                        required: true,
-                        validator,
-                        message: msg||"field can not be empty",
-                        trigger:trigger|| "blur",
+                required: true,
+                validator,
+                message: msg || "field can not be empty",
+                trigger: trigger || "blur",
         }
 }
 
-const rangeValidator =()=>{
+const rangeValidator = (rule, value, cb) => {
+        if (isNaN(value) || value < rule.min)
+                cb(Error("out of range"));
 
+        if (value > rule.max)
+                cb(Error("out of range"));
+
+        cb();
 };
 
-const range =(min,max,msg,trigger)=>{
-   return    {
-        validator:rangeValidator,
-        min: min,
-        max: max,
-        message: msg||`out of range ${min}-${max} `,
-        trigger: trigger||"blur",
-      }
+const range = (min, max, msg, trigger) => {
+        return {
+                validator: rangeValidator,
+                min: min,
+                max: max,
+                message: msg || `out of range ${min}-${max} `,
+                trigger: trigger || "blur",
+        }
 }
 
-const email =()=>{
+const email = () => {
         return {
-                type:"email",
+                type: "email",
                 message: "email incorrect ",
                 trigger: "blur",
         }
 }
 
-const ip =()=>{
+const ip = () => {
         return {
-                type:"phone",
-                message: "phone incorrect",
-                trigger: "blur",
+                pattern: /^((2[0-4]\d|25[0-5]|[01]?\d\d?)\.){3}(2[0-4]\d|25[0-5]|[01]?\d\d?)$/, 
+                message: "ip incorrect", 
+                trigger: "blur"
         }
 };
 
-const port =()=>{
+const port = (msg,trigger) => {
         return {
-                type:"phone",
-                message: "port incorrect",
-                trigger: "blur",
-        }  
+                validator: rangeValidator,
+                min: 1,
+                max: 63000,
+                message:msg||`out of port number range `,
+                trigger: trigger||"blur",
+        }
 };
 
-const phone=()=>{
+const phone = () => {
         return {
-                type:"phone",
-                message: "phone incorrect",
-                trigger: "blur",
-        }  
+                pattern: /^1[3456789]\d{9}$/, 
+                message: "phone incorrect", 
+                trigger: "blur"
+        }
 }
 
-const url=()=>{
+const url = () => {
         return {
-                type:"url",
+                type: "url",
                 message: "url incorrect",
                 trigger: "blur",
-        }  
+        }
 }
 
 export default {
@@ -447,4 +577,14 @@ export default {
         ip,
         port,
         url,
+        initOptionsShow,
+        copyFieldsFrom,
+        add,
+        edit,
+        batchEdit,
+        editProps,
+        batchEditProps,
+        addProps,
+        changeShowOptionalFields,
+        changeShowingFilters
 }

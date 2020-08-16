@@ -28,7 +28,6 @@
         show_: false,
       };
     },
-
     methods: {
       show() {
         this.show_ = true;
@@ -42,8 +41,3 @@
     },
   };
 </script>
-<style scoped>
-  .footer {
-    text-align: right;
-  }
-</style>

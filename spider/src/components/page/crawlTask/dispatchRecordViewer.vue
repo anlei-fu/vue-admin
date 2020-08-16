@@ -1,5 +1,5 @@
 <template>
-  <MyModal ref="modal" :noCancel="true" @ok="onOk" width="45%">
+  <MyModal ref="modal" title="DispatchRecords" :noCancel="true" @ok="onOk" width="45%">
     <dispatchList :id="id" />
   </MyModal>
 </template>

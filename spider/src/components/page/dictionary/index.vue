@@ -73,7 +73,7 @@
               utils.column("value"),
               utils.column("color"),
               utils.dateColumn("createTime", "Ctime"),
-              utils.operateColumn([utils.operation("edit"), utils.operation("delete")]),
+              utils.operateColumn([utils.operation("edit"), utils.operation("delete")],{width:"150px"}),
             ],
             showingColumns: [],
           },
@@ -103,14 +103,7 @@
     },
     watch: {
       "pageSetting.filters.enabledFilters"(newVal) {
-        let set = new Set(newVal);
-        this.pageSetting.filters.options.forEach((op) => {
-          if (set.has(op.value)) {
-            this["show" + op.value] = true;
-          } else {
-            this["show" + op.value] = false;
-          }
-        });
+        utils.changeShowingFilters.call(this, newVal);
       },
     },
     methods: {
@@ -124,7 +117,6 @@
         utils.onEditSuccess.call(this, row);
       },
       batchEdit() {
-        debugger;
         utils.batchEdit.call(this);
       },
       onBatchEditSuccess(data) {

@@ -30,7 +30,6 @@
       :selectedColumns="pageSetting.table.showingColumns"
       @delete="showDelete"
     />
-
     <MyPager
       :current="query.pageIndex"
       :total="data.total"
@@ -44,7 +43,6 @@
 <script>
   import utils from "./../../../common";
   import add from "./add";
-
   export default {
     components: {
       add,
@@ -63,8 +61,12 @@
               utils.enumColumn("siteAccountId", "Account", "Account"),
               utils.column("cookie"),
               utils.column("loginIp"),
-              utils.column("currentBlockCount", "CurBCon"),
+              utils.positiveProgress("usage", "maxUseCount", "currentUseCount"),
+              utils.column("maxUseCount", "mxUseCount"),
               utils.column("currentUseCount", "CurUCon"),
+              utils.positiveProgress("blkRate", "maxBlockCount", "currentBlockCount"),
+              utils.column("maxBlockCount", "mxBlkCnt"),
+              utils.column("currentBlockCount", "CurBCon"),
               utils.dateColumn("expireTime", "ExpTime"),
               utils.dateColumn("createTime", "CTime"),
               utils.operateColumn([utils.operation("delete")]),
@@ -74,15 +76,14 @@
               "siteId",
               "siteAccountId",
               "loginIp",
-              "currentBlockCount",
-              "currentUseCount",
+              "blkRate",
+              "usage",
               "expireTime",
               "createTime",
               "test",
             ],
           },
         },
-
         api: "cookie",
         siteId: null,
         accountOptions: [],
@@ -98,21 +99,13 @@
         data: utils.data(),
       };
     },
-
     beforeMount() {
       utils.initFilterOptionShow.call(this);
       this.getData(true);
     },
     watch: {
       "pageSetting.filters.enabledFilters"(newVal) {
-        let set = new Set(newVal);
-        this.pageSetting.filters.options.forEach((op) => {
-          if (set.has(op.value)) {
-            this["show" + op.value] = true;
-          } else {
-            this["show" + op.value] = false;
-          }
-        });
+        utils.changeShowingFilters.call(this, newVal);
       },
       async siteId(newVal) {
         this.query.siteAccountId = null;
@@ -121,26 +114,22 @@
         this.accountOptions = resp.data;
       },
     },
-
     methods: {
       showAdd() {
         this.addSetting.title = "add";
         this.addSetting.model = {};
         this.$refs.add.show();
       },
-
       showDelete(row) {
         this.$utils.showComfirm.call(this, "Warning", `are you sure to delete this data?`, () => {
           this.$utils.handleNormalRequest.call(this, async () => {
             let resp = await this.$api.cookie.deleteById({ id: row.id });
             if (resp.code == 100) this.data.list = this.data.list.filter((x) => x.id != row.id);
             this.data.total -= 1;
-
             return resp;
           });
         });
       },
-
       batchDelete() {
         if (this.checkCount()) {
           this.$utils.showComfirm.call(
@@ -157,7 +146,6 @@
           );
         }
       },
-
       checkCount() {
         let items = this.$refs.table.getSelection();
         if (items.length == 0) {
@@ -166,25 +154,20 @@
         }
         return true;
       },
-
       getIds() {
         return this.$utils.pickObjectArrayFileds(this.$refs.table.getSelection(), "id");
       },
-
       showSetting() {
         this.$refs.setting.show();
       },
-
       onPageSizeChanged(newSize) {
         this.query.pageSize = newSize;
         this.getData(true);
       },
-
       onPageIndexChanged(newIndex) {
         this.query.pageIndex = newIndex;
         this.getData();
       },
-
       getData(reset) {
         utils.getData.call(this, reset, false, true);
       },

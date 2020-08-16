@@ -41,7 +41,6 @@
           <NavTab ref="tab" @on-change="changeTab" />
         </div>
         <!--router view page container-->
-
         <div class="body-right-page-container">
           <transition name="fade-transform" mode="out-in">
             <router-view v-if="ready" />
@@ -57,14 +56,12 @@
 </template>
 <script>
   import { modules } from "./../../config/modules";
-
   import LeftNavMenu from "./../control/LeftNavMenu";
   import NavMenu from "./../control/NavMenu";
   import SearchBox from "./../control/SearchBox";
   import NavTab from "./../control/NavTab";
   import Footer from "./../control/Footer";
   import DropdownMenu from "./../control/DropdownMenu";
-
   export default {
     name: "home",
     components: {
@@ -169,10 +166,8 @@
             item.menus.forEach((menu) => {
               this.cacheMenu(menu, map, item);
             });
-
           this.moduleMenuMap.set(item._name, map);
         });
-
         // go to default menu
         let menu = this.findMenuByName(
           this.selectedModule._name,
@@ -193,7 +188,6 @@
         menu.module = module;
         this.pathMenuMap.set(menu.path, menu);
         map.set(menu.path, menu);
-
         // recursive all submenu
         if (menu.menus) {
           menu.menus.forEach((subMenu) => {
@@ -212,7 +206,6 @@
           //   if (!dic[item.type]) {
           //     dic[item.type] = [];
           //   }
-
           //   dic[item.type].push(item);
           //    this.$store.dispatch("setCaches",dic);
           // });
@@ -222,7 +215,6 @@
             if (item.value !== undefined) item.value = "" + item.value;
             dic.push(item);
           }
-
           this.Enums.clear();
           this.Enums.set(dic);
           this.ready = true;
@@ -241,7 +233,6 @@
     },
   };
 </script>
-
 <style></style>
 <style scoped>
   .container {
@@ -252,7 +243,6 @@
     background-size: cover;
     background-color: #f7f7f7;
   }
-
   /* Set scroll bar style */
   ::-webkit-scrollbar {
     width: 8px;
@@ -273,7 +263,6 @@
   ::-webkit-scrollbar-thumb:hover {
     background: #555;
   }
-
   .header {
     height: 65px;
     background-color: rgb(48, 65, 86);
@@ -290,7 +279,6 @@
     display: inline-block;
     position: relative;
   }
-
   .user-dropdown-menu-container {
     margin-right: 50px;
     margin-top: 20px;
@@ -298,14 +286,12 @@
     float: right;
     font-size: 13px;
   }
-
   .body {
     padding: 0;
     margin-top: 71px;
     width: 100%;
     text-align: left;
   }
-
   .body-left-menu-container {
     position: fixed;
     top: 65px;
@@ -313,10 +299,8 @@
     bottom: 0;
     vertical-align: top;
     background-color: rgb(48, 65, 86);
-
     /* box-shadow: 0px 0px 6px 4px rgba(80, 80, 80, 0.2); */
   }
-
   .body-right-container {
     display: inline-block;
     margin-left: 14%;
@@ -324,26 +308,22 @@
     min-height: 800px;
     background-color: white;
   }
-
   .body-right-page-container {
     margin: 20px;
     text-align: center;
   }
-
   .body-right-tab-nav-container {
     background-color: white;
     height: 50px;
     padding: 10px;
     border-bottom: 1px solid #dcdee2;
   }
-
   .footer {
     padding-top: 10px;
     margin-top: 5px;
     background-color: #ffffff;
     height: 70px;
   }
-
   /* iview style override */
   .ivu-menu-horizontal.ivu-menu-light:after {
     content: "";
@@ -362,7 +342,6 @@
   .ivu-menu-light.ivu-menu-horizontal .ivu-menu-item {
     color: white;
   }
-
   .ivu-menu-light.ivu-menu-vertical .ivu-menu-item-active:not(.ivu-menu-submenu):after {
     content: "";
     display: block;
@@ -371,7 +350,6 @@
     bottom: 0;
     right: 0;
   }
-
   .ivu-dropdown-item:hover {
     background: red;
   }
@@ -379,56 +357,46 @@
     width: 100%;
     text-align: left;
   }
-
   .ivu-menu-light.ivu-menu-vertical .ivu-menu-item-active:not(.ivu-menu-submenu) {
     color: #2d8cf0;
     /* background: #f0faff; */
     z-index: 2;
   }
-
   /* fade */
   .fade-enter-active,
   .fade-leave-active {
     transition: opacity 0.28s;
   }
-
   .fade-enter,
   .fade-leave-active {
     opacity: 0;
   }
-
   /* fade-transform */
   .fade-transform-leave-active,
   .fade-transform-enter-active {
     transition: all 0.5s;
   }
-
   .fade-transform-enter {
     opacity: 0;
     transform: translateX(-30px);
   }
-
   .fade-transform-leave-to {
     opacity: 0;
     transform: translateX(30px);
   }
-
   /* breadcrumb transition */
   .breadcrumb-enter-active,
   .breadcrumb-leave-active {
     transition: all 0.5s;
   }
-
   .breadcrumb-enter,
   .breadcrumb-leave-active {
     opacity: 0;
     transform: translateX(20px);
   }
-
   .breadcrumb-move {
     transition: all 0.5s;
   }
-
   .breadcrumb-leave-active {
     position: absolute;
   }
@@ -438,22 +406,18 @@
     text-align: left;
     margin-bottom: 30px;
   }
-
   .filter > span {
     display: inline-block;
     margin-top: 20px;
     margin-right: 20px;
   }
-
   .pager {
     margin-top: 15px;
     text-align: left;
   }
-
   .control-title {
     margin-right: 10px;
   }
-
   .ivu-scroll-container {
     overflow-y: scroll;
     padding-right: 10px;

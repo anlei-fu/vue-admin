@@ -23,13 +23,11 @@
         data: utils.data(),
       };
     },
-
     watch: {
       id() {
         this.getData();
       },
     },
-
     methods: {
       async getData() {
         try {

@@ -31,7 +31,6 @@
     methods: {
       async getData() {
         try {
-          debugger;
           let resp = await this.$api.dispatchRecord.getByTaskId({
             taskId: this.$utils.clone(this.id),
           });

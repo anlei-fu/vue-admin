@@ -26,7 +26,6 @@
     color: white;
     border: none;
   }
-
   .tab-item {
     background-color: whitesmoke;
     margin-right: 3px;
@@ -37,13 +36,11 @@
     padding-left: 10px;
     width: 100px;
   }
-
   .tab-content {
     overflow: hidden;
     text-overflow: ellipsis;
     width: 80px;
   }
-
   .tab-item:hover {
     color: white;
     cursor: pointer;

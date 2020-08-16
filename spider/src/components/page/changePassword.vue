@@ -39,7 +39,6 @@
     },
   };
 </script>
-
 <style scoped>
   .change-password-wrapper {
     margin-top: 200px;

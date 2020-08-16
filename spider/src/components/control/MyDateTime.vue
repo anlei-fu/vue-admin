@@ -23,7 +23,6 @@
         value_: null,
       };
     },
-
     created() {
       this.value_ = this.value;
     },

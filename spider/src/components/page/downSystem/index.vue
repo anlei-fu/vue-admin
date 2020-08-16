@@ -71,32 +71,33 @@
               utils.column("priority"),
               utils.column("description", "Desc"),
               utils.column("appKey"),
-              utils.column("appSecret"),
+              utils.column("appSecret","Scrt"),
               utils.column("dataUrl"),
               utils.column("dataQueue", "DataQ"),
               utils.negativeProgress(
-                "concurrency",
+                "concur",
                 "taskMaxRunningCount",
                 "taskCurrentRunningCount"
               ),
-              utils.column("taskMaxRunningCount", "MaxCon"),
-              utils.column("taskCurrentRunningCount", "CurCon"),
-              utils.negativeProgress("completion", "urlTotalCount", "urlFinishedCount"),
-              utils.negativeProgress("urlBadRate", "urlTotalCount", "urlBadCount"),
-              utils.column("urlTotalCount", "UrlTotal"),
-              utils.column("urlFinishedCount", "UrlFinished"),
-              utils.column("urlBadCount", "UrlBad"),
+              utils.column("taskMaxRunningCount", "MxCon"),
+              utils.column("taskCurrentRunningCount", "CrtCon"),
+              utils.negativeProgress("urlCplt", "urlTotalCount", "urlFinishedCount"),
+              utils.positiveProgress("urlBadRt", "urlTotalCount", "urlBadCount"),
+              utils.column("urlTotalCount", "TtlUrl"),
+              utils.column("urlFinishedCount", "FnsdUrl"),
+              utils.column("urlBadCount", "BadUrl"),
               utils.enumColumn("enableStatus", null, "Status"),
               utils.dateColumn("createTime", "CTime"),
-              utils.operateColumn([utils.operation("edit"), utils.operation("delete")]),
+              utils.operateColumn([utils.operation("edit"), utils.operation("delete")],{width:"180px"}),
             ],
             showingColumns: [
               "Checkbox",
               "name",
               "priority",
               "concurrency",
-              "completion",
-              "urlBadRate",
+              "concur",
+              "urlCplt",
+              "urlBdRt",
               "enableStatus",
               "createTime",
               "test",
@@ -124,14 +125,7 @@
     },
     watch: {
       "pageSetting.filters.enabledFilters"(newVal) {
-        let set = new Set(newVal);
-        this.pageSetting.filters.options.forEach((op) => {
-          if (set.has(op.value)) {
-            this["show" + op.value] = true;
-          } else {
-            this["show" + op.value] = false;
-          }
-        });
+        utils.changeShowingFilters.call(this, newVal);
       },
     },
     methods: {

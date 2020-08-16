@@ -86,167 +86,171 @@
   </div>
 </template>
 <script>
-  import add from "./add";
-  import edit from "./edit";
-  import batchEdit from "./batchEdit";
-  import utils from "./../../../common";
-  export default {
-    components: {
-      edit,
-      add,
-      batchEdit,
-    },
-    data() {
-      return {
-        pageSetting: {
-          filters: {
-            options: utils.options([
-              "TimeRange",
-              "ParentSiteId",
-              "CrawlNeedUseCookie",
-              "LoginNeedVcode",
-              "LoginCaptaType",
-              "EnableStatus",
-              "NeedUseProxy",
-              "RadioGroup",
-            ]),
-            enabledFilters: [
-              "TimeRange",
-              "ParentSiteId",
-              "CrawlNeedUseCookie",
-              "LoginNeedVcode",
-              "LoginCaptaType",
-              "NeedUseProxy",
-              "EnableStatus",
-              "RadioGroup",
-            ],
-          },
-          table: {
-            columns: [
-              utils.CHECKBOX_COLUMN,
-              utils.column("id"),
-              utils.column("name"),
-              utils.column("description", "Desc"),
-              utils.enumColumn("parentSiteId", "Site", "PSite"),
-              utils.column("domain"),
-              utils.column("homePageUrl", "Home"),
-              utils.enumColumn("loginNeedVcode", "YesNo"),
-              utils.enumColumn("loginCaptaType", null),
-              utils.enumColumn("crawlNeedUseCookie", "YesNo", "NeedCookie"),
-              utils.enumColumn("needUseProxy", "YesNo", "NeedProxy"),
-              utils.column("loginScriptId", "LoginScript"),
-              utils.column("ipDelayTimeout", "IpDTut(s)"),
-              utils.column("ipBlockTimeout", "IpBTut(min)"),
-              utils.column("ipHourSpeedLimit", "IpHLmt"),
-              utils.column("ipMinuteSpeedLimit", "IpMLmt"),
-              utils.column("ipDaySpeedLimit", "IpDLmt"),
-              utils.enumColumn("accountAllowCrossIp", "YesNo", "AccCrossIp"),
-              utils.enumColumn("accountAllowMultiple", "YesNo", "AcctMulti"),
-              utils.column("accountMinuteSpeedLimit", "AccountMLmt"),
-              utils.column("accountHourSpeedLimit", "AccountHLmt"),
-              utils.column("accountDaySpeedLimit", "AccountDLmt"),
-              utils.column("accountMaxBlockCount", "AccountMaxB"),
-              utils.column("accountBlockTimeout", "AccountBTut(h)"),
-              utils.column("accountMaxCookieCount", "AccountMaxCk"),
-              utils.column("accountDelayTimeout", "AccountDTut(s)"),
-              utils.column("cookieMaxBlockCount", "CookieMaxB"),
-              utils.column("cookieExpireTimeout", "CookieExp"),
-              utils.column("cookieDelayTimeout", "CookieDTut(s)"),
-              utils.enumColumn("enableStatus", null, "Status"),
-              utils.dateColumn("createTime", "CTime"),
-              utils.operateColumn([utils.operation("edit"), utils.operation("delete")]),
-            ],
-            showingColumns: [
-              "Checkbox",
-              "name",
-              "crawlNeedUseCookie",
-              "needUseProxy",
-              "ipDelayTimeout",
-              "ipBlockTimeout",
-              "ipHourSpeedLimit",
-              "accountAllowCrossIp",
-              "accountAllowMultiple",
-              "enableStatus",
-              "createTime",
-              "test",
-            ],
-          },
+import add from "./add";
+import edit from "./edit";
+import batchEdit from "./batchEdit";
+import utils from "./../../../common";
+export default {
+  components: {
+    edit,
+    add,
+    batchEdit,
+  },
+  data() {
+    return {
+      pageSetting: {
+        filters: {
+          options: utils.options([
+            "TimeRange",
+            "ParentSiteId",
+            "CrawlNeedUseCookie",
+            "LoginNeedVcode",
+            "LoginCaptaType",
+            "EnableStatus",
+            "NeedUseProxy",
+            "RadioGroup",
+          ]),
+          enabledFilters: [
+            "TimeRange",
+            "ParentSiteId",
+            "CrawlNeedUseCookie",
+            "LoginNeedVcode",
+            "LoginCaptaType",
+            "NeedUseProxy",
+            "EnableStatus",
+            "RadioGroup",
+          ],
         },
-        editSetting: utils.editSetting(),
-        addSetting: utils.addSetting(),
-        batchEditSetting: utils.batchEditSetting(),
-        radioKey: "name",
-        keyword: "",
-        radioOptions: utils.radioOptions(["name", "domain"]),
-        api: "site",
-        timeRange: [],
-        query: {
-          parentSiteId: null,
-          crawlNeedUseCookie: null,
-          loginNeedVcode: null,
-          loginCaptaType: null,
-          needUseProxy: null,
-          enableStatus: null,
-          createTimeStart: null,
-          createTimeEnd: null,
-          pageIndex: 1,
-          pageSize: 10,
+        table: {
+          columns: [
+            utils.CHECKBOX_COLUMN,
+            utils.column("id"),
+            utils.column("name"),
+            utils.column("description", "Desc"),
+            utils.enumColumn("parentSiteId", "Site", "PSite"),
+            utils.column("domain"),
+            utils.column("homePageUrl", "HmPg"),
+            utils.enumColumn("loginNeedVcode", "YesNo", "LgNdVcd"),
+            utils.enumColumn("loginCaptaType", null, "LgCptTy"),
+            utils.enumColumn("crawlNeedUseCookie", "YesNo", "NdCk"),
+            utils.enumColumn("needUseProxy", "YesNo", "NdPro"),
+            utils.column("loginScriptId", "LgScript"),
+            utils.column("ipMinuteSpeedLimit", "IpMinLmt"),
+            utils.column("ipHourSpeedLimit", "IpHrLmt"),
+            utils.column("ipDaySpeedLimit", "IpDayLmt"),
+            utils.column("ipDelayTimeout", "IpDlTmt(s)"),
+            utils.column("ipBlockTimeout", "IpBlkTmt(min)", { width: "120px" }),
+            utils.enumColumn("accountAllowCrossIp", "YesNo", "CrsIp"),
+            utils.enumColumn("accountAllowMultiple", "YesNo", "Mltpl"),
+            utils.column("accountMinuteSpeedLimit", "AccMinLmt"),
+            utils.column("accountHourSpeedLimit", "AccHrLmt"),
+            utils.column("accountDaySpeedLimit", "AccDayLmt"),
+            utils.column("accountMaxBlockCount", "AccMxB"),
+            utils.column("accountBlockTimeout", "AccBlkTmt(h)"),
+            utils.column("accountMaxCookieCount", "AccMxCk"),
+            utils.column("accountDelayTimeout", "AcctDlTmt(s)"),
+            utils.column("cookieMaxBlockCount", "CkMxBlk"),
+            utils.column("cookieExpireTimeout", "CkExp"),
+            utils.column("cookieDelayTimeout", "CkDTmt(s)"),
+            utils.enumColumn("enableStatus", null, "Status"),
+            utils.dateColumn("createTime", "CTime"),
+            utils.operateColumn(
+              [utils.operation("edit"), utils.operation("delete")],
+              { width: "150px" }
+            ),
+          ],
+          showingColumns: [
+            "Checkbox",
+            "name",
+            "crawlNeedUseCookie",
+            "needUseProxy",
+            "ipDelayTimeout",
+            "ipBlockTimeout",
+            "ipMinuteSpeedLimit",
+            "accountAllowCrossIp",
+            "accountAllowMultiple",
+            "enableStatus",
+            // "createTime",
+            "test",
+          ],
         },
-        data: utils.data(),
-      };
+      },
+      editSetting: utils.editSetting(),
+      addSetting: utils.addSetting(),
+      batchEditSetting: utils.batchEditSetting(),
+      radioKey: "name",
+      keyword: "",
+      radioOptions: utils.radioOptions(["name", "domain"]),
+      api: "site",
+      timeRange: [],
+      query: {
+        parentSiteId: null,
+        crawlNeedUseCookie: null,
+        loginNeedVcode: null,
+        loginCaptaType: null,
+        needUseProxy: null,
+        enableStatus: null,
+        createTimeStart: null,
+        createTimeEnd: null,
+        pageIndex: 1,
+        pageSize: 10,
+      },
+      data: utils.data(),
+    };
+  },
+  beforeMount() {
+    utils.initFilterOptionShow.call(this);
+    this.getData(true);
+  },
+  watch: {
+    "pageSetting.filters.enabledFilters"(newVal) {
+      let set = new Set(newVal);
+      this.pageSetting.filters.options.forEach((op) => {
+        if (set.has(op.value)) {
+          this["show" + op.value] = true;
+        } else {
+          this["show" + op.value] = false;
+        }
+      });
     },
-    beforeMount() {
-      utils.initFilterOptionShow.call(this);
+  },
+  methods: {
+    showAdd() {
+      debugger;
+      utils.showAdd.call(this);
+    },
+    showEdit(row) {
+      utils.showEdit.call(this, row);
+    },
+    onEditSuccess(row) {
+      utils.onEditSuccess.call(this, row);
+    },
+    batchEdit() {
+      utils.batchEdit.call(this);
+    },
+    onBatchEditSuccess(data) {
+      utils.onBatchEditSuccess.call(this, data);
+    },
+    batchDelete() {
+      utils.batchDelete.call(this);
+    },
+    showDelete(row) {
+      utils.showDelete.call(this, row);
+    },
+    showSetting() {
+      this.$refs.setting.show();
+    },
+    onPageSizeChanged(newSize) {
+      this.query.pageSize = newSize;
       this.getData(true);
     },
-    watch: {
-      "pageSetting.filters.enabledFilters"(newVal) {
-        let set = new Set(newVal);
-        this.pageSetting.filters.options.forEach((op) => {
-          if (set.has(op.value)) {
-            this["show" + op.value] = true;
-          } else {
-            this["show" + op.value] = false;
-          }
-        });
-      },
+    onPageIndexChanged(newIndex) {
+      this.query.pageIndex = newIndex;
+      this.getData();
     },
-    methods: {
-      showAdd() {
-        utils.showAdd.call(this);
-      },
-      showEdit(row) {
-        utils.showEdit.call(this, row);
-      },
-      onEditSuccess(row) {
-        utils.onEditSuccess.call(this, row);
-      },
-      batchEdit() {
-        utils.batchEdit.call(this);
-      },
-      onBatchEditSuccess(data) {
-        utils.onBatchEditSuccess.call(this, data);
-      },
-      batchDelete() {
-        utils.batchDelete.call(this);
-      },
-      showDelete(row) {
-        utils.showDelete.call(this, row);
-      },
-      showSetting() {
-        this.$refs.setting.show();
-      },
-      onPageSizeChanged(newSize) {
-        this.query.pageSize = newSize;
-        this.getData(true);
-      },
-      onPageIndexChanged(newIndex) {
-        this.query.pageIndex = newIndex;
-        this.getData();
-      },
-      getData(reset) {
-        utils.getData.call(this, reset, true, true);
-      },
+    getData(reset) {
+      utils.getData.call(this, reset, true, true);
     },
-  };
+  },
+};
 </script>

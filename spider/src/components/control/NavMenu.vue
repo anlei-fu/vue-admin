@@ -65,11 +65,9 @@
     color: #57a3f3 !important;
     border-bottom: 2px solid !important;
   }
-
   .nav-left-menu-item {
     padding: 14px 0px;
     margin: 13px;
-
     font-size: 16px;
     display: inline;
     float: none;

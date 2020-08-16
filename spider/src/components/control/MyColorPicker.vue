@@ -43,7 +43,6 @@
             label: "Disabled",
             value: "#515a6e",
           },
-
           {
             label: "Moccasin",
             value: "#FFE4B5",

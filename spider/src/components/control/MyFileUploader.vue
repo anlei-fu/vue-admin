@@ -40,7 +40,6 @@
           this.$Message.error("upload failed:" + resp.Message);
         }
       },
-
       onError(err) {
         this.$Message.error("upload failed!");
       },

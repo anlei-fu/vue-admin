@@ -92,7 +92,6 @@
               "EnableStatus",
               "RadioGroup",
             ]),
-
             enabledFilters: [
               "TimeRange",
               "CrawlerType",
@@ -106,23 +105,23 @@
             columns: [
               utils.CHECKBOX_COLUMN,
               utils.column("name"),
-              utils.column("ip"),
+              utils.column("clientVersion", "Vs"),
+              utils.column("ip",null,{width:"110px"}),
               utils.column("port"),
               utils.column("description", "Desc"),
               utils.column("uniqueId", "UId"),
               utils.column("key"),
-              utils.column("clientVersion", "Ver"),
-              utils.enumColumn("crawlerType", null, "Type"),
+              utils.enumColumn("crawlerType", null, "CrlerTp"),
               utils.positiveProgress("usage", "maxConcurrency", "currentConcurrency"),
-              utils.column("maxConcurrency", "MaxCon"),
-              utils.column("currentConcurrency", "CurCon"),
-              utils.enumColumn("heartbeatStatus", null, "HbStatus"),
-              utils.dateColumn("heartbeatLastTime", "HbTime"),
-              utils.column("heartbeatLostCount", "LHbCnt"),
-              utils.dateColumn("lastSyncConcurrencyTime", "LSync"),
+              utils.column("maxConcurrency", "MxCon"),
+              utils.column("currentConcurrency", "CrtCon"),
+              utils.enumColumn("heartbeatStatus", null, "HbSt"),
+              utils.dateColumn("heartbeatLastTime", "HbTm","MM-dd hh:mm",{width:"110px"}),
+              utils.column("heartbeatLostCount", "LosCnt"),
+              utils.dateColumn("lastSyncConcurrencyTime", "Sync","MM-dd hh:mm",{width:"110px"}),
               utils.enumColumn("enableStatus", null, "Status"),
               utils.dateColumn("createTime", "CTime"),
-              utils.operateColumn([utils.operation("edit"), utils.operation("delete")]),
+              utils.operateColumn([utils.operation("edit"), utils.operation("delete")],{width:"130px"}),
             ],
             showingColumns: [
               "Checkbox",
@@ -136,8 +135,9 @@
               "heartbeatLastTime",
               "heartbeatLostCount",
               "enableStatus",
-              "createTime",
+              // "createTime",
               "test",
+              "lastSyncConcurrencyTime"
             ],
           },
         },
@@ -168,18 +168,12 @@
     },
     watch: {
       "pageSetting.filters.enabledFilters"(newVal) {
-        let set = new Set(newVal);
-        this.pageSetting.filters.options.forEach((op) => {
-          if (set.has(op.value)) {
-            this["show" + op.value] = true;
-          } else {
-            this["show" + op.value] = false;
-          }
-        });
+        utils.changeShowingFilters.call(this, newVal);
       },
     },
     methods: {
       showAdd() {
+        debugger
         utils.showAdd.call(this);
       },
       showEdit(row) {

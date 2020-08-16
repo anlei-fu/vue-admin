@@ -8,21 +8,13 @@
   </MyModal>
 </template>
 <script>
+  import utils from "./../../../common";
   export default {
-    props: {
-      ids: {
-        type: Array,
-        default: () => [],
-      },
-      title: {
-        type: String,
-        default: "title",
-      },
-    },
-
+    props: utils.batchEditProps(),
     data() {
       return {
         rules: {},
+        api: "dictionary",
         query: {
           type: null,
         },
@@ -36,26 +28,8 @@
         this.$refs.modal.close();
       },
       ok() {
-        this.$refs.form.validate((valid) => {
-          if (valid) {
-            this.$utils.handleNormalRequest.call(this, async () => {
-              this.query.ids = this.ids;
-              let resp = await this.$api.dictionary.updateBatch(this.query);
-              if (resp.code == 100) {
-                this.$emit("success", this.query);
-                this.close();
-              }
-
-              return resp;
-            });
-          }
-        });
+        utils.batchEdit.call(this);
       },
     },
   };
 </script>
-<style scoped>
-  .footer {
-    text-align: right;
-  }
-</style>
