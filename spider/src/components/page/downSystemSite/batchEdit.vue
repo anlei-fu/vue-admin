@@ -34,6 +34,9 @@
         <FormItem v-if="showTaskTimeout" label="TaskTimeout" prop="taskTimeout">
           <Input v-model="query.taskTimeout" placeholder="Input value" />
         </FormItem>
+          <FormItem v-if="showTaskBindTimeout" label="BdTmt" prop="taskBindTimeout">
+          <Input v-model="query.taskBindTimeout" placeholder="Input value" />
+        </FormItem>
       </MyScroll>
     </Form>
   </MyModal>
@@ -52,6 +55,7 @@
           "TaskMaxWaitToBindCount",
           "TaskMaxRunningCount",
           "TaskTimeout",
+          "TaskBindTimeout",
         ]),
         showingOptionalFields: ["EnableStatus"],
         rules: {
@@ -63,6 +67,7 @@
           taskMaxWaitToBindCount: [utils.range(1, 200)],
           taskMaxRunningCount: [utils.range(1, 1000)],
           taskTimeout: [utils.range(1, 120)],
+          taskBindTimeout: [utils.range(1, 240)],
           urlMaxDepth: [utils.range(1, 100)],
           taskUrlMaxFailCount: [utils.range(10, 500)],
           taskUrlMaxContinuouslyFailCount: [utils.range(1, 30)],
@@ -76,6 +81,7 @@
           taskMaxWaitToBindCount: null,
           taskMaxRunningCount: null,
           taskTimeout: null,
+          taskBindTimeout:null,
           ids: null,
         },
       };

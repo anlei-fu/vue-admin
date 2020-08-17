@@ -69,6 +69,9 @@
         <FormItem v-if="showTaskTimeout" label="Timeout" prop="taskTimeout">
           <Input v-model="query.taskTimeout" placeholder="Input value" />
         </FormItem>
+        <FormItem v-if="showTaskBindTimeout" label="BdTmt" prop="taskBindTimeout">
+          <Input v-model="query.taskBindTimeout" placeholder="Input value" />
+        </FormItem>
         <FormItem v-if="showUrlMaxDepth" label="UrlMaxDepth" prop="urlMaxDepth">
           <Input v-model="query.urlMaxDepth" placeholder="Input value" />
         </FormItem>
@@ -121,6 +124,7 @@
           "TaskMaxCount",
           "TaskMaxRunningCount",
           "TaskTimeout",
+          "TaskBindTimeout",
           "TaskUrlMaxFailCount",
           "TaskUrlMaxContinuouslyFailCount",
           "TaskUrlMaxConcurrency",
@@ -146,6 +150,7 @@
           taskMaxCount: [utils.range(1, 20)],
           taskMaxRunningCount: [utils.range(1, 1000)],
           taskTimeout: [utils.range(1, 120)],
+          taskBindTimeout: [utils.range(1, 240)],
           urlMaxDepth: [utils.range(1, 100)],
           taskUrlMaxFailCount: [utils.range(10, 500)],
           taskUrlMaxContinuouslyFailCount: [utils.range(1, 30)],
@@ -170,6 +175,7 @@
           taskUrlBatchCount: null,
           taskMaxCount: null,
           taskMaxRunningCount: null,
+          taskBindTimeout:null,
           taskTimeout: null,
           taskUrlMaxFailCount: null,
           taskUrlMaxContinuouslyFailCount: null,

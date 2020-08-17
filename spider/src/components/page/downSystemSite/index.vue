@@ -126,6 +126,7 @@
               utils.column("taskMaxRunningCount", "MxCon"),
               utils.column("taskCurrentRunningCount", "CrtCon"),
               utils.column("taskTimeout", "TaskTut"),
+              utils.column("taskBindTimeout", "BdTut"),
               utils.column("taskUrlMaxFailCount", "TskUMxF"),
               utils.column("taskUrlMaxContinuouslyFailCount", "TskUMxCF"),
               utils.column("taskUrlMaxConcurrency", "TskUMxCon"),

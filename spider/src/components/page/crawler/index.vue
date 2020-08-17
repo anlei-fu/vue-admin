@@ -118,7 +118,6 @@
               utils.enumColumn("heartbeatStatus", null, "HbSt"),
               utils.dateColumn("heartbeatLastTime", "HbTm","MM-dd hh:mm",{width:"110px"}),
               utils.column("heartbeatLostCount", "LosCnt"),
-              utils.dateColumn("lastSyncConcurrencyTime", "Sync","MM-dd hh:mm",{width:"110px"}),
               utils.enumColumn("enableStatus", null, "Status"),
               utils.dateColumn("createTime", "CTime"),
               utils.operateColumn([utils.operation("edit"), utils.operation("delete")],{width:"130px"}),
