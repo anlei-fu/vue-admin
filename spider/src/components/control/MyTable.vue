@@ -47,67 +47,70 @@
   </div>
 </template>
 <script>
-  export default {
-    props: {
-      columns: {
-        type: Array,
-        default: () => [],
+export default {
+  props: {
+    columns: {
+      type: Array,
+      default: () => [],
+    },
+    datas: Array,
+    columnFilter: Boolean,
+    stripe: Boolean,
+    border: Boolean,
+    selectedColumns: {
+      type: Array,
+      default: () => [],
+    },
+  },
+  data() {
+    return {
+      selectedColumns_: [],
+      contentColumn: {
+        source: [],
+        filtered: [],
       },
-      datas: Array,
-      columnFilter: Boolean,
-      stripe: Boolean,
-      border: Boolean,
-      selectedColumns: {
-        type: Array,
-        default: () => [],
+    };
+  },
+  created() {
+    this.init();
+  },
+  methods: {
+    init() {
+      this.contentColumn.source = this.contentColumn.filtered = this.columns;
+      let columns = this.$utils.clone(this.selectedColumns);
+      this.selectedColumns_ =
+        columns.length == 0 ? this.getAllColumns() : columns;
+    },
+    emit(event, row) {
+      this.$emit(event, row);
+    },
+    getSelection() {
+      return this.$refs.table.getSelection();
+    },
+    doFilter() {
+      let set = new Set(this.selectedColumns_);
+      this.contentColumn.filtered = this.contentColumn.source.filter((x) =>
+        set.has(x.slot)
+      );
+    },
+    getAllColumns() {
+      let columns = [];
+      this.contentColumn.source.forEach((x) => {
+        columns.push(x.slot);
+      });
+      return columns;
+    },
+  },
+  watch: {
+    selectedColumns_: {
+      deep: true,
+      handler: function (newVal) {
+        if (this.doFilter) this.doFilter();
       },
     },
-    data() {
-      return {
-        selectedColumns_: [],
-        contentColumn: {
-          source: [],
-          filtered: [],
-        },
-      };
+    selectedColumns() {
+      this.selectedColumns_ = this.$utils.clone(this.selectedColumns);
     },
-    created() {
-      this.init();
-    },
-    methods: {
-      init() {
-        this.contentColumn.source = this.contentColumn.filtered = this.columns;
-        let columns = this.$utils.clone(this.selectedColumns);
-        this.selectedColumns_ = columns.length == 0 ? this.getAllColumns() : columns;
-      },
-      emit(event, row) {
-        this.$emit(event, row);
-      },
-      getSelection() {
-        return this.$refs.table.getSelection();
-      },
-      doFilter() {
-        let set = new Set(this.selectedColumns_);
-        this.contentColumn.filtered = this.contentColumn.source.filter((x) => set.has(x.slot));
-      },
-      getAllColumns() {
-        let columns = [];
-        this.contentColumn.source.forEach((x) => {
-          columns.push(x.slot);
-        });
-        return columns;
-      },
-    },
-    watch: {
-      selectedColumns_: {
-        deep: true,
-        handler: function (newVal) {
-          if (this.doFilter) this.doFilter();
-        },
-      },
-      selectedColumns() {
-        this.selectedColumns_ = this.$utils.clone(this.selectedColumns);
-      },
-    },
-  };
+  },
+};
 </script>

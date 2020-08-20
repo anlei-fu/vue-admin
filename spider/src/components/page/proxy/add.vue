@@ -87,7 +87,7 @@
       };
     },
     beforeMount() {
-      utils.initOptionsShow.call(this);
+      utils.initOptionsFieldsShows.call(this);
       utils.copyFieldsFrom(this.query, this.model);
     },
     watch: {
@@ -95,7 +95,7 @@
         utils.copyFieldsFrom(this.query, newVal);
       },
       showingOptionalFields(newVal) {
-        utils.changeShowOptionalFields.call(this, newVal);
+        utils.changeShowingOptionalFields.call(this, newVal);
       },
     },
     methods: {

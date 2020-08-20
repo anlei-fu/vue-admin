@@ -89,7 +89,7 @@
         this.resetCheckItems();
       },
       /**
-       * Reset checked items call by init and prop 'checkcedItems' changed
+       * Reset checked items called by init and prop 'checkcedItems' changed
        */
       resetCheckItems() {
         this._checkItems.forEach((item) => {

@@ -1,7 +1,20 @@
+/**
+ * Upper first letter
+ * 
+ * @param {String} input 
+ * @returns {String}
+ */
 function upperFirstLetter(input) {
         return `${input.substr(0, 1).toUpperCase()}${input.substr(1, input.length - 1)}`;
 }
 
+/**
+ * Extends sourece object with option object
+ * 
+ * @param {Object} source 
+ * @param {Object} option 
+ * @returns {Object}
+ */
 function extend(source, option) {
         Object.keys(option).forEach(key => {
                 source[key] = option[key];
@@ -10,7 +23,7 @@ function extend(source, option) {
 }
 
 /**
- * CheckboxColumn
+ * CheckboxColumn config
  */
 const CHECKBOX_COLUMN = {
         title: "Ckbox",
@@ -191,7 +204,13 @@ const addSetting = (title) => {
         };
 };
 
-const editProps = () => {
+/***
+ * Edit props model
+ * 
+ * @param {String} title
+ * @returns {EditProps}
+ */
+const editProps = (title) => {
         return {
                 model: {
                         type: Object,
@@ -199,12 +218,19 @@ const editProps = () => {
                 },
                 title: {
                         type: String,
-                        default: "",
+                        default: title || "",
                 },
         };
 }
 
-const batchEditProps = () => {
+
+/**
+ * Batch edit props
+ * 
+ * @param {String} title 
+ * @returns {BatchEditProps}
+ */
+const batchEditProps = (title = "") => {
         return {
                 ids: {
                         type: Array,
@@ -212,12 +238,18 @@ const batchEditProps = () => {
                 },
                 title: {
                         type: String,
-                        default: "title",
+                        default: title,
                 },
         }
 }
 
-const addProps = () => {
+/**
+ * Add props
+ * 
+ * @param {String} title 
+ * @returns {AddProps}
+ */
+const addProps = (title = "") => {
         return {
                 model: {
                         type: Object,
@@ -225,17 +257,30 @@ const addProps = () => {
                 },
                 title: {
                         type: String,
-                        default: "",
+                        default: title,
                 },
         }
 }
 
-function showAdd() {
-        this.addSetting.title = "add";
-        this.addSetting.model = {};
+/**
+ * Show add modal
+ * require ：
+ *  @type {AddProps} 'addSetting'
+ *  modal 'modal'
+ * 
+ * @param {Object} model
+ * @param {String} title
+ */
+function showAdd(model = {}, title = "add") {
+        this.addSetting.title = title;
+        this.addSetting.model = model;
         this.$refs.add.show();
 };
 
+/**
+ * Call add api
+ * 
+ */
 function add() {
         this.$refs.form.validate((valid) => {
                 if (valid) {
@@ -245,12 +290,21 @@ function add() {
         });
 }
 
-function showEdit(row) {
-        this.editSetting.title = "edit";
+/**
+ * Show edit modal
+ * 
+ * @param {Object} row 
+ * @param {String} title 
+ */
+function showEdit(row, title = "edit") {
+        this.editSetting.title = title;
         this.editSetting.model = row;
         this.$refs.edit.show();
 };
 
+/**
+ * Call edit api and update table if success
+ */
 function edit() {
         this.$refs.form.validate((valid) => {
                 if (valid) {
@@ -266,6 +320,31 @@ function edit() {
         });
 }
 
+/**
+ * Update table when edit succeed
+ * 
+ * @param {Objec} row 
+ * @param {String} idFiled 
+ */
+function onEditSuccess(row, idFiled = "id") {
+        let data = this.data.list.filter((x) => x[idFiled] == row[idFiled]);
+        if (data.length > 0) copyFieldsFrom(data[0], row);
+}
+
+/**
+ * Show batch edit modal
+ */
+function batchEdit(title = "Batch Edit") {
+        if (checkCount.call(this)) {
+                this.batchEditSetting.title = title;
+                this.batchEditSetting.ids = getIds.call(this);
+                this.$refs.batchEdit.show();
+        }
+}
+
+/**
+ * Call batch edit api and update table if success
+ */
 function batchEdit() {
         this.query.ids = this.ids;
         this.$refs.form.validate((valid) => {
@@ -282,13 +361,49 @@ function batchEdit() {
         });
 }
 
-function batchEdit() {
-        if (checkCount.call(this)) {
-                this.batchEditSetting.ids = getIds.call(this);
-                this.$refs.batchEdit.show();
-        }
+/**
+ * Update table when batch edit succeed
+ * 
+ * @param {Object} data 
+ * @param {String} idField 
+ */
+function onBatchEditSuccess(data, idField = "id") {
+        let set = new Set(data.ids);
+        this.data.list.forEach((x) => {
+                if (set.has(x[idField])) copyFieldsFrom(x, data);
+        });
 };
 
+/**
+ * Show batch delete if success update table
+ * 
+ * @param {String} idField 
+ * @param {String} msg 
+ */
+function batchDelete(idField = "id", msg = "are you sure to delete these data?") {
+        if (checkCount.call(this)) {
+                this.$utils.showComfirm.call(
+                        this,
+                        "Delete comfirm",
+                        msg,
+                        () => {
+                                this.$utils.handleNormalRequest.call(
+                                        this,
+                                        async () => this.$api[this.api].deleteBatch(getIds.call(this, idField)),
+                                        true
+                                );
+                        }
+                );
+        }
+}
+
+/**
+ * Show delete confirm if success update table
+ * 
+ * @param {Object} row 
+ * @param {String} idField 
+ * @param {String} msg 
+ */
 function showDelete(row, idField = "id", msg = "are you sure to delete this data?") {
         this.$utils.showComfirm.call(
                 this,
@@ -307,24 +422,9 @@ function showDelete(row, idField = "id", msg = "are you sure to delete this data
         );
 };
 
-function batchDelete(idField = "id", msg = "are you sure to delete these data?") {
-        if (checkCount.call(this)) {
-                this.$utils.showComfirm.call(
-                        this,
-                        "Delete comfirm",
-                        msg,
-                        () => {
-                                this.$utils.handleNormalRequest.call(
-                                        this,
-                                        async () => this.$api[this.api].deleteBatch(getIds.call(this, idField)),
-                                        true
-                                );
-                        }
-                );
-        }
-
-}
-
+/**
+ * Check batch is there any row selected for batch operation
+ */
 function checkCount() {
         let items = this.$refs.table.getSelection();
         if (items.length == 0) {
@@ -334,26 +434,17 @@ function checkCount() {
         return true;
 };
 
-function getIds(idField) {
+/**
+ * Get id array from selected rows
+ * 
+ * @param {String} idField 
+ */
+function getIds(idField = "id") {
         return this.$utils.pickObjectArrayFileds(
                 this.$refs.table.getSelection(),
                 idField
         );
 };
-
-function onEditSuccess(row, idFiled = "id") {
-        let data = this.data.list.filter((x) => x[idFiled] == row[idFiled]);
-        if (data.length > 0) copyFieldsFrom(data[0], row);
-}
-
-function onBatchEditSuccess(data, idField = "id") {
-        let set = new Set(data.ids);
-        this.data.list.forEach((x) => {
-                if (set.has(x[idField])) copyFieldsFrom(x, data);
-        });
-};
-
-
 
 /**
  * Build filter options
@@ -372,6 +463,12 @@ const options = (items) => {
         return ops;
 }
 
+/**
+ * Build radio group options
+ * 
+ * @param {String} items 
+ * @returns {[RadioGroupOption]}
+ */
 const radioOptions = (items) => {
         let ops = [];
         items.forEach(x => {
@@ -383,6 +480,11 @@ const radioOptions = (items) => {
         return ops;
 };
 
+/**
+ * Build data props
+ * 
+ * @returns {DataProps}
+ */
 const data = () => {
         return {
                 total: 0,
@@ -390,35 +492,43 @@ const data = () => {
         };
 }
 
-function initFilterOptionShow() {
+/**
+ * Init filter showing control fields
+ */
+function initFilterOptionShows() {
         this.pageSetting.filters.options.forEach(item => {
                 this["show" + item.value] = true;
         });
 }
 
+/**
+ * Change showing filters
+ * 
+ * @param {[String]} showings 
+ */
 function changeShowingFilters(showings) {
         let set = new Set(showings);
         this.pageSetting.filters.options.forEach((op) => {
-                if (set.has(op.value)) {
-                        this["show" + op.value] = true;
-                } else {
-                        this["show" + op.value] = false;
-                }
+                this["show" + op.value] = set.has(op.value);
         });
 }
 
-function initOptionsShow() {
+/**
+ * Init optional fields showing control fields
+ */
+function initOptionsFieldsShows() {
         let set = new Set(this.showingOptionalFields);
         this.optionalFields.forEach(item => {
-                if (set.has(item.value)) {
-                        this["show" + item.value] = true;
-                } else {
-                        this["show" + item.value] = false;
-                }
+                        this["show" + item.value] = set.has(item.value);
         });
 }
 
-function changeShowOptionalFields(showings) {
+/**
+ * Change showing optional fields
+ * 
+ * @param {[String]} showings 
+ */
+function changeShowingOptionalFields(showings) {
         let set = new Set(showings);
         this.optionalFields.forEach((op) => {
                 if (set.has(op.value)) {
@@ -442,6 +552,13 @@ function copyFieldsFrom(target, source) {
         });
 }
 
+/**
+ * Call get list data api and re-render table
+ * 
+ * @param {Boolean} reset 
+ * @param {Boolean} radio 
+ * @param {Boolean} timeRange 
+ */
 function getData(reset, radio = false, timeRange = false) {
         if (reset) {
                 this.query.pageIndex = 1;
@@ -467,23 +584,43 @@ function getData(reset, radio = false, timeRange = false) {
         }
 }
 
-const validator = (rule, value, cb) => {
-        if (!value) {
+/**
+ * Require rule validator
+ * 
+ * @param {Any} _ 
+ * @param {Any} value 
+ * @param {(Error?)=>void} cb 
+ */
+const requireValidator = (_, value, cb) => {
+        if (value == undefined) {
                 cb(new Error("empty"));
         }
 
         cb();
 };
 
+/**
+ * Require rule builder
+ * 
+ * @param {String} msg 
+ * @param {String} trigger 
+ */
 const require = (msg, trigger) => {
         return {
                 required: true,
-                validator,
+                validator: requireValidator,
                 message: msg || "field can not be empty",
                 trigger: trigger || "blur",
         }
 }
 
+/**
+ * Range validator
+ * 
+ * @param {Any} rule 
+ * @param {Number} value 
+ * @param {(Error?)=>Void} cb 
+ */
 const rangeValidator = (rule, value, cb) => {
         if (isNaN(value) || value < rule.min)
                 cb(Error("out of range"));
@@ -494,6 +631,14 @@ const rangeValidator = (rule, value, cb) => {
         cb();
 };
 
+/**
+ * Build range rule
+ * 
+ * @param {Number} min 
+ * @param {Number} max 
+ * @param {String} msg 
+ * @param {String} trigger 
+ */
 const range = (min, max, msg, trigger) => {
         return {
                 validator: rangeValidator,
@@ -504,6 +649,9 @@ const range = (min, max, msg, trigger) => {
         }
 }
 
+/**
+ * Build email rule
+ */
 const email = () => {
         return {
                 type: "email",
@@ -512,39 +660,128 @@ const email = () => {
         }
 }
 
-const ip = () => {
+/**
+ * Build ip rule
+ * 
+ * @param {String} msg 
+ * @param {String} trigger 
+ */
+const ip = (msg, trigger) => {
         return {
-                pattern: /^((2[0-4]\d|25[0-5]|[01]?\d\d?)\.){3}(2[0-4]\d|25[0-5]|[01]?\d\d?)$/, 
-                message: "ip incorrect", 
-                trigger: "blur"
+                pattern: /^((2[0-4]\d|25[0-5]|[01]?\d\d?)\.){3}(2[0-4]\d|25[0-5]|[01]?\d\d?)$/,
+                message: msg || "ip incorrect",
+                trigger: trigger || "blur"
         }
 };
 
-const port = (msg,trigger) => {
+/**
+ * 
+ * @param {String} msg 
+ * @param {String} trigger 
+ */
+const port = (msg, trigger) => {
         return {
                 validator: rangeValidator,
                 min: 1,
                 max: 63000,
-                message:msg||`out of port number range `,
-                trigger: trigger||"blur",
+                message: msg || `out of port number range `,
+                trigger: trigger || "blur",
         }
 };
 
-const phone = () => {
+/**
+ * Builde mobile rule
+ * 
+ * @param {String} msg 
+ * @param {String} trigger 
+ */
+const phone = (msg, trigger) => {
         return {
-                pattern: /^1[3456789]\d{9}$/, 
-                message: "phone incorrect", 
-                trigger: "blur"
+                pattern: /^1[3456789]\d{9}$/,
+                message: msg || "phone incorrect",
+                trigger: trigger || "blur"
         }
 }
 
-const url = () => {
+/**
+ * Builde url rule
+ * 
+ * @param {String} msg 
+ * @param {String} trigger 
+ */
+const url = (msg, trigger) => {
         return {
                 type: "url",
-                message: "url incorrect",
-                trigger: "blur",
+                message: msg || "url incorrect",
+                trigger: trigger || "blur",
         }
 }
+
+/**
+ * Json array rule validator
+ * 
+ * @param {Null} _ 
+ * @param {String} value 
+ * @param {(Error?)=>Void} cb 
+ */
+const jsonArrayValidator = (_, value, cb) => {
+        try {
+                let array = JSON.parse(value);
+                if (typeof array == "array")
+                        cb();
+
+                cb(new Error("incorrect json!"))
+        } catch (ex) {
+                cb(ex)
+        }
+}
+
+/**
+ * Builde json array rule
+ * 
+ * @param {String} msg 
+ * @param {String} trigger 
+ */
+const jsonArray = (msg, trigger) => {
+        return {
+                message: msg || "Incorrect json array",
+                trigger: trigger || "blur",
+                validator: jsonArrayValidator
+        }
+};
+
+/**
+ * Json object rule validator
+ * 
+ * @param {Null} _ 
+ * @param {String} value 
+ * @param {(Error?)=>Void} cb 
+ */
+const jsonObjectValidator = (_, value, cb) => {
+        try {
+                let array = JSON.parse(value);
+                if (typeof array == "object")
+                        cb();
+
+                cb(new Error("incorrect json!"))
+        } catch (ex) {
+                cb(ex)
+        }
+}
+
+/**
+ * Builde json object rule
+ * 
+ * @param {String} msg 
+ * @param {String} trigger 
+ */
+const jsonObject = (msg, trigger) => {
+        return {
+                message: msg || "Incorrect json object",
+                trigger: trigger || "blur",
+                validator: jsonObjectValidator
+        }
+};
 
 export default {
         CHECKBOX_COLUMN,
@@ -567,7 +804,7 @@ export default {
         onEditSuccess,
         batchEdit,
         radioOptions,
-        initFilterOptionShow,
+        initFilterOptionShows,
         getData,
         data,
         require,
@@ -577,7 +814,9 @@ export default {
         ip,
         port,
         url,
-        initOptionsShow,
+        jsonArray,
+        jsonObject,
+        initOptionsFieldsShows,
         copyFieldsFrom,
         add,
         edit,
@@ -585,6 +824,6 @@ export default {
         editProps,
         batchEditProps,
         addProps,
-        changeShowOptionalFields,
+        changeShowingOptionalFields,
         changeShowingFilters
 }

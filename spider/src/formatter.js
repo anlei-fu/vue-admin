@@ -9,16 +9,12 @@ import * as dateUtility from "./DateUtil";
  * @returns {String}
  */
 function format(source, config) {
-     
 	try {
-		if(source==undefined)
+		if(source==undefined||source==="")
 		return "";
 
 		if(!config)
 		  return source;
-
-		if(source==="")
-		  return "";
 
 		if (!config) {
 			return source;
@@ -28,13 +24,7 @@ function format(source, config) {
 			return formtEmptyContent(source);
 		} else if (config.type == "date") {
 			return formatDate(source, config.pattern);
-		} else if (config.tof) {
-			return SubstituteTof(source, config.tof);
-		} else if (config.ellipsis) {
-			return formatEllipsis(source, config.ellipsis);
-		} else if (config.flow !== undefined) {
-			return formatFlow(source);
-		} else if (config.type == "number") {
+		}  else if (config.type == "number") {
 			return formatNumber(source);
 		} else if (config.type == "money") {
 			return formatMoney(source);
@@ -108,25 +98,6 @@ function formatDate(date, format="yyyy-MM-dd hh:mm:ss") {
 	return dateUtility.ToString(date, format, false);
 }
 
-function SubstituteTof(value, tof) {
-	let status = tof.split(",");
-	let index = parseInt(value);
-	return status[index];
-}
-
-function formatEllipsis(value, number) {
-	if (value.length >= number) {
-		let subval = value.slice(0, number - 1) + "...";
-		return subval;
-	} else if (0 < value.length < number) {
-		let subval = value;
-		// let subval = value.slice(0, number - 1) + '...'
-		return subval;
-	} else {
-		return "---";
-	}
-}
-
 /**
  * Format number ,if empty set '0'
  * 
@@ -137,27 +108,12 @@ function formatNumber(value) {
 	return value ? ((value + "").trim() == "" ? 0 : value) : 0;
 }
 
-function formatFlow(value) {
-	let result = value;
-	if (value == undefined || value == "") {
-		return result;
-	}
-	let val = parseFloat(value);
-	if (val >= 1024) {
-		val = val / 1024.0;
-		result = Math.floor(val * 100) / 100 + "GB";
-	} else if (val > 0) {
-		result = val + "MB";
-	} else {
-		result = val + "";
-	}
-	return result;
-}
-
-// function formatMoney(value) {
-
-// }
-
+/**
+ * Format undefine to empty string
+ * 
+ * @param {String} str 
+ * @returns {String}
+ */
 function isNullOrEmpty(str) {
 	return str == undefined || (str + "").trim() == "";
 }
@@ -175,9 +131,7 @@ function formatMoney(amount, round = 2, decimal = ".", thousands = ",") {
 	try {
 		round = Math.abs(round);
 		round = isNaN(round) ? 2 : round;
-
-		const negativeSign = amount < 0 ? "-" : "";
-
+		let negativeSign = amount < 0 ? "-" : "";
 		let integer = parseInt(amount = Math.abs(Number(amount) || 0).toFixed(round)).toString();
 		let first2 = (integer.length > 3) ? integer.length % 3 : 0;
 

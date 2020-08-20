@@ -8,8 +8,8 @@
         <FormItem v-if="showParentSiteId" label="ParentSite" prop="parentSiteId">
           <MySelect v-model="query.parentSiteId" enum="parentSiteId" width="100%" />
         </FormItem>
-        <FormItem v-if="showCrawlNeedUseCookie" label="NeedUseCookie" prop="YesNo">
-          <MySelect v-model="query.crawlNeedUseCookie" enum="YesNo" width="100%" />
+        <FormItem v-if="showNeedUseCookie" label="NeedUseCookie" prop="YesNo">
+          <MySelect v-model="query.needUseCookie" enum="YesNo" width="100%" />
         </FormItem>
         <FormItem v-if="showLoginNeedVcode" label="LoginNeedVcode" prop="loginNeedVcode">
           <MySelect v-model="query.loginNeedVcode" enum="YesNo" width="100%" />
@@ -153,7 +153,7 @@
           "AccountHourSpeedLimit",
           "EnableStatus",
           "Description",
-          "CrawlNeedUseCookie",
+          "NeedUseCookie",
           "CookieMaxBlockCount",
           "LoginNeedVcode",
           "LoginCaptaType",
@@ -202,7 +202,7 @@
         api: "site",
         query: {
           parentSiteId: null,
-          crawlNeedUseCookie: null,
+          needUseCookie: null,
           loginNeedVcode: null,
           loginCaptaType: null,
           needUseProxy: null,
@@ -233,7 +233,7 @@
       };
     },
     beforeMount() {
-      utils.initOptionsShow.call(this);
+      utils.initOptionsFieldsShows.call(this);
       utils.copyFieldsFrom(this.query, this.model);
     },
     watch: {
@@ -241,7 +241,7 @@
         utils.copyFieldsFrom(this.query, newVal);
       },
       showingOptionalFields(newVal) {
-        utils.changeShowOptionalFields.call(this, newVal);
+        utils.changeShowingOptionalFields.call(this, newVal);
       },
     },
     methods: {

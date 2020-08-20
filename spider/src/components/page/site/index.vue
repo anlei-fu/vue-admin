@@ -11,8 +11,8 @@
         width="200px"
       />
       <MySelect
-        v-show="showCrawlNeedUseCookie"
-        v-model="query.crawlNeedUseCookie"
+        v-show="showNeedUseCookie"
+        v-model="query.needUseCookie"
         title="NeedCookie"
         enum="YesNo"
         width="200px"
@@ -103,7 +103,7 @@ export default {
           options: utils.options([
             "TimeRange",
             "ParentSiteId",
-            "CrawlNeedUseCookie",
+            "needUseCookie",
             "LoginNeedVcode",
             "LoginCaptaType",
             "EnableStatus",
@@ -113,7 +113,7 @@ export default {
           enabledFilters: [
             "TimeRange",
             "ParentSiteId",
-            "CrawlNeedUseCookie",
+            "needUseCookie",
             "LoginNeedVcode",
             "LoginCaptaType",
             "NeedUseProxy",
@@ -132,7 +132,7 @@ export default {
             utils.column("homePageUrl", "HmPg"),
             utils.enumColumn("loginNeedVcode", "YesNo", "LgNdVcd"),
             utils.enumColumn("loginCaptaType", null, "LgCptTy"),
-            utils.enumColumn("crawlNeedUseCookie", "YesNo", "NdCk"),
+            utils.enumColumn("needUseCookie", "YesNo", "NdCk"),
             utils.enumColumn("needUseProxy", "YesNo", "NdPro"),
             utils.column("loginScriptId", "LgScript"),
             utils.column("ipMinuteSpeedLimit", "IpMinLmt"),
@@ -162,7 +162,7 @@ export default {
           showingColumns: [
             "Checkbox",
             "name",
-            "crawlNeedUseCookie",
+            "needUseCookie",
             "needUseProxy",
             "ipDelayTimeout",
             "ipBlockTimeout",
@@ -185,7 +185,7 @@ export default {
       timeRange: [],
       query: {
         parentSiteId: null,
-        crawlNeedUseCookie: null,
+        needUseCookie: null,
         loginNeedVcode: null,
         loginCaptaType: null,
         needUseProxy: null,
@@ -199,7 +199,7 @@ export default {
     };
   },
   beforeMount() {
-    utils.initFilterOptionShow.call(this);
+    utils.initFilterOptionShows.call(this);
     this.getData(true);
   },
   watch: {

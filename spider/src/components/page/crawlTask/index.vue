@@ -131,7 +131,7 @@ export default {
             utils.enumColumn("downSystemId", "System", "System"),
             utils.enumColumn("siteId", "Site", "Site"),
             utils.enumColumn("taskStatus", null, "Status",{width:"100px"}),
-            utils.enumColumn("taskExecuteResultType", "TaskResult", "Result"),
+            utils.enumColumn("taskResult", "TaskResult", "Result"),
             utils.enumColumn("crawlerId", "Crawler", "Crler"),
             utils.enumColumn("bindLastResult", "BindResult", "BdRst"),
             utils.column("bindLastMsg", "BdMsg"),
@@ -178,7 +178,7 @@ export default {
             "taskTimeoutTime",
             "bindTimeoutTime",
             "taskStatus",
-            "taskExecuteResultType",
+            "taskResult",
             "bindLastResult",
             "bindLastTime",
             "bindCount",
@@ -212,7 +212,7 @@ export default {
     };
   },
   beforeMount() {
-    utils.initFilterOptionShow.call(this);
+    utils.initFilterOptionShows.call(this);
     this.getData(true);
   },
   watch: {

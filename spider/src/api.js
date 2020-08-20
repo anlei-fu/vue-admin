@@ -57,7 +57,6 @@ const apiConfig = {
                         url: "/crawler/{id}"
                 }
         },
-     
         downSystem: {
                 add: {
                         method: "post",
@@ -122,7 +121,7 @@ const apiConfig = {
                 getList: {
                         method: "get",
                         url: "/siteAccount/page"
-                }, 
+                },
                 getBySite: {
                         method: "get",
                         url: "/siteAccount/getBySite"
@@ -245,17 +244,45 @@ const apiConfig = {
                         url: "/enum/all"
                 }
         },
-        dispatchRecord:{
-                getByTaskId:{
-                        method:"get",
-                        url:"/dispatchRecord/getByTaskId/{taskId}"
+        dispatchRecord: {
+                getByTaskId: {
+                        method: "get",
+                        url: "/dispatchRecord/getByTaskId/{taskId}"
                 }
         },
-        bindRecord:{
-                getByTaskId:{
-                        method:"get",
-                        url:"/bindRecord/getByTaskId/{taskId}"
+        bindRecord: {
+                getByTaskId: {
+                        method: "get",
+                        url: "/bindRecord/getByTaskId/{taskId}"
                 }
+        },
+        url: {
+                getSeedUrlByDownSystemSiteId: {
+                        method: "get",
+                        url: "/url/getSeedUrlByDownSystemSiteId/{downSystemSiteId}"
+                },
+                addSeedUrl: {
+                        method: "post",
+                        url: "/url/seed"
+                },
+                deleteById: {
+                        method: "delete",
+                        url: "/url/{id}"
+                },
+        },
+        blockRule: {
+                getByDownSystemSiteId: {
+                        method: "get",
+                        url: "/blockRule/getByDownSystemSiteId/{downSystemSiteId}",
+                },
+                add: {
+                        method: "post",
+                        url: "/blockRule"
+                },
+                deleteById: {
+                        method: "delete",
+                        url: "/blockRule/{id}"
+                },
         }
 
 }

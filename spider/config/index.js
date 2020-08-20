@@ -10,7 +10,7 @@ module.exports = {
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
     proxyTable: {
-      '/upload': {
+      '/uploadFile': {
         target: 'http://192.168.5.32:10035',//原本是192.168.5.188 本地是http://182.140.244.57:2048
         changeOrigin: true
       },

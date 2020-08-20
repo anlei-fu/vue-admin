@@ -9,9 +9,15 @@ class WebClient {
 
                 if (respInterceptor)
                         this._internalClient.interceptors.response.use(respInterceptor);
-
         }
 
+        /**
+         * Do request
+         * 
+         * @param {String} url 
+         * @param {String} method 
+         * @param {Object} params 
+         */
         request(url, method, params) {
                 // 处理 path variable  e.g:
                 //  url: /info/get/{id}, params {id:10} => /info/get/10   

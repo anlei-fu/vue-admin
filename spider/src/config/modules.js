@@ -1,5 +1,4 @@
 exports.modules = [
-
         {
                 _name: "module1",
                 icon: "navicon-round",
@@ -22,7 +21,7 @@ exports.modules = [
                         icon: "",
                         label: "Site",
                         moduleName: "module1",
-                },{
+                }, {
                         path: "/downSystemSite",
                         icon: "",
                         label: "SystemSite",
@@ -39,7 +38,7 @@ exports.modules = [
                         label: "Proxy",
                         moduleName: "module1",
                 },
-               {
+                {
                         path: "/siteAccount",
                         icon: "",
                         label: "Account",
@@ -49,19 +48,12 @@ exports.modules = [
                         icon: "",
                         label: "Cookie",
                         moduleName: "module1",
-                },  {
+                }, {
                         path: "/dictionary",
                         icon: "",
                         label: "Dictionary",
                         moduleName: "module1",
-                }, 
-                // {
-                //         path: "/script",
-                //         icon: "",
-                //         label: "Script",
-                //         moduleName: "module1",
-                // },
-                
+                },
                 {
                         path: "/siteIpBlockMap",
                         icon: "",
@@ -74,7 +66,6 @@ exports.modules = [
                         moduleName: "module1",
                 },
                 ]
-
         },
         {
                 _name: "module2",
@@ -82,14 +73,12 @@ exports.modules = [
                 label: "Monitor",
                 activeMenuName: "/script",
         },
-
         {
                 _name: "module3",
                 icon: "navicon-round",
                 label: "Statistics",
                 activeMenuName: "/script",
         },
-
         {
                 _name: "module4",
                 icon: "navicon-round",

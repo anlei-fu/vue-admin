@@ -1,6 +1,7 @@
 <template>
   <div>
     <MyPageSettingButton @click="showSetting" />
+     <PageSetting ref="setting" :setting="pageSetting" />
     <MyFilter>
       <MyDateRange v-model="timeRange" />
       <MySelect v-show="showSiteId" v-model="query.siteId" title="Site" enum="Site" width="200px" />
@@ -29,7 +30,6 @@
       @onSizeChanged="onPageSizeChanged"
       @onIndexChanged="onPageIndexChanged"
     />
-    <PageSetting ref="setting" :setting="pageSetting" />
   </div>
 </template>
 <script>
@@ -73,23 +73,18 @@
           pageIndex: 1,
           pageSize: 10,
         },
-        // data set
         data: utils.data(),
       };
     },
     beforeMount() {
-      utils.initFilterOptionShow.call(this);
+      utils.initFilterOptionShows.call(this);
       this.getData(true);
     },
     watch: {
       "pageSetting.filters.enabledFilters"(newVal) {
         let set = new Set(newVal);
         this.pageSetting.filters.options.forEach((op) => {
-          if (set.has(op.value)) {
-            this["show" + op.value] = true;
-          } else {
-            this["show" + op.value] = false;
-          }
+            this["show" + op.value] = set.has(op.value);
         });
       },
     },

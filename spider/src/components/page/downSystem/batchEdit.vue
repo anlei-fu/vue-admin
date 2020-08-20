@@ -44,11 +44,11 @@
       };
     },
     beforeMount() {
-      utils.initOptionsShow.call(this);
+      utils.initOptionsFieldsShows.call(this);
     },
     watch: {
       showingOptionalFields(newVal) {
-        utils.changeShowOptionalFields.call(this, newVal);
+        utils.changeShowingOptionalFields.call(this, newVal);
       },
     },
     methods: {

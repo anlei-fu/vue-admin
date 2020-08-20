@@ -9,7 +9,7 @@
         :show-upload-list="false"
         :on-success="onSuccess"
         :on-error="onError"
-        action="/upload?ext=js"
+        action="/uploadFile?ext=js"
       >
         <Button icon="ios-cloud-upload-outline">Upload files</Button>
       </Upload>
@@ -32,12 +32,12 @@
     },
     methods: {
       onSuccess(resp) {
-        if (resp.Result) {
-          this.$emit("change", resp.Key);
-          this.path_ = resp.Key;
+        if (resp.result) {
+          this.$emit("change", resp.key);
+          this.path_ = resp.key;
           this.$Message.info("upload success!");
         } else {
-          this.$Message.error("upload failed:" + resp.Message);
+          this.$Message.error("upload failed:" + resp.message);
         }
       },
       onError(err) {

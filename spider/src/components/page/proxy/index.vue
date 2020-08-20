@@ -145,19 +145,12 @@
       };
     },
     beforeMount() {
-      utils.initFilterOptionShow.call(this);
+      utils.initFilterOptionShows.call(this);
       this.getData(true);
     },
     watch: {
       "pageSetting.filters.enabledFilters"(newVal) {
-        let set = new Set(newVal);
-        this.pageSetting.filters.options.forEach((op) => {
-          if (set.has(op.value)) {
-            this["show" + op.value] = true;
-          } else {
-            this["show" + op.value] = false;
-          }
-        });
+        utils.changeShowingFilters.call(this,newVal);
       },
     },
     methods: {

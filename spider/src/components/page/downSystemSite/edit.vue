@@ -1,6 +1,6 @@
 <template>
   <MyModal :title="title" ref="modal" @ok="ok" width="40%">
-    <Form ref="form" :model="query" :rules="rules" :label-width="120">
+    <Form ref="form" :model="query" :rules="rules" :label-width="120" >
       <FormItem label="Fields">
         <MyCheckBoxGroup v-model="showingOptionalFields" :options="optionalFields" />
       </FormItem>
@@ -160,7 +160,7 @@
       };
     },
     beforeMount() {
-      utils.initOptionsShow.call(this);
+      utils.initOptionsFieldsShows.call(this);
       utils.copyFieldsFrom(this.query, this.model);
     },
     watch: {
@@ -168,7 +168,7 @@
         utils.copyFieldsFrom(this.query, newVal);
       },
       showingOptionalFields(newVal) {
-        utils.changeShowOptionalFields.call(this, newVal);
+        utils.changeShowingOptionalFields.call(this, newVal);
       },
     },
     methods: {

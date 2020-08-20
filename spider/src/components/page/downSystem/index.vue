@@ -120,7 +120,7 @@
       };
     },
     beforeMount() {
-      utils.initFilterOptionShow.call(this);
+      utils.initFilterOptionShows.call(this);
       this.getData(true);
     },
     watch: {
