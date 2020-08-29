@@ -10,7 +10,7 @@
           <MyCheckBoxGroup v-model="showingOptionalFields" :options="optionalFields" />
         </FormItem>
       </template>
-      <MyScroll height="150px">
+      <MyScroll height="180px">
         <FormItem v-if="showParentSiteId" label="ParentSite" prop="parentSiteId">
           <MySelect v-model="query.parentSiteId" enum="parentSiteId" width="100%" />
         </FormItem>

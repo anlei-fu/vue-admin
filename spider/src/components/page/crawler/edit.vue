@@ -4,7 +4,7 @@
       <FormItem label="Fields">
         <MyCheckBoxGroup v-model="showingOptionalFields" :options="optionalFields" />
       </FormItem>
-      <MyScroll>
+      <MyScroll height="180px">
         <FormItem v-if="showName" label="Name" prop="name">
           <Input v-model="query.name" placeholder="Input value" />
         </FormItem>
@@ -57,7 +57,7 @@
           "MaxConcurrency",
           "Description",
         ]),
-        showingOptionalFields: ["CrawlerType", "MaxConcurrency"],
+        showingOptionalFields: [],
         rules: {
           port: [utils.port()],
           maxConcurrency: [utils.range(10, 10000)],

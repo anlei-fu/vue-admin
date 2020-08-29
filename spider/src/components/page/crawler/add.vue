@@ -22,7 +22,7 @@
           <MyCheckBoxGroup v-model="showingOptionalFields" :options="optionalFields" />
         </FormItem>
       </template>
-      <MyScroll height="120px">
+      <MyScroll height="180px">
         <FormItem v-if="showCrawlerType" label="CrawlerType" prop="crawlerType">
           <MySelect v-model="query.crawlerType" enum="CrawlerType" width="100%" />
         </FormItem>

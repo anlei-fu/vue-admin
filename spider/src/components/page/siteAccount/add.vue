@@ -13,7 +13,7 @@
           <MyCheckBoxGroup v-model="showingOptionalFields" :options="optionalFields" />
         </FormItem>
       </template>
-      <MyScroll>
+      <MyScroll  height="180px">
         <FormItem v-if="showNickName" label="NickName" prop="nickName">
           <Input v-model="query.nickName" placeholder="Input value" />
         </FormItem>

@@ -13,7 +13,7 @@
           <MyCheckBoxGroup v-model="showingOptionalFields" :options="optionalFields" />
         </FormItem>
       </template>
-      <MyScroll>
+      <MyScroll  height="180px">
         <FormItem v-if="showProxyType" label="ProxyType" prop="proxyType">
           <MySelect v-model="query.proxyType" enum="ProxyType" width="100%" />
         </FormItem>

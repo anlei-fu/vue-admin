@@ -230,7 +230,7 @@ const editProps = (title) => {
  * @param {String} title 
  * @returns {BatchEditProps}
  */
-const batchEditProps = (title = "") => {
+const batchEditProps = (title = "Batch Edit") => {
         return {
                 ids: {
                         type: Array,
@@ -334,7 +334,7 @@ function onEditSuccess(row, idFiled = "id") {
 /**
  * Show batch edit modal
  */
-function batchEdit(title = "Batch Edit") {
+function showBatchEdit(title = "Batch Edit") {
         if (checkCount.call(this)) {
                 this.batchEditSetting.title = title;
                 this.batchEditSetting.ids = getIds.call(this);
@@ -519,7 +519,7 @@ function changeShowingFilters(showings) {
 function initOptionsFieldsShows() {
         let set = new Set(this.showingOptionalFields);
         this.optionalFields.forEach(item => {
-                        this["show" + item.value] = set.has(item.value);
+                this["show" + item.value] = set.has(item.value);
         });
 }
 
@@ -592,7 +592,7 @@ function getData(reset, radio = false, timeRange = false) {
  * @param {(Error?)=>void} cb 
  */
 const requireValidator = (_, value, cb) => {
-        if (value == undefined) {
+        if (value != 0 && !value) {
                 cb(new Error("empty"));
         }
 
@@ -622,6 +622,9 @@ const require = (msg, trigger) => {
  * @param {(Error?)=>Void} cb 
  */
 const rangeValidator = (rule, value, cb) => {
+        if (value == "" || value == null)
+                cb();
+
         if (isNaN(value) || value < rule.min)
                 cb(Error("out of range"));
 
@@ -725,9 +728,12 @@ const url = (msg, trigger) => {
  * @param {(Error?)=>Void} cb 
  */
 const jsonArrayValidator = (_, value, cb) => {
+        if (!value)
+                cb();
+
         try {
                 let array = JSON.parse(value);
-                if (typeof array == "array")
+                if (Array.isArray(array))
                         cb();
 
                 cb(new Error("incorrect json!"))
@@ -758,9 +764,12 @@ const jsonArray = (msg, trigger) => {
  * @param {(Error?)=>Void} cb 
  */
 const jsonObjectValidator = (_, value, cb) => {
+        if (!value)
+                cb();
+
         try {
-                let array = JSON.parse(value);
-                if (typeof array == "object")
+                let obj = JSON.parse(value);
+                if (typeof obj == "object")
                         cb();
 
                 cb(new Error("incorrect json!"))
@@ -802,6 +811,7 @@ export default {
         batchDelete,
         onBatchEditSuccess,
         onEditSuccess,
+        showBatchEdit,
         batchEdit,
         radioOptions,
         initFilterOptionShows,
@@ -820,7 +830,6 @@ export default {
         copyFieldsFrom,
         add,
         edit,
-        batchEdit,
         editProps,
         batchEditProps,
         addProps,

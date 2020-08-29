@@ -4,7 +4,7 @@
       <FormItem label="Fields">
         <MyCheckBoxGroup v-model="showingOptionalFields" :options="optionalFields" />
       </FormItem>
-      <MyScroll height="150px">
+      <MyScroll height="180px">
         <FormItem v-if="showParentSiteId" label="ParentSite" prop="parentSiteId">
           <MySelect v-model="query.parentSiteId" enum="parentSiteId" width="100%" />
         </FormItem>
@@ -180,7 +180,7 @@
           "CookieDelayTimeout",
           "CookieExpireTimeout",
         ]),
-        showingOptionalFields: ["ScriptType", "EnableStatus"],
+        showingOptionalFields: [],
         rules: {
           ipDelayTimeout: [utils.range(0, 100000000)],
           ipBlockTimeout: [utils.range(5, 100000)],

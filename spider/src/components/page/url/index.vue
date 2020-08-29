@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Form ref="form" :v-model="query" :rule="rule" :label-width="90">
+    <Form ref="form" :model="query" :rules="rules" :label-width="90">
       <Row>
         <Col span="8">
           <FormItem label="Url" prop="url">
@@ -99,12 +99,12 @@ export default {
         downSystemSiteId: null,
       },
       api: "url",
-      rule: {
+      rules: {
         url: [utils.require(), utils.url()],
         referUrl: [utils.require(), utils.url()],
         httpMethod: [utils.require()],
         query: [utils.require()],
-        params: [utils.require()],
+        params: [utils.jsonObject()],
       },
       data: utils.data(),
     };

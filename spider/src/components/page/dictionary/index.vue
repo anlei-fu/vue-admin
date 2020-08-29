@@ -10,7 +10,7 @@
       <span>
         <QueryButton @click="getData(true)" />
         <CreateButton @click="showAdd" />
-        <BatchEditButton @click="batchEdit" />
+        <BatchEditButton @click="showBatchEdit" />
         <BatchDeleteButton @click="batchDelete" />
       </span>
     </MyFilter>
@@ -116,9 +116,9 @@
       onEditSuccess(row) {
         utils.onEditSuccess.call(this, row);
       },
-      batchEdit() {
-        utils.batchEdit.call(this);
-      },
+     showBatchEdit() {
+      utils.showBatchEdit.call(this);
+    },
       onBatchEditSuccess(data) {
         utils.onBatchEditSuccess.call(this, data);
       },

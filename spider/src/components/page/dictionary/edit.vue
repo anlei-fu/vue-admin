@@ -28,7 +28,7 @@
     data() {
       return {
         optionalFields: utils.options(["Type", "Color", "Label", "Value"]),
-        showingOptionalFields: ["Type", "Color", "Label", "Value"],
+        showingOptionalFields: [],
         rules: {
           value: [utils.range(-1, 1000)],
         },
