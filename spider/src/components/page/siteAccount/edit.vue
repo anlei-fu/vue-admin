@@ -4,7 +4,7 @@
       <FormItem label="Fields">
         <MyCheckBoxGroup v-model="showingOptionalFields" :options="optionalFields" />
       </FormItem>
-      <MyScroll height="350px">
+      <MyScroll height="180px">
         <FormItem v-if="showLoginType" label="LoginType" prop="loginType">
           <MySelect v-model="query.loginType" enum="LoginType" width="100%" />
         </FormItem>
@@ -65,7 +65,7 @@
           "DelayTimeoutTime",
           "Description",
         ]),
-        showingOptionalFields: ["Password"],
+        showingOptionalFields: [],
         rules: {
           emial: [utils.email()],
           phone: [utils.phone],

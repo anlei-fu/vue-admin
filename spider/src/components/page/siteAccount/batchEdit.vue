@@ -4,7 +4,7 @@
       <FormItem label="Fields">
         <MyCheckBoxGroup v-model="showingOptionalFields" :options="optionalFields" />
       </FormItem>
-      <MyScroll height="300px">
+      <MyScroll height="180px">
         <FormItem v-if="showEnableStatus" label="EnableStatus" prop="enableStatus">
           <MySelect v-model="query.enableStatus" enum="EnableStatus" width="100%" />
         </FormItem>
@@ -22,7 +22,7 @@
     data() {
       return {
         optionalFields: utils.options(["EnableStatus", "Password"]),
-        showingOptionalFields: ["Password", "EnableStatus"],
+        showingOptionalFields: [],
         rules: {},
         api: "siteAccount",
         query: {

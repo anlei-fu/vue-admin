@@ -1,10 +1,10 @@
 <template>
   <MyModal :title="title" ref="modal" @ok="ok" width="40%">
-    <Form ref="form" :model="query" :rules="rules" :label-width="140">
+    <Form ref="form" :model="query" :rules="rules" :label-width="110">
       <FormItem label="Fields">
         <MyCheckBoxGroup v-model="showingOptionalFields" :options="optionalFields" />
       </FormItem>
-      <MyScroll>
+      <MyScroll  height="180px">
         <FormItem v-if="showEnableStatus" label="EnableStatus" prop="enableStatus">
           <MySelect v-model="query.enableStatus" enum="EnableStatus" width="100%" />
         </FormItem>
@@ -18,15 +18,15 @@
           <Input v-model="query.taskUrlBatchCount" placeholder="Input value" />
         </FormItem>
         <FormItem
-          v-if="showTaskMaxWaitToBindCount"
-          label="TaskMaxWaitToBindCount"
+          v-if="showTaskMaxCount"
+          label="TaskMaxCount"
           prop="taskMaxWaitToBindCount"
         >
           <Input v-model="query.taskMaxWaitToBindCount" placeholder="Input value" />
         </FormItem>
         <FormItem
-          v-if="showTaskMaxRunningCount"
-          label="TaskMaxRunningCount"
+          v-if="showTaskMaxCon"
+          label="TskMaxCon"
           prop="taskMaxRunningCount"
         >
           <Input v-model="query.taskMaxRunningCount" placeholder="Input value" />
@@ -52,12 +52,12 @@
           "UrlMaxCacheCount",
           "Priority",
           "TaskUrlBatchCount",
-          "TaskMaxWaitToBindCount",
-          "TaskMaxRunningCount",
+          "TaskMaxCount",
+          "TaskMaxCon",
           "TaskTimeout",
           "TaskBindTimeout",
         ]),
-        showingOptionalFields: ["EnableStatus"],
+        showingOptionalFields: [],
         rules: {
           priority: [utils.range(1, 10)],
           crawlerPageTimeout: [utils.range(3000, 600000)],
@@ -102,6 +102,7 @@
         this.$refs.modal.close();
       },
       ok() {
+        debugger
         utils.batchEdit.call(this);
       },
     },

@@ -145,8 +145,6 @@ export default {
             ),
             utils.dateColumn("dispatchLastTime","DspTm","MM-dd hh:mm",{width:"110px"}),
             utils.column("dispatchLastMsg", "DspMsg"),
-           
-           
             utils.dateColumn("taskTimeoutTime", "ExeTmt","MM-dd hh:mm",{width:"110px"}),
             utils.enumColumn("siteAccountId", "Account", "Acc"),
             utils.enumColumn("proxyId", "Proxy", "Pro"),
@@ -158,7 +156,7 @@ export default {
             utils.column("urlBadCount", "BadCnt"),
             utils.column("averageSpeedOfAll", "SpdOfAll"),
             utils.column("averageSpeedOfSuccess", "SpdOfSuc"),
-            utils.column("meanSpeedOfSuccess", "MeanSpdOfSuc"),
+            utils.column("medianSpeedOfSuccess", "MedianSpdOfSuc"),
             utils.column("maxSpeedOfSuccess", "MxSpdOfSuc"),
             utils.dateColumn("createTime", "Ctime"),
             utils.operateColumn(

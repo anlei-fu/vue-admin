@@ -1,30 +1,27 @@
 <template>
   <div>
-    <Form ref="form" :v-model="query" :rule="rule" :label-width="90">
+    <Form ref="form" :model="query" :rules="rules" :label-width="110">
       <Row>
         <Col span="8">
           <FormItem label="HttpStatus" prop="httpStatus">
             <MySelect v-model="query.httpStatus" enum="HttpStatus" width="200px" />
           </FormItem>
         </Col>
-       
-          <Col span="8">
-           <Col span="8">
-          <FormItem label="PageResult" prop="pageResult">
-            <MySelect v-model="query.pageResult" enum="PageResult" width="200px" />
-          </FormItem>
-       
+
+        <Col span="8">
+            <FormItem label="PageResult" prop="pageResult">
+              <MySelect v-model="query.pageResult" enum="PageResult" width="200px" />
+            </FormItem>
         </Col>
-        </Col>
-         <Col span="8">
-            <FormItem label="CompareType" prop="compareType">
-            <MySelect v-model="query.compareType" enum="CompareType" width="200px" />
+        <Col span="8">
+          <FormItem label="CheckType" prop="checkType">
+            <MySelect v-model="query.checkType" enum="CheckType" width="200px" />
           </FormItem>
         </Col>
       </Row>
-      <Row>
+      <Row style="margin-top:20px">
         <Col span="8">
-       <FormItem label="Keywords" prop="keywords">
+          <FormItem label="Keywords" prop="keywords">
             <span class="form_span">
               <Input
                 v-model="query.keywords"
@@ -34,7 +31,7 @@
               />
             </span>
           </FormItem>
-          </Col>
+        </Col>
         <Col span="8">
           <FormItem>
             <CreateButton @click="addRule" />
@@ -43,7 +40,16 @@
       </Row>
     </Form>
     <MyScroll maxHeight="500px">
-      <MyTable ref="table" filter border stripe columnFilter :columns="columns" @delete="_delete" :datas="data.list" />
+      <MyTable
+        ref="table"
+        filter
+        border
+        stripe
+        columnFilter
+        :columns="columns"
+        @delete="_delete"
+        :datas="data.list"
+      />
     </MyScroll>
   </div>
 </template>
@@ -61,24 +67,30 @@ export default {
       columns: [
         utils.enumColumn("httpStatus"),
         utils.enumColumn("pageResult"),
-        utils.enumColumn("compareType"),
+        utils.enumColumn("checkType"),
         utils.column("keywords"),
         utils.dateColumn("createTime", "CTime"),
-       utils.operateColumn([utils.operation("delete")]),
+        utils.operateColumn([utils.operation("delete")]),
       ],
-      api:"blockRule",
-      showingColumns:["httpStatus","pageResult","compareType","keywords","test"],
-      query:{
-         downSystemSiteId:null,
-         httpStatus:null,
-         compareType:null,
-         keywords:null
+      api: "blockRule",
+      showingColumns: [
+        "httpStatus",
+        "pageResult",
+        "checkType",
+        "keywords",
+        "test",
+      ],
+      query: {
+        downSystemSiteId: null,
+        httpStatus: null,
+        checkType: null,
+        keywords: null,
       },
-      rule:{
-             httpStatus:[utils.require()],
-             pageResult:[utils.require()],
-             compareType:[utils.require()],
-             keywords:[utils.keywords]
+      rules: {
+        httpStatus: [utils.require()],
+        pageResult: [utils.require()],
+        checkType: [utils.require()],
+        keywords: [utils.jsonArray()],
       },
       data: utils.data(),
     };
@@ -102,8 +114,8 @@ export default {
         }
       });
     },
-     _delete(row) {
-           utils.showDelete.call(this,row);
+    _delete(row) {
+      utils.showDelete.call(this, row);
     },
     async getData() {
       try {

@@ -4,7 +4,7 @@
       <FormItem label="Fields">
         <MyCheckBoxGroup v-model="showingOptionalFields" :options="optionalFields" />
       </FormItem>
-      <MyScroll>
+      <MyScroll height="180px">
         <FormItem v-if="showProxyType" label="ProxyType" prop="proxyType">
           <MySelect v-model="query.proxyType" enum="ProxyType" width="100%" />
         </FormItem>
@@ -49,7 +49,7 @@
           "BlockTimeout",
           "BlockTimeoutTime",
         ]),
-        showingOptionalFields: ["EnableStatus"],
+        showingOptionalFields: [],
         rules: {
           maxUseCount: [utils.range(1, 1000)],
           blockMaxCount: [utils.range(1, 15)],

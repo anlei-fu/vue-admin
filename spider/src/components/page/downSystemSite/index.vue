@@ -35,7 +35,7 @@
       <span>
         <QueryButton @click="getData(true)" />
         <CreateButton @click="showAdd" />
-        <BatchEditButton @click="batchEdit" />
+        <BatchEditButton @click="showBatchEdit" />
         <BatchDeleteButton @click="batchDelete" />
       </span>
     </MyFilter>
@@ -66,8 +66,8 @@
       :title="editSetting.title"
       @success="onEditSuccess"
     />
-    <seed ref="seed"/>
-    <blockRule ref="blockRule"/>
+    <seed ref="seed" />
+    <blockRule ref="blockRule" />
     <batchEdit ref="batchEdit" :ids="batchEditSetting.ids" @success="onBatchEditSuccess" />
     <PageSetting ref="setting" :setting="pageSetting" />
   </div>
@@ -85,7 +85,7 @@ export default {
     add,
     batchEdit,
     seed,
-    blockRule
+    blockRule,
   },
   data() {
     return {
@@ -162,7 +162,7 @@ export default {
                 utils.operation("edit"),
                 utils.operation("delete"),
                 utils.operation("blkRule"),
-                 utils.operation("seedUrl"),
+                utils.operation("seedUrl"),
               ],
               { width: "250px" }
             ),
@@ -219,19 +219,19 @@ export default {
     showEdit(row) {
       utils.showEdit.call(this, row);
     },
-    
-    showBlockRule(row){
-  this.$refs.blockRule.show(row.id);
+
+    showBlockRule(row) {
+      this.$refs.blockRule.show(row.id);
     },
 
-    showSeedUrl(row){
-     this.$refs.seed.show(row.id);
+    showSeedUrl(row) {
+      this.$refs.seed.show(row.id);
     },
     onEditSuccess(row) {
       utils.onEditSuccess.call(this, row);
     },
-    batchEdit() {
-      utils.batchEdit.call(this);
+    showBatchEdit() {
+      utils.showBatchEdit.call(this);
     },
     onBatchEditSuccess(data) {
       utils.onBatchEditSuccess.call(this, data);
