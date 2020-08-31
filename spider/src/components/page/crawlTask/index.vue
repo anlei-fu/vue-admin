@@ -20,7 +20,7 @@
       />
       <MySelect
         v-show="showTaskExecuteResultType"
-        v-model="query.taskExecuteResultType"
+        v-model="query.taskResult"
         title="ResultType"
         enum="TaskResult"
         width="200px"
@@ -195,7 +195,7 @@ export default {
         siteId: null,
         downSystemId: null,
         taskStatus: null,
-        taskExecuteResultType: null,
+        taskResult: null,
         crawlerId: null,
         bindLastStatus: null,
         dispatchStatus: null,

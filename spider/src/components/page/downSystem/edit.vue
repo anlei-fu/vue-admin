@@ -23,7 +23,7 @@
         <FormItem v-if="showDataQueue" label="DataQ" prop="dataQueue">
           <Input v-model="query.dataQueue" placeholder="Input value" />
         </FormItem>
-        <FormItem v-if="showTaskMaxRunningCount" label="TMaxCon" prop="taskMaxRunningCount">
+        <FormItem v-if="showTaskMaxCon" label="TMaxCon" prop="taskMaxRunningCount">
           <Input v-model="query.taskMaxRunningCount" placeholder="Input value" />
         </FormItem>
       </MyScroll>
@@ -44,9 +44,9 @@
           "AppSecret",
           "DataUrl",
           "DataQueue",
-          "TaskMaxRunningCount",
+          "TaskMaxCon",
         ]),
-        showingOptionalFields: ["EnableStatus", "DataQueue", "TaskMaxRunningCount", "Priority"],
+        showingOptionalFields: ["EnableStatus", "DataQueue", "TaskMaxCon", "Priority"],
         rules: {
           priority: [utils.range(1, 10)],
           taskMaxRunningCount: [utils.range(0, 1000)],
