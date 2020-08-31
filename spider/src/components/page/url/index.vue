@@ -10,17 +10,18 @@
           </FormItem>
         </Col>
         <Col span="8">
+          <FormItem label="HttpMethod" prop="url">
+            <MySelect v-model="query.httpMethod" enum="HttpMethod" width="200px" />
+          </FormItem>
+        </Col>
+        <Col span="8">
           <FormItem label="ReferUrl" prop="referUrl">
             <span class="form_span">
               <Input v-model="query.referUrl" placeholder="Input value" width="200px" />
             </span>
           </FormItem>
         </Col>
-        <Col span="8">
-          <FormItem label="HttpMethod" prop="url">
-            <MySelect v-model="query.httpMethod" enum="HttpMethod" width="200px" />
-          </FormItem>
-        </Col>
+        
       </Row>
       <Row>
         <Col span="8">
@@ -93,7 +94,7 @@ export default {
       query: {
         url: null,
         referUrl: null,
-        httpMethod: null,
+        httpMethod: 1,
         query: null,
         params: null,
         downSystemSiteId: null,
@@ -101,9 +102,9 @@ export default {
       api: "url",
       rules: {
         url: [utils.require(), utils.url()],
-        referUrl: [utils.require(), utils.url()],
-        httpMethod: [utils.require()],
-        query: [utils.require()],
+        referUrl: [utils.url()],
+        httpMethod: [],
+        query: [],
         params: [utils.jsonObject()],
       },
       data: utils.data(),

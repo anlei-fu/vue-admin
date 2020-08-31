@@ -32,7 +32,7 @@
         <FormItem v-if="showDataQueue" label="DataQueue" prop="dataQueue">
           <Input v-model="query.dataQueue" placeholder="Input value" />
         </FormItem>
-        <FormItem v-if="showTaskMaxRunningCount" label="MaxRunningCount" prop="taskMaxRunningCount">
+        <FormItem v-if="showTaskMaxCon" label="TaskMaxCon" prop="taskMaxRunningCount">
           <Input v-model="query.taskMaxRunningCount" placeholder="Input value" />
         </FormItem>
         <FormItem v-if="showDescription" label="Description" prop="description">
@@ -56,9 +56,9 @@
           "AppSecret",
           "DataUrl",
           "DataQueue",
-          "TaskMaxRunningCount",
+          "TaskMaxCon",
         ]),
-        showingOptionalFields: ["DataQueue", "TaskMaxRunningCount", "Priority"],
+        showingOptionalFields: ["DataQueue", "TaskMaxCon", "Priority"],
         rules: {
           name: [utils.require()],
           priority: [utils.range(1, 10)],
