@@ -120,8 +120,8 @@ export default {
         urlMatchPatterns: [utils.jsonArray()],
         urlMaxDepth: [utils.range(1, 100)],
         taskUrlMaxFailCount: [utils.range(10, 500)],
-        taskUrlMaxContinuouslyFailCount: [utils.range(1, 30)],
-        taskUrlMaxConcurrency: [utils.range(1, 1000)],
+        taskUrlMaxContinuouslyFailCount: [utils.range(1, 3000)],
+        taskUrlMaxConcurrency: [utils.range(1, 10000)],
       },
       api: "downSystemSite",
       query: {
