@@ -150,7 +150,7 @@ export default {
             utils.enumColumn("proxyId", "Proxy", "Pro"),
             utils.dateColumn("taskStartTime", "StTm"),
             utils.dateColumn("taskFinishTime", "FnshTm"),
-            utils.column("successUrlCount", "SucUrlCnt"),
+            utils.column("urlSuccessCount", "SucUrlCnt"),
             utils.column("urlFailedCount", "FailCnt"),
             utils.column("urlNewCount", "NewCnt"),
             utils.column("urlBadCount", "BadCnt"),
