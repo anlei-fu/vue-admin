@@ -13,6 +13,9 @@
       <FormItem label="Color" prop="color">
         <MyColorPicker v-model="query.color" />
       </FormItem>
+       <FormItem label="SortNumber" prop="sortNumber">
+        <Input v-model="query.sortNumber" placeholder="Label of item" />
+      </FormItem>
       <template v-if="optionalFields.length > 0">
         <Divider orientation="left">Optional Filter</Divider>
         <FormItem label="Fields">
@@ -40,6 +43,7 @@
           type: null,
           value: null,
           label: null,
+          sortNumber:null,
           color: null,
         },
       };
@@ -47,6 +51,10 @@
     beforeMount() {
       utils.initOptionsFieldsShows.call(this);
       utils.copyFieldsFrom(this.query, this.model);
+        utils.restoreOptionalFields("/dictionary/add",this);
+    },
+    beforeDestroy(){
+       utils.snapShotOptionalFields("/dictionary/add",this);
     },
     watch: {
       model(newVal) {

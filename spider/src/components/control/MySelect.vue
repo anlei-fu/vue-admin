@@ -14,6 +14,7 @@
   </span>
 </template>
 <script>
+  import utils from "./../../common";
   export default {
     model: {
       prop: "selectedValue",
@@ -78,6 +79,7 @@
         this.$emit("change", newVal);
       },
       selectedValue(newVal) {
+        debugger
         this.selectedValue_ = newVal;
       },
     },
@@ -85,8 +87,13 @@
       init() {
         this.options_ = {};
         if (this.enum) {
+          let enums =utils.getEnum(this.enum);
+          if(!enums){
+            console.info("unexcepte enum "+this.enum);
+            return;
+          }
           this.options_.source = this.options_.filtered = this.$utils.clone(
-            this.Enums.get(this.enum)
+            enums
           );
         } else {
           this.options_.source = this.options_.filtered = this.options;

@@ -72,6 +72,7 @@
               utils.column("label"),
               utils.column("value"),
               utils.column("color"),
+              utils.column("sortNumber"),
               utils.dateColumn("createTime", "Ctime"),
               utils.operateColumn([utils.operation("edit"), utils.operation("delete")],{width:"150px"}),
             ],
@@ -97,10 +98,13 @@
         data: utils.data(),
       };
     },
-    beforeMount() {
-      utils.initFilterOptionShows.call(this);
-      this.getData(true);
-    },
+  beforeMount() {
+    utils.initFilterOptionShows.call(this);
+    if (!utils.restoreIndex("/dictionary/index", this)) this.getData(true);
+  },
+  beforeDestroy() {
+    utils.snapShotIndex("/dictionary/index", this);
+  },
     watch: {
       "pageSetting.filters.enabledFilters"(newVal) {
         utils.changeShowingFilters.call(this, newVal);

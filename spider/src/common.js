@@ -1,3 +1,101 @@
+import EventEmitter from "./lib/EventEmitter";
+import { Cache } from "./cache";
+import { EnumManager } from "./EnumManager";
+
+if (!global.mycaches)
+        global.mycaches = new Cache();
+
+if (!global.enumManager)
+        global.enumManager = new EnumManager();
+
+function getCache(key) {
+        return global.mycaches.get(key);
+}
+
+function setCache(key, value, expire) {
+        return global.mycaches.set(key, value, expire);
+}
+
+function snapShotIndex(key,component){
+      let data ={
+              query:component.query,
+              showingColumns:component.$refs.table.selectedColumns_,
+      }
+
+      if(component.timeRange)
+            data.timeRange=component.timeRange;
+
+      if(component.radioKey)
+          data.radioKey=component.radioKey;
+
+      if(component.keyword)
+          data.keyword=component.keyword;
+        
+      if(component.data)
+         data.data=component.data;
+
+      setCache(key,data);
+}
+
+function snapShotOptionalFields(key,component){
+        if(component.showingOptionalFields)
+          setCache(key,component.showingOptionalFields);
+}
+
+function restoreOptionalFields(key,component){
+        let fields =getCache(key);
+        if(fields)
+          component.showingOptionalFields=fields;
+}
+
+function restoreIndex(key,component){
+      let data =getCache(key);
+      if(!data)
+      return false;
+
+      copyFieldsFrom(component,data);
+      component.pageSetting.table.showingColumns=data.showingColumns;
+
+      return true;
+
+}
+
+function getEnum(key) {
+        return global.enumManager.getEnum(key);
+}
+
+function getSingleEnum(key, value) {
+        let enums = getEnum(key);
+        if (!enums)
+                return null;
+
+        let values = enums.filter(x => x.value == value);
+        return values.length > 0 ? values[0] : null;
+}
+
+function addEnumValue(key, value) {
+        return global.enumManager.addEnumValue(key, value);
+}
+
+function addEnum(key, values) {
+        return global.enumManager.addEnum(key, values);
+}
+
+function removeEnumValue(key, value) {
+        return global.enumManager.removeEnumValue(key, value);
+}
+
+if (!global.eventEmitter)
+        global.eventEmitter = new EventEmitter();
+
+function subscribe(event, target, callback) {
+        global.eventEmitter.subscribe(event, target, callback);
+}
+
+function publish(event) {
+        global.eventEmitter.publish(event);
+}
+
 /**
  * Upper first letter
  * 
@@ -70,6 +168,17 @@ const dateColumn = (slot, label, pattern, option = {}) => {
         };
         return extend(column, option);
 };
+
+const linkColumn = (slot, label, linkField, option = {}) => {
+        let column = {
+                slot,
+                title: label || upperFirstLetter(slot),
+                linkField,
+                isLink: true
+
+        };
+        return extend(column, option);
+}
 
 /**
  * Build operate column
@@ -271,9 +380,13 @@ const addProps = (title = "") => {
  * @param {Object} model
  * @param {String} title
  */
-function showAdd(model = {}, title = "add") {
-        this.addSetting.title = title;
-        this.addSetting.model = model;
+function showAdd(model, title) {
+        if (model)
+                this.addSetting.title = title;
+
+        if (title)
+                this.addSetting.model = model;
+
         this.$refs.add.show();
 };
 
@@ -545,7 +658,7 @@ function changeShowingOptionalFields(showings) {
  * @param {Object} target 
  * @param {Object} source 
  */
-function copyFieldsFrom(target, source) {
+function copyFieldsFrom(target, source,resetToNullOnMissing=false) {
         Object.keys(target).forEach(x => {
                 if (source[x] != null)
                         target[x] = source[x];
@@ -799,6 +912,7 @@ export default {
         addSetting,
         enumColumn,
         dateColumn,
+        linkColumn,
         column,
         operateColumn,
         operation,
@@ -834,5 +948,18 @@ export default {
         batchEditProps,
         addProps,
         changeShowingOptionalFields,
-        changeShowingFilters
+        changeShowingFilters,
+        subscribe,
+        publish,
+        getCache,
+        setCache,
+        addEnum,
+        addEnumValue,
+        getEnum,
+        getSingleEnum,
+        removeEnumValue,
+        snapShotIndex,
+        restoreIndex,
+        snapShotOptionalFields,
+        restoreOptionalFields
 }

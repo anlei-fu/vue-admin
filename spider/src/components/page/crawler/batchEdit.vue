@@ -68,6 +68,7 @@
     },
     methods: {
       show() {
+        this.$utils.resetQuery(this.query);
         this.$refs.modal.show();
       },
       close() {

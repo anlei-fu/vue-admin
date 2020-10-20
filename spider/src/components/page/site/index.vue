@@ -3,13 +3,13 @@
     <MyPageSettingButton @click="showSetting" />
     <MyFilter>
       <MyDateRange v-model="timeRange" />
-      <MySelect
+      <!-- <MySelect
         v-show="showParentSiteId"
         v-model="query.parentSiteId"
         title="ParentSite"
         enum="Site"
         width="200px"
-      />
+      /> -->
       <MySelect
         v-show="showNeedUseCookie"
         v-model="query.needUseCookie"
@@ -46,8 +46,12 @@
         width="200px"
       />
       <span v-show="showRadioGroup">
-        <MyRadioGroup v-model="radioKey" :options="radioOptions" width="200px" />
-        <Input v-model="keyword" style="width: 200px;" />
+        <MyRadioGroup
+          v-model="radioKey"
+          :options="radioOptions"
+          width="200px"
+        />
+        <Input v-model="keyword" style="width: 200px" />
       </span>
       <span>
         <QueryButton @click="getData(true)" />
@@ -65,6 +69,7 @@
       :columns="pageSetting.table.columns"
       :datas="data.list"
       @delete="showDelete"
+      @clone="clone"
       :selectedColumns="pageSetting.table.showingColumns"
       @edit="showEdit"
     />
@@ -81,7 +86,11 @@
       :title="editSetting.title"
       @success="onEditSuccess"
     />
-    <batchEdit ref="batchEdit" :ids="batchEditSetting.ids" @success="onBatchEditSuccess" />
+    <batchEdit
+      ref="batchEdit"
+      :ids="batchEditSetting.ids"
+      @success="onBatchEditSuccess"
+    />
     <PageSetting ref="setting" :setting="pageSetting" />
   </div>
 </template>
@@ -125,17 +134,18 @@ export default {
           columns: [
             utils.CHECKBOX_COLUMN,
             utils.column("id"),
-            utils.column("name"),
+            utils.linkColumn("name", "Name", "homepageUrl"),
             utils.column("description", "Desc"),
             utils.enumColumn("parentSiteId", "Site", "PSite"),
             utils.column("domain"),
-            utils.column("homePageUrl", "HmPg"),
+            utils.column("homepageUrl", "HmPg"),
             utils.enumColumn("loginNeedVcode", "YesNo", "LgNdVcd"),
             utils.enumColumn("loginCaptaType", null, "LgCptTy"),
             utils.enumColumn("needUseCookie", "YesNo", "NdCk"),
             utils.enumColumn("needUseProxy", "YesNo", "NdPro"),
             utils.column("loginScriptId", "LgScript"),
             utils.column("ipMinuteSpeedLimit", "IpMinLmt"),
+            utils.column("ip10MinuteSpeedLimit", "Ip10MinLmt"),
             utils.column("ipHourSpeedLimit", "IpHrLmt"),
             utils.column("ipDaySpeedLimit", "IpDayLmt"),
             utils.column("ipDelayTimeout", "IpDlTmt(s)"),
@@ -155,20 +165,26 @@ export default {
             utils.enumColumn("enableStatus", null, "Status"),
             utils.dateColumn("createTime", "CTime"),
             utils.operateColumn(
-              [utils.operation("edit"), utils.operation("delete")],
-              { width: "150px" }
+              [
+                utils.operation("edit"),
+                utils.operation("delete"),
+                utils.operation("clone"),
+              ],
+              { width: "250px" }
             ),
           ],
           showingColumns: [
             "Checkbox",
             "name",
-            "needUseCookie",
-            "needUseProxy",
+            // "needUseCookie",
+            // "needUseProxy",
             "ipDelayTimeout",
             "ipBlockTimeout",
             "ipMinuteSpeedLimit",
-            "accountAllowCrossIp",
-            "accountAllowMultiple",
+            "ip10MinuteSpeedLimit",
+            "ipHourMinuteSpeedLimit",
+            // "accountAllowCrossIp",
+            // "accountAllowMultiple",
             "enableStatus",
             // "createTime",
             "test",
@@ -200,7 +216,10 @@ export default {
   },
   beforeMount() {
     utils.initFilterOptionShows.call(this);
-    this.getData(true);
+    if (!utils.restoreIndex("/site/index", this)) this.getData(true);
+  },
+  beforeDestroy() {
+    utils.snapShotIndex("/site/index", this);
   },
   watch: {
     "pageSetting.filters.enabledFilters"(newVal) {
@@ -215,12 +234,18 @@ export default {
     },
   },
   methods: {
-    showAdd() {
-      debugger;
-      utils.showAdd.call(this);
+    showAdd(model, title) {
+      utils.showAdd.call(this, model, title);
     },
     showEdit(row) {
       utils.showEdit.call(this, row);
+    },
+    clone(row) {
+      let model = this.$utils.clone(row);
+      model.id = null;
+      model.name = null;
+      (model.homepageUrl = null), (this.addSetting.model = model);
+      this.showAdd();
     },
     onEditSuccess(row) {
       utils.onEditSuccess.call(this, row);

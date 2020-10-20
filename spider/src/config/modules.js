@@ -72,12 +72,51 @@ exports.modules = [
                 icon: "navicon-round",
                 label: "Monitor",
                 activeMenuName: "/script",
+                menus:[{
+                        path: "/siteIpDelayMap",
+                        icon: "",
+                        label: "DashBoard",
+                        moduleName: "module2",
+                },
+                {
+                        path: "/siteIpDelayMap",
+                        icon: "",
+                        label: "Task",
+                        moduleName: "module2",
+                },
+                {
+                        path: "/siteIpDelayMap",
+                        icon: "",
+                        label: "DownSystem",
+                        moduleName: "module2",
+                },
+                {
+                        path: "/siteIpDelayMap",
+                        icon: "",
+                        label: "DownSystemSite",
+                        moduleName: "module2",
+                },
+                {
+                        path: "/siteIpDelayMap",
+                        icon: "",
+                        label: "Crawler",
+                        moduleName: "module2",
+                },
+                {
+                        path: "/siteIpDelayMap",
+                        icon: "",
+                        label: "Site",
+                        moduleName: "module2",
+                },
+        ]
         },
         {
                 _name: "module3",
                 icon: "navicon-round",
                 label: "Statistics",
                 activeMenuName: "/script",
+               
+
         },
         {
                 _name: "module4",

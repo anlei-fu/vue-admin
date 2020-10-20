@@ -4,6 +4,7 @@
   </div>
 </template>
 <script>
+  import utils from "./../../common";
   export default {
     props: {
       value: {
@@ -20,8 +21,10 @@
     },
     computed: {
       color() {
-        if (this.format && this.format.type && this.format.type == "enum")
-          return this.Enums.getColor(this.format.pattern, this.value);
+        if (this.format && this.format.type && this.format.type == "enum"){
+          let item =utils.getSingleEnum(this.format.pattern, this.value);
+          return item?item.color:"";
+        }
       },
     },
     methods: {

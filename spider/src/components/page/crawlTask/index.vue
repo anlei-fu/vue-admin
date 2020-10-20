@@ -3,14 +3,14 @@
     <MyPageSettingButton @click="showSetting" />
     <MyFilter>
       <MyDateRange v-model="timeRange" />
-      <MySelect v-show="showSiteId" v-model="query.siteId" title="Site" enum="Site" width="200px" />
-      <MySelect
+            <MySelect
         v-show="showDownSystemId"
         v-model="query.downSystemId"
         title="System"
         enum="System"
         width="200px"
       />
+      <MySelect v-show="showSiteId" v-model="query.siteId" title="Site" enum="Site" width="200px" />
       <MySelect
         v-show="showTaskStatus"
         v-model="query.taskStatus"
@@ -23,6 +23,20 @@
         v-model="query.taskResult"
         title="ResultType"
         enum="TaskResult"
+        width="200px"
+      />
+      <MySelect
+        v-show="showDataSyncStatus"
+        v-model="query.dataSyncStatus"
+        title="DataSyncStatus"
+        enum="SyncStatus"
+        width="200px"
+      />
+      <MySelect
+        v-show="showUrlSyncStatus"
+        v-model="query.urlSyncStatus"
+        title="UrlSyncStatus"
+        enum="SyncStatus"
         width="200px"
       />
       <MySelect
@@ -60,6 +74,10 @@
         enum="EnableStatus"
         width="200px"
       />
+       <span v-show="showRadioGroup">
+        <MyRadioGroup v-model="radioKey" :options="radioOptions" width="200px" />
+        <Input v-model="keyword" style="width: 200px;" />
+      </span>
       <span>
         <QueryButton @click="getData(true)" />
       </span>
@@ -109,8 +127,11 @@ export default {
             "CrawlerId",
             "BindLastStatus",
             "DispatchStatus",
+            "DataSyncStatus",
+            "UrlSyncStatus",
             "ProxyId",
             "EnableStatus",
+            "RadioGroup"
           ]),
           enabledFilters: [
             "TimeRange",
@@ -121,8 +142,11 @@ export default {
             "CrawlerId",
             "BindLastStatus",
             "DispatchStatus",
+            "DataSyncStatus",
+            "UrlSyncStatus",
             "ProxyId",
             "EnableStatus",
+            "RadioGroup"
           ],
         },
         table: {
@@ -130,26 +154,33 @@ export default {
             utils.column("id"),
             utils.enumColumn("downSystemId", "System", "System"),
             utils.enumColumn("siteId", "Site", "Site"),
-            utils.enumColumn("taskStatus", null, "Status",{width:"100px"}),
-            utils.enumColumn("taskResult", "TaskResult", "Result"),
+            utils.column("downSystemSiteName","DssName"),
+            utils.enumColumn("taskStatus", null, "Status", { width: "100px" }),
             utils.enumColumn("crawlerId", "Crawler", "Crler"),
             utils.enumColumn("bindLastResult", "BindResult", "BdRst"),
             utils.column("bindLastMsg", "BdMsg"),
-            utils.dateColumn("bindLastTime","BdTm","MM-dd hh:mm",{width:"110px"}),
             utils.column("bindCount", "BdCnt"),
-             utils.dateColumn("bindTimeoutTime", "BdTmt","MM-dd hh:mm",{width:"110px"}),
-            utils.enumColumn(
-              "dispatchLastResult",
-              "DispatchResult",
-              "DspRst"
-            ),
-            utils.dateColumn("dispatchLastTime","DspTm","MM-dd hh:mm",{width:"110px"}),
+            utils.dateColumn("bindLastTime", "BdTm", "MM-dd hh:mm", {
+              width: "110px",
+            }),
+            utils.dateColumn("bindTimeoutTime", "BdTmt", "MM-dd hh:mm", {
+              width: "110px",
+            }),
+            utils.enumColumn("dispatchLastResult", "DispatchResult", "DspRst"),
+            utils.dateColumn("dispatchLastTime", "DspTm", "MM-dd hh:mm", {
+              width: "110px",
+            }),
             utils.column("dispatchLastMsg", "DspMsg"),
-            utils.dateColumn("taskTimeoutTime", "ExeTmt","MM-dd hh:mm",{width:"110px"}),
+            utils.dateColumn(
+              "taskExecuteTimeoutTime",
+              "ExeTmt",
+              "MM-dd hh:mm",
+              { width: "110px" }
+            ),
             utils.enumColumn("siteAccountId", "Account", "Acc"),
             utils.enumColumn("proxyId", "Proxy", "Pro"),
             utils.dateColumn("taskStartTime", "StTm"),
-            utils.dateColumn("taskFinishTime", "FnshTm"),
+            utils.dateColumn("taskFinishTime", "FnshTm","MM-dd hh:mm"),
             utils.column("urlSuccessCount", "SucUrlCnt"),
             utils.column("urlFailedCount", "FailCnt"),
             utils.column("urlNewCount", "NewCnt"),
@@ -158,12 +189,13 @@ export default {
             utils.column("averageSpeedOfSuccess", "SpdOfSuc"),
             utils.column("medianSpeedOfSuccess", "MedianSpdOfSuc"),
             utils.column("maxSpeedOfSuccess", "MxSpdOfSuc"),
-            utils.dateColumn("createTime", "Ctime"),
+            utils.enumColumn("urlSyncStatus", "SyncStatus", "UrlSync"),
+            utils.enumColumn("dataSyncStatus", "SyncStatus", "DataSync"),
+            utils.column("dataFile", "DataFile"),
+            utils.enumColumn("taskResult", "TaskResult", "Result"),
+            utils.dateColumn("createTime", "Ctime", "MM-dd hh:mm"),
             utils.operateColumn(
-              [
-                utils.operation("bdRcd"),
-                utils.operation("dsphRcd"),
-              ],
+              [utils.operation("bdRcd"), utils.operation("dsphRcd")],
               {
                 width: "150px",
               }
@@ -172,25 +204,30 @@ export default {
           showingColumns: [
             "test",
             "downSystemId",
+            "downSystemSiteName",
             "siteId",
-            "taskTimeoutTime",
-            "bindTimeoutTime",
+            // "taskExecuteTimeoutTime",
+            // "bindTimeoutTime",
             "taskStatus",
-            "taskResult",
-            "bindLastResult",
-            "bindLastTime",
             "bindCount",
-            "dispatchLastResult",
-            "dispatchLastTime"
+            // "bindLastResult",
+            "bindLastTime",
+
+            // "dispatchLastResult",
+            "dispatchLastTime",
             // "taskStartTime",
             // "taskFinishTime",
             // "enableStatus",
-            // "createTime",
+            "taskResult",
+            "createTime",
           ],
         },
       },
       api: "crawlTask",
       timeRange: [],
+      radioKey: "downSystemSiteName",
+      keyword: "",
+      radioOptions: utils.radioOptions(["downSystemSiteName"]),
       query: {
         siteId: null,
         downSystemId: null,
@@ -199,6 +236,8 @@ export default {
         crawlerId: null,
         bindLastStatus: null,
         dispatchStatus: null,
+        dataSyncStatus: null,
+        urlSyncStatus: null,
         proxyId: null,
         enableStatus: null,
         createTimeStart: null,
@@ -211,7 +250,10 @@ export default {
   },
   beforeMount() {
     utils.initFilterOptionShows.call(this);
-    this.getData(true);
+    if (!utils.restoreIndex("/crawlTask/index", this)) this.getData(true);
+  },
+  beforeDestroy() {
+    utils.snapShotIndex("/crawlTask/index", this);
   },
   watch: {
     "pageSetting.filters.enabledFilters"(newVal) {
@@ -237,7 +279,7 @@ export default {
       this.getData();
     },
     getData(reset) {
-      utils.getData.call(this, reset, false, true);
+      utils.getData.call(this, reset, true, true);
     },
   },
 };

@@ -11,7 +11,7 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {
       '/uploadFile': {
-        target: 'http://192.168.29.136:10035',//原本是192.168.5.188 本地是http://182.140.244.57:2048
+        target: 'http://192.168.29.138:10035',//原本是192.168.5.188 本地是http://182.140.244.57:2048
         changeOrigin: true
       },
       '/': {

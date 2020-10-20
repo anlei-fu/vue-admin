@@ -4,7 +4,7 @@
       <FormItem label="Fields">
         <MyCheckBoxGroup v-model="showingOptionalFields" :options="optionalFields" />
       </FormItem>
-      <MyScroll>
+      <MyScroll height="200px">
         <FormItem v-if="showType" label="Type" prop="type">
           <Input v-model="query.type" placeholder="Input value" />
         </FormItem>
@@ -17,6 +17,9 @@
         <FormItem v-if="showColor" label="Color" prop="color">
           <MyColorPicker v-model="query.color" />
         </FormItem>
+          <FormItem v-if="showSortNumber" label="SortNumber" prop="sortNumber">
+          <Input v-model="query.sortNumber" placeholder="Input value" />
+        </FormItem>
       </MyScroll>
     </Form>
   </MyModal>
@@ -27,7 +30,7 @@
     props: utils.editProps(),
     data() {
       return {
-        optionalFields: utils.options(["Type", "Color", "Label", "Value"]),
+        optionalFields: utils.options(["Type", "Color", "Label", "Value","SortNumber"]),
         showingOptionalFields: [],
         rules: {
           value: [utils.range(-1, 1000)],
@@ -38,6 +41,7 @@
           value: null,
           label: null,
           color: null,
+          sortNumber:null,
           id: null,
         },
       };
@@ -45,6 +49,10 @@
     beforeMount() {
       utils.initOptionsFieldsShows.call(this);
       utils.copyFieldsFrom(this.query, this.model);
+       utils.restoreOptionalFields("/dictionary/edit",this);
+    },
+    beforeDestroy(){
+       utils.snapShotOptionalFields("/dictionary/edit",this);
     },
     watch: {
       model(newVal) {

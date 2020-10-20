@@ -32,8 +32,8 @@
         <FormItem v-if="showDomain" label="Domain" prop="domain">
           <Input v-model="query.domain" placeholder="Input value" />
         </FormItem>
-        <FormItem v-if="showHomePageUrl" label="HomePageUrl" prop="homePageUrl">
-          <Input v-model="query.homePageUrl" placeholder="Input value" />
+        <FormItem v-if="showHomePageUrl" label="HomePageUrl" prop="homepageUrl">
+          <Input v-model="query.homepageUrl" placeholder="Input value" />
         </FormItem>
         <FormItem v-if="showIpDelayTimeout" label="IpDelayTimeout" prop="ipDelayTimeout">
           <Input v-model="query.ipDelayTimeout" placeholder="Input value" />
@@ -41,16 +41,24 @@
         <FormItem v-if="showIpBlockTimeout" label="IpBlockTimeout" prop="ipBlockTimeout">
           <Input v-model="query.ipBlockTimeout" placeholder="Input value" />
         </FormItem>
-        <FormItem v-if="showIpHourSpeedLimit" label="IpHourSpeedLimit" prop="ipHourSpeedLimit">
-          <Input v-model="query.ipHourSpeedLimit" placeholder="Input value" />
-        </FormItem>
+
         <FormItem
           v-if="showIpMinuteSpeedLimit"
           label="IpMinuteSpeedLimit"
           prop="ipMinuteSpeedLimit"
         >
-          <Input v-model="query.ipMinuteSpeedLimit" placeholder="Input value" />
+         <Input v-model="query.ipMinuteSpeedLimit" placeholder="Input value" />
         </FormItem>
+          <FormItem
+            v-if="showIp10MinuteSpeedLimit"
+            label="Ip10MinuteSpeedLimit"
+            prop="ip10MinuteSpeedLimit"
+          >
+           <Input v-model="query.ip10MinuteSpeedLimit" placeholder="Input value" />
+          </FormItem>
+          <FormItem v-if="showIpHourSpeedLimit" label="IpHourSpeedLimit" prop="ipHourSpeedLimit">
+            <Input v-model="query.ipHourSpeedLimit" placeholder="Input value" />
+          </FormItem>
         <FormItem v-if="showIpDaySpeedLimit" label="IpDaySpeedLimit" prop="ipDaySpeedLimit">
           <Input v-model="query.ipDaySpeedLimit" placeholder="Input value" />
         </FormItem>
@@ -146,121 +154,129 @@
   </MyModal>
 </template>
 <script>
-  import utils from "./../../../common";
-  export default {
-    props: utils.addProps(),
-    data() {
-      return {
-        optionalFields: utils.options([
-          "ParentSiteId",
-          "NeedUseCookie",
-          "LoginNeedVcode",
-          "LoginCaptaType",
-          "NeedUseProxy",
-          "EnableStatus",
-          "Domain",
-          "HomePageUrl",
-          "IpDelayTimeout",
-          "IpBlockTimeout",
-          "IpHourSpeedLimit",
-          "IpMinuteSpeedLimit",
-          "IpDaySpeedLimit",
-          "AccountAllowCrossIp",
-          "AccountAllowMultiple",
-          "AccountMinuteSpeedLimit",
-          "AccountHourSpeedLimit",
-          "AccountDaySpeedLimit",
-          "AccountMaxBlockCount",
-          "AccountBlockTimeout",
-          "AccountMaxCookieCount",
-          "AccountDelayTimeout",
-          "CookieMaxBlockCount",
-          "CookieExpireTimeout",
-          "CookieDelayTimeout",
-          "Description",
-        ]),
-        showingOptionalFields: [
-          "HomePageUrl",
-          "NeedUseProxy",
-          "NeedUseCookie",
-          "CrawlerAutoDownloadPage",
-          "IpMinuteSpeedLimit",
-          "CookieExpireTimeout",
-        ],
-        rules: {
-          name: [utils.require()],
-          ipDelayTimeout: [utils.require(), utils.range(0, 100000000)],
-          ipBlockTimeout: [utils.range(5, 100000)],
-          ipHourSpeedLimit: [utils.range(1, 1000000)],
-          ipMinuteSpeedLimit: [utils.range(1, 100000)],
-          ipDaySpeedLimit: [utils.range(1, 10000000)],
-          accountMinuteSpeedLimit: [utils.range(1, 100)],
-          accountHourSpeedLimit: [utils.range(1, 3000)],
-          accountDaySpeedLimit: [utils.range(1, 30000)],
-          accountMaxBlockCount: [utils.range(1, 20)],
-          accountBlockTimeout: [utils.range(1, 3000)],
-          accountMaxCookieCount: [utils.range(1, 3000)],
-          accountDelayTimeout: [utils.range(1, 3000)],
-          cookieMaxBlockCount: [utils.range(1, 20)],
-          cookieExpireTimeout: [utils.range(1, 3000)],
-          cookieDelayTimeout: [utils.range(1, 3000)],
-          homePageUrl: [utils.url()],
-        },
-        api: "site",
-        query: {
-          parentSiteId: null,
-          needUseCookie: null,
-          loginNeedVcode: null,
-          loginCaptaType: null,
-          needUseProxy: null,
-          enableStatus: null,
-          name: null,
-          domain: null,
-          homePageUrl: null,
-          ipDelayTimeout: null,
-          ipBlockTimeout: null,
-          ipHourSpeedLimit: null,
-          ipMinuteSpeedLimit: null,
-          ipDaySpeedLimit: null,
-          accountAllowCrossIp: null,
-          accountAllowMultiple: null,
-          accountMinuteSpeedLimit: null,
-          accountHourSpeedLimit: null,
-          accountDaySpeedLimit: null,
-          accountMaxBlockCount: null,
-          accountBlockTimeout: null,
-          accountMaxCookieCount: null,
-          accountDelayTimeout: null,
-          cookieMaxBlockCount: null,
-          cookieExpireTimeout: null,
-          cookieDelayTimeout: null,
-          description: null,
-          id: null,
-        },
-      };
+import utils from "./../../../common";
+export default {
+  props: utils.addProps(),
+  data() {
+    return {
+      optionalFields: utils.options([
+        "ParentSiteId",
+        "NeedUseCookie",
+        "LoginNeedVcode",
+        "LoginCaptaType",
+        "NeedUseProxy",
+        "EnableStatus",
+        "Domain",
+        "HomePageUrl",
+        "IpDelayTimeout",
+        "IpBlockTimeout",
+        "IpMinuteSpeedLimit",
+        "Ip10MinuteSpeedLimit",
+        "IpHourSpeedLimit",
+        "IpDaySpeedLimit",
+        "AccountAllowCrossIp",
+        "AccountAllowMultiple",
+        "AccountMinuteSpeedLimit",
+        "AccountHourSpeedLimit",
+        "AccountDaySpeedLimit",
+        "AccountMaxBlockCount",
+        "AccountBlockTimeout",
+        "AccountMaxCookieCount",
+        "AccountDelayTimeout",
+        "CookieMaxBlockCount",
+        "CookieExpireTimeout",
+        "CookieDelayTimeout",
+        "Description",
+      ]),
+      showingOptionalFields: [
+        "HomePageUrl",
+        "NeedUseProxy",
+        "NeedUseCookie",
+        "CrawlerAutoDownloadPage",
+        "IpMinuteSpeedLimit",
+        "CookieExpireTimeout",
+      ],
+      rules: {
+        name: [utils.require()],
+        ipDelayTimeout: [utils.require(), utils.range(0, 100000000)],
+        ipBlockTimeout: [utils.range(5, 100000)],
+        ipHourSpeedLimit: [utils.range(1, 1000000)],
+        ipMinuteSpeedLimit: [utils.range(1, 100000)],
+        ip10MinuteSpeedLimit: [utils.range(1, 100000)],
+        ipDaySpeedLimit: [utils.range(1, 10000000)],
+        accountMinuteSpeedLimit: [utils.range(1, 100)],
+        accountHourSpeedLimit: [utils.range(1, 3000)],
+        accountDaySpeedLimit: [utils.range(1, 30000)],
+        accountMaxBlockCount: [utils.range(1, 20)],
+        accountBlockTimeout: [utils.range(1, 3000)],
+        accountMaxCookieCount: [utils.range(1, 3000)],
+        accountDelayTimeout: [utils.range(1, 3000)],
+        cookieMaxBlockCount: [utils.range(1, 20)],
+        cookieExpireTimeout: [utils.range(1, 3000)],
+        cookieDelayTimeout: [utils.range(1, 3000)],
+        homepageUrl: [utils.url()],
+      },
+      api: "site",
+      query: {
+        parentSiteId: null,
+        needUseCookie: null,
+        loginNeedVcode: null,
+        loginCaptaType: null,
+        needUseProxy: null,
+        enableStatus: null,
+        name: null,
+        domain: null,
+        homepageUrl: null,
+        ipDelayTimeout: null,
+        ipBlockTimeout: null,
+        ipHourSpeedLimit: null,
+        ipMinuteSpeedLimit: null,
+        ip10MinuteSpeedLimit: null,
+        ipDaySpeedLimit: null,
+        accountAllowCrossIp: null,
+        accountAllowMultiple: null,
+        accountMinuteSpeedLimit: null,
+        accountHourSpeedLimit: null,
+        accountDaySpeedLimit: null,
+        accountMaxBlockCount: null,
+        accountBlockTimeout: null,
+        accountMaxCookieCount: null,
+        accountDelayTimeout: null,
+        cookieMaxBlockCount: null,
+        cookieExpireTimeout: null,
+        cookieDelayTimeout: null,
+        description: null,
+        id: null,
+      },
+    };
+  },
+  beforeMount() {
+    utils.initOptionsFieldsShows.call(this);
+    utils.copyFieldsFrom(this.query, this.model);
+      utils.restoreOptionalFields("/site/add",this);
     },
-    beforeMount() {
-      utils.initOptionsFieldsShows.call(this);
-      utils.copyFieldsFrom(this.query, this.model);
+    beforeDestroy(){
+       utils.snapShotOptionalFields("/site/add",this);
     },
-    watch: {
-      model(newVal) {
-        utils.copyFieldsFrom(this.query, newVal);
-      },
-      showingOptionalFields(newVal) {
-        utils.changeShowingOptionalFields.call(this, newVal);
-      },
+  watch: {
+    model(newVal) {
+      this.$utils.resetQuery(this.query);
+      utils.copyFieldsFrom(this.query, newVal);
     },
-    methods: {
-      show() {
-        this.$refs.modal.show();
-      },
-      close() {
-        this.$refs.modal.close();
-      },
-      ok() {
-        utils.add.call(this);
-      },
+    showingOptionalFields(newVal) {
+      utils.changeShowingOptionalFields.call(this, newVal);
     },
-  };
+  },
+  methods: {
+    show() {
+      this.$refs.modal.show();
+    },
+    close() {
+      this.$refs.modal.close();
+    },
+    ok() {
+      utils.add.call(this);
+    },
+  },
+};
 </script>

@@ -83,6 +83,10 @@
     beforeMount() {
       utils.initOptionsFieldsShows.call(this);
       utils.copyFieldsFrom(this.query, this.model);
+    utils.restoreOptionalFields("/downSystem/add",this);
+    },
+    beforeDestroy(){
+       utils.snapShotOptionalFields("/downSystem/add",this);
     },
     watch: {
       model(newVal) {

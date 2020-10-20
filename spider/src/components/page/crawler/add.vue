@@ -85,6 +85,7 @@
     },
     watch: {
       model(newVal) {
+        this.$utils.resetQuery(this.query);
         utils.copyFieldsFrom(this.query, newVal);
       },
       showingOptionalFields(newVal) {
@@ -93,7 +94,6 @@
     },
     methods: {
       show() {
-        debugger
         this.$refs.modal.show();
       },
       close() {

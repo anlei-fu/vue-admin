@@ -2,70 +2,190 @@
   <MyModal :title="title" ref="modal" @ok="ok" width="40%">
     <Form ref="form" :model="query" :rules="rules" :label-width="100">
       <FormItem label="Fields">
-        <MyCheckBoxGroup v-model="showingOptionalFields" :options="optionalFields" />
+        <MyCheckBoxGroup
+          v-model="showingOptionalFields"
+          :options="optionalFields"
+        />
       </FormItem>
       <MyScroll height="180px">
-        <FormItem v-if="showCrawlType" label="CrawlType" prop="crawlerCrawlType">
-          <MySelect v-model="query.crawlerCrawlType" enum="CrawlType" width="100%" />
+        <FormItem v-if="showName" label="Name" prop="name">
+          <Input v-model="query.name" placeholder="Input value" />
+        </FormItem>
+        <FormItem v-if="showDescription" label="Desc" prop="description">
+          <Input v-model="query.description" placeholder="Input value" />
+        </FormItem>
+        <FormItem
+          v-if="showDownSystemSiteType"
+          label="Type"
+          prop="downSystemSiteType"
+        >
+          <MySelect
+            v-model="query.downSystemSiteType"
+            enum="DownSystemSiteType"
+            width="100%"
+          />
+        </FormItem>
+        <FormItem
+          v-if="showCrawlType"
+          label="CrawlType"
+          prop="crawlerCrawlType"
+        >
+          <MySelect
+            v-model="query.crawlerCrawlType"
+            enum="CrawlType"
+            width="100%"
+          />
         </FormItem>
         <FormItem
           v-if="showAutoDownloadPage"
           label="AutoDownloadPage"
           prop="crawlerAutoDownloadPage"
         >
-          <MySelect v-model="query.crawlerAutoDownloadPage" enum="YesNo" width="100%" />
+          <MySelect
+            v-model="query.crawlerAutoDownloadPage"
+            enum="YesNo"
+            width="100%"
+          />
         </FormItem>
-        <FormItem v-if="showEnableStatus" label="EnableStatus" prop="enableStatus">
-          <MySelect v-model="query.enableStatus" enum="EnableStatus" width="100%" />
+        <FormItem
+          v-if="showEnableStatus"
+          label="EnableStatus"
+          prop="enableStatus"
+        >
+          <MySelect
+            v-model="query.enableStatus"
+            enum="EnableStatus"
+            width="100%"
+          />
         </FormItem>
         <FormItem v-if="showScriptPath" label="Script" prop="scriptPath">
           <MyFileUploader v-model="query.scriptPath" />
         </FormItem>
-        <FormItem v-if="showPageEncoding" label="Encoding" prop="crawlerPageEncoding">
-          <Input v-model="query.crawlerPageEncoding" placeholder="Input value" />
+        <FormItem
+          v-if="showPageEncoding"
+          label="Encoding"
+          prop="crawlerPageEncoding"
+        >
+          <Input
+            v-model="query.crawlerPageEncoding"
+            placeholder="Input value"
+          />
         </FormItem>
-        <FormItem v-if="showUrlMaxCacheCount" label="MaxCacheCount" prop="urlMaxCacheCount">
+        <FormItem
+          v-if="showUrlMaxCacheCount"
+          label="MaxCacheCount"
+          prop="urlMaxCacheCount"
+        >
           <Input v-model="query.urlMaxCacheCount" placeholder="Input value" />
         </FormItem>
         <FormItem v-if="showUrlEncodes" label="Encodes" prop="urlEncodes">
           <Input v-model="query.urlEncodes" placeholder="Input value" />
         </FormItem>
-        <FormItem v-if="showUrlMatchPatterns" label="MatchPatterns" prop="urlMatchPatterns">
+        <FormItem
+          v-if="showUrlMatchPatterns"
+          label="MatchPatterns"
+          prop="urlMatchPatterns"
+        >
           <Input v-model="query.urlMatchPatterns" placeholder="Input value" />
         </FormItem>
-        <FormItem v-if="showTaskUrlBatchCount" label="UrlBatchCount" prop="taskUrlBatchCount">
+        <FormItem
+          v-if="showTaskUrlBatchCount"
+          label="UrlBatchCount"
+          prop="taskUrlBatchCount"
+        >
           <Input v-model="query.taskUrlBatchCount" placeholder="Input value" />
         </FormItem>
-        <FormItem v-if="showTaskMaxCount" label="MaxWaitToBindCount" prop="taskMaxCount">
+        <FormItem
+          v-if="showTaskMaxCount"
+          label="MaxWaitToBindCount"
+          prop="taskMaxCount"
+        >
           <Input v-model="query.taskMaxCount" placeholder="Input value" />
         </FormItem>
-        <FormItem v-if="showTaskMaxCon" label="MaxRunningCount" prop="taskMaxRunningCount">
-          <Input v-model="query.taskMaxRunningCount" placeholder="Input value" />
+        <FormItem
+          v-if="showTaskMaxCon"
+          label="MaxRunningCount"
+          prop="taskMaxRunningCount"
+        >
+          <Input
+            v-model="query.taskMaxRunningCount"
+            placeholder="Input value"
+          />
         </FormItem>
         <FormItem v-if="showTaskTimeout" label="Timeout" prop="taskTimeout">
           <Input v-model="query.taskTimeout" placeholder="Input value" />
         </FormItem>
-        <FormItem v-if="showTaskBindTimeout" label="BdTmt" prop="taskBindTimeout">
+        <FormItem
+          v-if="showTaskBindTimeout"
+          label="BdTmt"
+          prop="taskBindTimeout"
+        >
           <Input v-model="query.taskBindTimeout" placeholder="Input value" />
         </FormItem>
         <FormItem v-if="showUrlMaxDepth" label="UrlMaxDepth" prop="urlMaxDepth">
           <Input v-model="query.urlMaxDepth" placeholder="Input value" />
         </FormItem>
-        <FormItem v-if="showUrlMaxCrawlCount" label="UrlMaxCrawlCount" prop="urlMaxCrawlCount">
+        <FormItem
+          v-if="showUrlMaxCrawlCount"
+          label="UrlMaxCrawlCount"
+          prop="urlMaxCrawlCount"
+        >
           <Input v-model="query.urlMaxCrawlCount" placeholder="Input value" />
         </FormItem>
-        <FormItem v-if="showTaskUrlMaxFCnt" label="TaskUrlMaxFCnt" prop="taskUrlMaxFailCount">
-          <Input v-model="query.taskUrlMaxFailCount" placeholder="Input value" />
+        <FormItem
+          v-if="showTaskUrlMaxFCnt"
+          label="TaskUrlMaxFCnt"
+          prop="taskUrlMaxFailCount"
+        >
+          <Input
+            v-model="query.taskUrlMaxFailCount"
+            placeholder="Input value"
+          />
         </FormItem>
         <FormItem
           v-if="showTaskUrlMaxCFlCnt"
           label="TaskUrlMaxCFlCnt"
           prop="taskUrlMaxContinuouslyFailCount"
         >
-          <Input v-model="query.taskUrlMaxContinuouslyFailCount" placeholder="Input value" />
+          <Input
+            v-model="query.taskUrlMaxContinuouslyFailCount"
+            placeholder="Input value"
+          />
         </FormItem>
-        <FormItem v-if="showTaskUrlMaxCon" label="TaskUrlMaxCon" prop="taskUrlMaxConcurrency">
-          <Input v-model="query.taskUrlMaxConcurrency" placeholder="Input value" />
+        <FormItem
+          v-if="showTaskUrlMaxCon"
+          label="TaskUrlMaxCon"
+          prop="taskUrlMaxConcurrency"
+        >
+          <Input
+            v-model="query.taskUrlMaxConcurrency"
+            placeholder="Input value"
+          />
+        </FormItem>
+        <FormItem
+          v-if="showRunLimitMaxDays"
+          label="MaxDays"
+          prop="runLimitMaxDays"
+        >
+          <Input v-model="query.runLimitMaxDays" placeholder="Input value" />
+        </FormItem>
+        <FormItem
+          v-if="showRunLimitMaxHours"
+          label="MaxHours"
+          prop="runLimitMaxHours"
+        >
+          <Input v-model="query.runLimitMaxHours" placeholder="Input value" />
+        </FormItem>
+        <FormItem
+          v-if="showRunLimitAllowAutoBalance"
+          label="AutoBalance"
+          prop="runLimitAllowAutoBalance"
+        >
+          <MySelect
+            v-model="query.runLimitAllowAutoBalance"
+            enum="YesNo"
+            width="100%"
+          />
         </FormItem>
       </MyScroll>
     </Form>
@@ -78,6 +198,9 @@ export default {
   data() {
     return {
       optionalFields: utils.options([
+        "Name",
+        "Description",
+        "DownSystemSiteType",
         "CrawlType",
         "ScriptPath",
         "AutoDownloadPage",
@@ -96,6 +219,9 @@ export default {
         "TaskUrlMaxFCnt",
         "TaskUrlMaxCFlCnt",
         "TaskUrlMaxCon",
+        "RunLimitMaxDays",
+        "RunLimitMaxHours",
+        "RunLimitAllowAutoBalance",
       ]),
       showingOptionalFields: [
         // "CrawlType",
@@ -122,11 +248,16 @@ export default {
         taskUrlMaxFailCount: [utils.range(10, 500)],
         taskUrlMaxContinuouslyFailCount: [utils.range(1, 3000)],
         taskUrlMaxConcurrency: [utils.range(1, 10000)],
+        runLimitMaxDays: [utils.range(0, 7)],
+        runLimitMaxHours: [utils.range(0, 24)],
       },
       api: "downSystemSite",
       query: {
         id: null,
         scriptPath: null,
+        name: null,
+        downSystemSiteType: null,
+        description: null,
         siteId: null,
         downSystemId: null,
         crawlerCrawlType: null,
@@ -146,15 +277,24 @@ export default {
         taskUrlMaxFailCount: null,
         taskUrlMaxContinuouslyFailCount: null,
         taskUrlMaxConcurrency: null,
+        runLimitMaxDays: null,
+        runLimitMaxHours: null,
+        runLimitAllowAutoBalance: null,
       },
     };
   },
   beforeMount() {
     utils.initOptionsFieldsShows.call(this);
     utils.copyFieldsFrom(this.query, this.model);
+    utils.restoreOptionalFields("/downSystemSite/edit", this);
+  },
+  beforeDestroy() {
+    utils.snapShotOptionalFields("/downSystemSite/edit", this);
   },
   watch: {
     model(newVal) {
+      this.$utils.resetQuery(this.query);
+      debugger
       utils.copyFieldsFrom(this.query, newVal);
     },
     showingOptionalFields(newVal) {

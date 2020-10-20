@@ -56,12 +56,14 @@
 </template>
 <script>
   import { modules } from "./../../config/modules";
+  import utils from "./../../common";
   import LeftNavMenu from "./../control/LeftNavMenu";
   import NavMenu from "./../control/NavMenu";
   import SearchBox from "./../control/SearchBox";
   import NavTab from "./../control/NavTab";
   import Footer from "./../control/Footer";
   import DropdownMenu from "./../control/DropdownMenu";
+import common from './../../common';
   export default {
     name: "home",
     components: {
@@ -199,24 +201,9 @@
         const res = await this.$api.enum.getAll();
         // let dic={};
         if (res.code == 100) {
-          // let data =res.data;
-          // data.forEach(function (item) {
-          //   // bug point
-          //   item.value = parseInt(item.value);
-          //   if (!dic[item.type]) {
-          //     dic[item.type] = [];
-          //   }
-          //   dic[item.type].push(item);
-          //    this.$store.dispatch("setCaches",dic);
-          // });
-          let dic = [];
-          for (let i = 0; i < res.data.length; i++) {
-            let item = res.data[i];
-            if (item.value !== undefined) item.value = "" + item.value;
-            dic.push(item);
-          }
-          this.Enums.clear();
-          this.Enums.set(dic);
+           res.data.forEach(x=>{
+              utils.addEnumValue(x.type,x);
+           });
           this.ready = true;
         }
       },

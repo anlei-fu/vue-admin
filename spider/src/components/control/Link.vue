@@ -16,8 +16,8 @@
     methods: {
       click() {
         if (this.path) {
-          if (this.$utils.isOutterUrl(this.path)) {
-            window.location.href = this.path;
+          if (this.$utils.isOutterLink(this.path)) {
+            window.open(this.path);
             return;
           }
           this.$router.push({ path: this.path });

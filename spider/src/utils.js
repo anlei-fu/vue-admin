@@ -15,6 +15,20 @@ function getCache(cacheKey, options) {
 
 }
 
+function isOutterLink(url){
+    if(!url)
+      return false;
+
+    url=url.trim();
+    return url.startsWith("http")||url.startsWith("https");
+}
+
+function resetQuery(query){
+    Object.keys(query).forEach(key=>{
+       query[key]=null;
+    });
+}
+
 /**
  * Convert array to object
  * 
@@ -219,5 +233,7 @@ export default {
     objectToArray,
     arraytoObject,
     handleNormalRequest,
-    cloneFields
+    cloneFields,
+    isOutterLink,
+    resetQuery
 }

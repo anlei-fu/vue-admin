@@ -81,7 +81,7 @@ export default {
   data() {
     return {
       columns: [
-        utils.column("url"),
+        utils.linkColumn("url","Url","url"),
         utils.column("referUrl"),
         utils.enumColumn("httpMethod"),
         utils.enumColumn("query"),

@@ -104,6 +104,22 @@ const apiConfig = {
                 deleteBatch: {
                         method: "delete",
                         url: "/downSystemSite/delete/batch"
+                },
+                getBySiteId: {
+                        method: "get",
+                        url: "/downSystemSite/getBySiteId/{siteId}"
+                },
+                balance:{
+                        method: "post",
+                        url: "/downSystemSite/balance"
+                },
+                resetConcurrency:{
+                        method: "post",
+                        url: "/downSystemSite/resetConcurrency/{downSystemSiteId}"
+                },
+                resetJob:{
+                        method: "post",
+                        url: "/downSystemSite/resetJob"
                 }
         },
         siteAccount: {
@@ -282,6 +298,20 @@ const apiConfig = {
                 deleteById: {
                         method: "delete",
                         url: "/blockRule/{id}"
+                },
+        },
+        downSystemSiteDispatch: {
+                getBySourceDownSystemSiteId: {
+                        method: "get",
+                        url: "/downSystemSiteDispatch/getBySourceDownSystemSiteId/{sourceDownSystemSiteId}",
+                },
+                add: {
+                        method: "post",
+                        url: "/downSystemSiteDispatch"
+                },
+                deleteById: {
+                        method: "delete",
+                        url: "/downSystemSiteDispatch//{id}"
                 },
         }
 

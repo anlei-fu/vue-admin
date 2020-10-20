@@ -24,6 +24,7 @@
               />
             </template>
           </span>
+          <Link v-else-if="column.isLink" :key="column.slot" :path="row[column.linkField]" :label="row[column.slot]"/>
           <MyPositiveProgress
             v-else-if="column.isPositiveProgress"
             :percent="
@@ -105,7 +106,9 @@ export default {
     selectedColumns_: {
       deep: true,
       handler: function (newVal) {
-        if (this.doFilter) this.doFilter();
+        if (this.doFilter) {
+          this.doFilter();
+        }
       },
     },
     selectedColumns() {

@@ -88,6 +88,10 @@
     },
     beforeMount() {
       utils.initOptionsFieldsShows.call(this);
+       utils.restoreOptionalFields("/downSystemSite/batchEdit",this);
+    },
+    beforeDestroy(){
+       utils.snapShotOptionalFields("/downSystemSite/batchEdit",this);
     },
     watch: {
       showingOptionalFields(newVal) {
@@ -96,13 +100,13 @@
     },
     methods: {
       show() {
+        this.$utils.resetQuery(this.query);
         this.$refs.modal.show();
       },
       close() {
         this.$refs.modal.close();
       },
       ok() {
-        debugger
         utils.batchEdit.call(this);
       },
     },

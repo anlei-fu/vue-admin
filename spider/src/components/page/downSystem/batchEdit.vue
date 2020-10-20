@@ -45,6 +45,10 @@
     },
     beforeMount() {
       utils.initOptionsFieldsShows.call(this);
+      utils.restoreOptionalFields("/downSystem/batchEdit",this);
+    },
+    beforeDestroy(){
+       utils.snapShotOptionalFields("/downSystem/batchEdit",this);
     },
     watch: {
       showingOptionalFields(newVal) {

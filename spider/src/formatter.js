@@ -1,5 +1,7 @@
 import { Enums } from "./Enums";
 import * as dateUtility from "./DateUtil";
+import utils from "./common";
+import common from "./common";
 
 /**
  * Dispatch func
@@ -60,8 +62,8 @@ function formatEnum(value, type) {
 		return "所有";
 	}
 
-	let enums = new Enums();
-	return enums.getLabel(type, value);
+	let item= common.getSingleEnum(type, value);
+	return item?item.label:"";
 }
 
 /**

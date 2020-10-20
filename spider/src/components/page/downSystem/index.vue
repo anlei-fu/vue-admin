@@ -93,7 +93,7 @@
             showingColumns: [
               "Checkbox",
               "name",
-              "priority",
+              // "priority",
               "concurrency",
               "concur",
               "urlCplt",
@@ -119,10 +119,13 @@
         data: utils.data(),
       };
     },
-    beforeMount() {
-      utils.initFilterOptionShows.call(this);
-      this.getData(true);
-    },
+  beforeMount() {
+    utils.initFilterOptionShows.call(this);
+    if (!utils.restoreIndex("/downSystem/index", this)) this.getData(true);
+  },
+  beforeDestroy() {
+    utils.snapShotIndex("/downSystem/index", this);
+  },
     watch: {
       "pageSetting.filters.enabledFilters"(newVal) {
         utils.changeShowingFilters.call(this, newVal);
