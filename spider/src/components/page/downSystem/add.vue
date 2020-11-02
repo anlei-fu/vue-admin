@@ -1,44 +1,36 @@
 <template>
   <MyModal :title="title" ref="modal" @ok="ok" width="40%">
-    <Form ref="form" :model="query" :rules="rules" :label-width="100">
+    <Form ref="form" class="form-container" :model="query" :rules="rules" :label-width="100">
       <FormItem label="Name" prop="name">
         <Input v-model="query.name" placeholder="Input value" />
       </FormItem>
-      <template v-if="optionalFields.length > 0">
-        <Divider orientation="left">Optional Filter</Divider>
-        <FormItem label="Fields">
-          <MyCheckBoxGroup v-model="showingOptionalFields" :options="optionalFields" />
-        </FormItem>
-      </template>
-      <MyScroll height="180px">
-        <FormItem v-if="showEnableStatus" label="EnableStatus" prop="enableStatus">
+        <FormItem  label="EnableStatus" prop="enableStatus">
           <MySelect v-model="query.enableStatus" enum="EnableStatus" width="100%" />
         </FormItem>
-        <FormItem v-if="showPriority" label="Priority" prop="priority">
+        <FormItem  label="Priority" prop="priority">
           <Input v-model="query.priority" placeholder="Input value" />
         </FormItem>
-        <FormItem v-if="showDescription" label="Description" prop="description">
+        <FormItem  label="Description" prop="description">
           <Input v-model="query.description" placeholder="Input value" />
         </FormItem>
-        <FormItem v-if="showAppKey" label="AppKey" prop="appKey">
+        <FormItem  label="AppKey" prop="appKey">
           <Input v-model="query.appKey" placeholder="Input value" />
         </FormItem>
-        <FormItem v-if="showAppSecret" label="AppSecret" prop="appSecret">
+        <FormItem  label="AppSecret" prop="appSecret">
           <Input v-model="query.appSecret" placeholder="Input value" />
         </FormItem>
-        <FormItem v-if="showDataUrl" label="DataUrl" prop="dataUrl">
+        <FormItem  label="DataUrl" prop="dataUrl">
           <Input v-model="query.dataUrl" placeholder="Input value" />
         </FormItem>
-        <FormItem v-if="showDataQueue" label="DataQueue" prop="dataQueue">
+        <FormItem  label="DataQueue" prop="dataQueue">
           <Input v-model="query.dataQueue" placeholder="Input value" />
         </FormItem>
-        <FormItem v-if="showTaskMaxCon" label="TaskMaxCon" prop="taskMaxRunningCount">
+        <FormItem  label="TaskMaxCon" prop="taskMaxRunningCount">
           <Input v-model="query.taskMaxRunningCount" placeholder="Input value" />
         </FormItem>
-        <FormItem v-if="showDescription" label="Description" prop="description">
+        <FormItem  label="Description" prop="description">
           <Input v-model="query.description" placeholder="Input value" />
         </FormItem>
-      </MyScroll>
     </Form>
   </MyModal>
 </template>
@@ -48,17 +40,6 @@
     props: utils.addProps(),
     data() {
       return {
-        optionalFields: utils.options([
-          "EnableStatus",
-          "Priority",
-          "Description",
-          "AppKey",
-          "AppSecret",
-          "DataUrl",
-          "DataQueue",
-          "TaskMaxCon",
-        ]),
-        showingOptionalFields: ["DataQueue", "TaskMaxCon", "Priority"],
         rules: {
           name: [utils.require()],
           priority: [utils.range(1, 10)],
@@ -79,14 +60,6 @@
           id: null,
         },
       };
-    },
-    beforeMount() {
-      utils.initOptionsFieldsShows.call(this);
-      utils.copyFieldsFrom(this.query, this.model);
-    utils.restoreOptionalFields("/downSystem/add",this);
-    },
-    beforeDestroy(){
-       utils.snapShotOptionalFields("/downSystem/add",this);
     },
     watch: {
       model(newVal) {
@@ -109,3 +82,13 @@
     },
   };
 </script>
+<style scoped>
+.form-container{
+    display: flex;
+    flex-wrap: wrap;
+}
+.form-container >div{
+    display: inline-block;
+    width: 47%;
+}
+</style>

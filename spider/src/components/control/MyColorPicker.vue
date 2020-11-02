@@ -1,6 +1,6 @@
 <template>
   <Select v-model="value_">
-    <Option v-for="color in colors" :key="color.value" :value="color.value">
+    <Option v-for="color in colors" :key="color.value" :value="color.value" :label="color.label">
       <span class="color" :style="{ 'background-color': color.value }"></span>
       <span class="text">{{ color.label }}</span>
     </Option>

@@ -5,6 +5,7 @@
       show-sizer
       show-total
       :current="current"
+      :page-size="size"
       @on-change="onIndexChanged"
       @on-page-size-change="onSizeChanged"
       :page-size-opts="sizes"
@@ -21,6 +22,10 @@
       current: {
         type: Number,
         default: 1,
+      },
+      size:{
+        type: Number,
+        default: 10,
       },
       sizes: {
         type: Array,

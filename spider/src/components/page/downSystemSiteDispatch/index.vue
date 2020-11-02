@@ -119,7 +119,6 @@ export default {
     addDownSystemSiteDispatch() {
       this.$refs.form.validate((valid) => {
         if (valid) {
-            debugger
           this.query.sourceDownSystemSiteId = this.downSystemSiteId;
           this.$utils.handleNormalRequest.call(this, async () => {
             let resp = await this.$api.downSystemSiteDispatch.add(this.query);

@@ -17,7 +17,10 @@ export class EnumManager {
            enums =[];
            this.enums.set(key,enums);
         }
-        
+
+        let numberValue =parseInt(value.value);
+        if(numberValue||numberValue==0)
+           value.value=numberValue;
         enums.push(value);
     }
     removeEnumValue(key,value){

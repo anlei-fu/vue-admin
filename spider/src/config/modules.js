@@ -32,7 +32,14 @@ exports.modules = [
                         icon: "",
                         label: "Crawler",
                         moduleName: "module1",
-                }, {
+                }, 
+                {
+                        path: "/enableTask",
+                        icon: "",
+                        label: "EnableTask",
+                        moduleName: "module1",
+                },
+                {
                         path: "/proxy",
                         icon: "",
                         label: "Proxy",

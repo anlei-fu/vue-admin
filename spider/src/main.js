@@ -11,6 +11,11 @@ import  api from "./api"
 import { format } from "./formatter";
 import { Enums } from "./Enums";
 import {ToString} from "./DateUtil"
+import VueCodemirror from 'vue-codemirror'
+
+// import base style
+import 'codemirror/lib/codemirror.css'
+Vue.use(VueCodemirror)
 
 // components
 Vue.use(iview);
@@ -32,6 +37,7 @@ Vue.filter("formatter", (value, config) => {
 utils.formatDate=val=>ToString(val);
 Vue.$utils = Vue.prototype.$utils = utils;
 Vue.$api = Vue.prototype.$api = api;
+
 
 // router config
 router.beforeEach((to, from, next) => {

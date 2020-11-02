@@ -1,12 +1,27 @@
 import EventEmitter from "./lib/EventEmitter";
 import { Cache } from "./cache";
 import { EnumManager } from "./EnumManager";
+import pinyinHeler from "pinyin-match";
 
 if (!global.mycaches)
         global.mycaches = new Cache();
 
 if (!global.enumManager)
         global.enumManager = new EnumManager();
+
+
+function matchPinyin(keywords, collection, field) {
+        if (keywords) {
+                let matchedCollection = [];
+                collection.forEach((item) => {
+                        if (pinyinHeler.match(item[field], keywords));
+                                matchedCollection.push(item);
+                });
+                return matchedCollection;
+        } else {
+                return collection;
+        }
+}
 
 function getCache(key) {
         return global.mycaches.get(key);
@@ -16,47 +31,47 @@ function setCache(key, value, expire) {
         return global.mycaches.set(key, value, expire);
 }
 
-function snapShotIndex(key,component){
-      let data ={
-              query:component.query,
-              showingColumns:component.$refs.table.selectedColumns_,
-      }
+function snapShotIndex(key, component) {
+        let data = {
+                query: component.query,
+                showingColumns: component.$refs.table.selectedColumns_,
+        }
 
-      if(component.timeRange)
-            data.timeRange=component.timeRange;
+        if (component.timeRange)
+                data.timeRange = component.timeRange;
 
-      if(component.radioKey)
-          data.radioKey=component.radioKey;
+        if (component.radioKey)
+                data.radioKey = component.radioKey;
 
-      if(component.keyword)
-          data.keyword=component.keyword;
-        
-      if(component.data)
-         data.data=component.data;
+        if (component.keyword)
+                data.keyword = component.keyword;
 
-      setCache(key,data);
+        if (component.data)
+                data.data = component.data;
+
+        setCache(key, data);
 }
 
-function snapShotOptionalFields(key,component){
-        if(component.showingOptionalFields)
-          setCache(key,component.showingOptionalFields);
+function snapShotOptionalFields(key, component) {
+        if (component.showingOptionalFields)
+                setCache(key, component.showingOptionalFields);
 }
 
-function restoreOptionalFields(key,component){
-        let fields =getCache(key);
-        if(fields)
-          component.showingOptionalFields=fields;
+function restoreOptionalFields(key, component) {
+        let fields = getCache(key);
+        if (fields)
+                component.showingOptionalFields = fields;
 }
 
-function restoreIndex(key,component){
-      let data =getCache(key);
-      if(!data)
-      return false;
+function restoreIndex(key, component) {
+        let data = getCache(key);
+        if (!data)
+                return false;
 
-      copyFieldsFrom(component,data);
-      component.pageSetting.table.showingColumns=data.showingColumns;
+        copyFieldsFrom(component, data);
+        component.pageSetting.table.showingColumns = data.showingColumns;
 
-      return true;
+        return true;
 
 }
 
@@ -658,7 +673,7 @@ function changeShowingOptionalFields(showings) {
  * @param {Object} target 
  * @param {Object} source 
  */
-function copyFieldsFrom(target, source,resetToNullOnMissing=false) {
+function copyFieldsFrom(target, source, resetToNullOnMissing = false) {
         Object.keys(target).forEach(x => {
                 if (source[x] != null)
                         target[x] = source[x];
@@ -961,5 +976,6 @@ export default {
         snapShotIndex,
         restoreIndex,
         snapShotOptionalFields,
-        restoreOptionalFields
+        restoreOptionalFields,
+        matchPinyin
 }

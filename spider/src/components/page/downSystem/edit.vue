@@ -1,49 +1,38 @@
 <template>
   <MyModal :title="title" ref="modal" @ok="ok" width="40%">
-    <Form ref="form" :model="query" :rules="rules" :label-width="100">
-      <FormItem label="Fields">
-        <MyCheckBoxGroup
-          v-model="showingOptionalFields"
-          :options="optionalFields"
+    <Form ref="form" class="form-container" :model="query" :rules="rules" :label-width="100">
+      <FormItem label="Name" prop="name">
+        <Input v-model="query.name" placeholder="Input value" />
+      </FormItem>
+      <FormItem label="Status" prop="enableStatus">
+        <MySelect
+          v-model="query.enableStatus"
+          enum="EnableStatus"
+          width="100%"
         />
       </FormItem>
-      <MyScroll height="180px">
-        <FormItem v-if="showName" label="Name" prop="name">
-          <Input v-model="query.name" placeholder="Input value" />
-        </FormItem>
-        <FormItem v-if="showEnableStatus" label="Status" prop="enableStatus">
-          <MySelect
-            v-model="query.enableStatus"
-            enum="EnableStatus"
-            width="100%"
-          />
-        </FormItem>
-        <FormItem v-if="showPriority" label="Priority" prop="priority">
-          <Input v-model="query.priority" placeholder="Input value" />
-        </FormItem>
-        <FormItem v-if="showAppKey" label="AppKey" prop="appKey">
-          <Input v-model="query.appKey" placeholder="Input value" />
-        </FormItem>
-        <FormItem v-if="showAppSecret" label="AppSecret" prop="appSecret">
-          <Input v-model="query.appSecret" placeholder="Input value" />
-        </FormItem>
-        <FormItem v-if="showDataUrl" label="DataUrl" prop="dataUrl">
-          <Input v-model="query.dataUrl" placeholder="Input value" />
-        </FormItem>
-        <FormItem v-if="showDataQueue" label="DataQ" prop="dataQueue">
-          <Input v-model="query.dataQueue" placeholder="Input value" />
-        </FormItem>
-        <FormItem
-          v-if="showTaskMaxCon"
-          label="TMaxCon"
-          prop="taskMaxRunningCount"
-        >
-          <Input
-            v-model="query.taskMaxRunningCount"
-            placeholder="Input value"
-          />
-        </FormItem>
-      </MyScroll>
+      <FormItem label="Priority" prop="priority">
+        <Input v-model="query.priority" placeholder="Input value" />
+      </FormItem>
+      <FormItem label="AppKey" prop="appKey">
+        <Input v-model="query.appKey" placeholder="Input value" />
+      </FormItem>
+      <FormItem label="AppSecret" prop="appSecret">
+        <Input v-model="query.appSecret" placeholder="Input value" />
+      </FormItem>
+      <FormItem label="DataUrl" prop="dataUrl">
+        <Input v-model="query.dataUrl" placeholder="Input value" />
+      </FormItem>
+      <FormItem label="DataQ" prop="dataQueue">
+        <Input v-model="query.dataQueue" placeholder="Input value" />
+      </FormItem>
+      <FormItem
+        v-if="showTaskMaxCon"
+        label="TMaxCon"
+        prop="taskMaxRunningCount"
+      >
+        <Input v-model="query.taskMaxRunningCount" placeholder="Input value" />
+      </FormItem>
     </Form>
   </MyModal>
 </template>
@@ -53,23 +42,6 @@ export default {
   props: utils.editProps(),
   data() {
     return {
-      optionalFields: utils.options([
-        "Name",
-        "EnableStatus",
-        "Priority",
-        "Description",
-        "AppKey",
-        "AppSecret",
-        "DataUrl",
-        "DataQueue",
-        "TaskMaxCon",
-      ]),
-      showingOptionalFields: [
-        "EnableStatus",
-        "DataQueue",
-        "TaskMaxCon",
-        "Priority",
-      ],
       rules: {
         priority: [utils.range(1, 10)],
         taskMaxRunningCount: [utils.range(0, 1000)],
@@ -90,14 +62,6 @@ export default {
       },
     };
   },
-  beforeMount() {
-    utils.initOptionsFieldsShows.call(this);
-    utils.copyFieldsFrom(this.query, this.model);
-    utils.restoreOptionalFields("/downSystem/edit",this);
-    },
-    beforeDestroy(){
-       utils.snapShotOptionalFields("/downSystem/edit",this);
-    },
   watch: {
     model(newVal) {
       utils.copyFieldsFrom(this.query, newVal);
@@ -119,3 +83,13 @@ export default {
   },
 };
 </script>
+<style scoped>
+.form-container{
+    display: flex;
+    flex-wrap: wrap;
+}
+.form-container >div{
+    display: inline-block;
+    width: 47%;
+}
+</style>

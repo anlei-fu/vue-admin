@@ -59,6 +59,7 @@
       :datas="data.list"
       @del="showDelete"
       @edit="showEdit"
+      @editCode ="editCode"
       @seeds="showSeedUrl"
       @blkRule="showBlockRule"
       @clone="clone"
@@ -71,6 +72,7 @@
     <MyPager
       :current="query.pageIndex"
       :total="data.total"
+      :size="query.pageSize"
       @onSizeChanged="onPageSizeChanged"
       @onIndexChanged="onPageIndexChanged"
     />
@@ -91,6 +93,7 @@
       :ids="batchEditSetting.ids"
       @success="onBatchEditSuccess"
     />
+    <codeViewer ref="codeViewer" @scriptUpdated="scriptUpdated"/>
     <PageSetting ref="setting" :setting="pageSetting" />
   </div>
 </template>
@@ -104,6 +107,7 @@ import blockRule from "./blockRuleViewer";
 import downSystemSiteDispatch from "./downSystemSiteDispatchViewer";
 import balance from "./balance";
 import resetJob from "./resetJob";
+import codeViewer from "./codeViewer"
 export default {
   components: {
     edit,
@@ -114,6 +118,7 @@ export default {
     downSystemSiteDispatch,
     balance,
     resetJob,
+    codeViewer
   },
   data() {
     return {
@@ -241,8 +246,8 @@ export default {
                 utils.operation("edit"),
                 utils.operation("del"),
                 utils.operation("clone"),
+                utils.operation("editCode",row=>row.scriptPath!=undefined),
                 utils.operation("balance"),
-                utils.operation("rstCon"),
                 utils.operation("rstJb"),
                 utils.operation("blkRule"),
                 utils.operation("seeds"),
@@ -278,6 +283,7 @@ export default {
       api: "downSystemSite",
       timeRange: [],
       radioKey: "name",
+      keyword:"",
       radioOptions: utils.radioOptions(["name"]),
       query: {
         siteId: null,
@@ -316,6 +322,15 @@ export default {
 
     showBlockRule(row) {
       this.$refs.blockRule.show(row.id);
+    },
+    editCode(row){
+       this.$refs.codeViewer.show(row.id,row.scriptPath);
+    },
+    
+    scriptUpdated({downSystemSiteId,scriptPath}){
+         let row= this.data.list.filter(x=>x.id==downSystemSiteId);
+         if(row&&row.length==1)
+           row[0].scriptPath=scriptPath;
     },
 
     showDownSystemSiteDispatch(row) {

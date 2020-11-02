@@ -3,13 +3,12 @@
     <span v-if="title" style="margin-right: 10px;">{{ title }}</span>
     <Select
       v-model="selectedValue_"
+      filterable
       :style="{ width: width }"
       :clearable="clearable"
       :placeHolder="placeHolder"
     >
-      <Option v-for="item in options_.filtered" :value="item[value]" :key="item[value]">
-        {{ item[label] }}
-      </Option>
+      <Option v-for="item in options_.filtered" :label="item[label]" :value="item[value]" :key="item[value]"/>
     </Select>
   </span>
 </template>
@@ -66,7 +65,7 @@
     },
     created() {
       this.init();
-      this.selectedValue_ = this.selectedValue;
+      this.selectedValue_ =this.selectedValue;
     },
     watch: {
       options() {
@@ -79,11 +78,14 @@
         this.$emit("change", newVal);
       },
       selectedValue(newVal) {
-        debugger
         this.selectedValue_ = newVal;
       },
     },
     methods: {
+      match(keywords){
+          this.options_.filtered=utils.matchPinyin(keywords,this.options_.source,this.label);
+      },
+
       init() {
         this.options_ = {};
         if (this.enum) {

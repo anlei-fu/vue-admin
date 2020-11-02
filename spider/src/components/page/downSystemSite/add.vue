@@ -1,22 +1,26 @@
 <template>
-  <MyModal :title="title" ref="modal" @ok="ok" width="40%">
-    <Form ref="form" :model="query" :rules="rules" :label-width="120">
+  <MyModal :title="title" ref="modal" @ok="ok" width="45%">
+    <Form ref="form"  :model="query" :rules="rules" :label-width="150">
+      <div class="form-container" style="max-height:500px;overflow-y: scroll;">
       <FormItem label="DownSystem" prop="downSystemId">
         <MySelect v-model="query.downSystemId" enum="System" width="100%" />
       </FormItem>
       <FormItem label="Site" prop="siteId">
         <MySelect v-model="query.siteId" enum="Site" width="100%" />
       </FormItem>
-       <FormItem label="Name" prop="name">
-          <Input v-model="query.name" placeholder="Input value" />
-        </FormItem>
-        <FormItem label="Desc" prop="description">
-          <Input v-model="query.description" placeholder="Input value" />
-        </FormItem>
-      <FormItem label="Type" prop="downSystemSiteType">
-        <MySelect v-model="query.downSystemSiteType" enum="DownSystemSiteType" width="100%" />
+      <FormItem label="Name" prop="name">
+        <Input v-model="query.name" placeholder="Input value" />
       </FormItem>
-
+      <FormItem label="Type" prop="downSystemSiteType">
+        <MySelect
+          v-model="query.downSystemSiteType"
+          enum="DownSystemSiteType"
+          width="100%"
+        />
+      </FormItem>
+      <FormItem label="Desc" prop="description">
+        <Input v-model="query.description" placeholder="Input value" />
+      </FormItem>
       <FormItem label="ExpectedUrlSize" prop="bloomExpectedUrlSize">
         <Input v-model="query.bloomExpectedUrlSize" placeholder="Input value" />
       </FormItem>
@@ -24,102 +28,96 @@
         <Input v-model="query.bloomFpp" placeholder="Input value" />
       </FormItem>
 
-      <template v-if="optionalFields.length > 0">
-        <Divider orientation="left">Optional Filter</Divider>
-        <FormItem label="Fields">
-          <MyCheckBoxGroup v-model="showingOptionalFields" :options="optionalFields" />
-        </FormItem>
-      </template>
-      <MyScroll>
-        <FormItem v-if="showCrawlerCrawlType" label="CrawlType" prop="crawlerCrawlType">
-          <MySelect v-model="query.crawlerCrawlType" enum="CrawlType" width="100%" />
-        </FormItem>
-        <FormItem
-          v-if="showCrawlerAutoDownloadPage"
-          label="AutoDownloadPage"
-          prop="crawlerAutoDownloadPage"
-        >
-          <MySelect v-model="query.crawlerAutoDownloadPage" enum="YesNo" width="100%" />
-        </FormItem>
-        <FormItem v-if="showEnableStatus" label="EnableStatus" prop="enableStatus">
-          <MySelect v-model="query.enableStatus" enum="EnableStatus" width="100%" />
-        </FormItem>
-        <FormItem v-if="showScriptPath" label="Script" prop="scriptPath">
-          <MyFileUploader v-model="query.scriptPath" />
-        </FormItem>
-        <FormItem v-if="showCrawlerPageEncoding" label="Encoding" prop="crawlerPageEncoding">
-          <Input v-model="query.crawlerPageEncoding" placeholder="Input value" />
-        </FormItem>
-        <FormItem v-if="showUrlMaxCacheCount" label="UrlMaxCacheCount" prop="urlMaxCacheCount">
-          <Input v-model="query.urlMaxCacheCount" placeholder="Input value" />
-        </FormItem>
-        <FormItem v-if="showUrlEncodes" label="Encodes" prop="urlEncodes">
-          <Input v-model="query.urlEncodes" placeholder="Input value" />
-        </FormItem>
-        <FormItem v-if="showUrlMatchPatterns" label="MatchPatterns" prop="urlMatchPatterns">
-          <Input v-model="query.urlMatchPatterns" placeholder="Input value" />
-        </FormItem>
+      <FormItem label="CrawlType" prop="crawlerCrawlType">
+        <MySelect
+          v-model="query.crawlerCrawlType"
+          enum="CrawlType"
+          width="100%"
+        />
+      </FormItem>
+      <FormItem label="AutoDownloadPage" prop="crawlerAutoDownloadPage">
+        <MySelect
+          v-model="query.crawlerAutoDownloadPage"
+          enum="YesNo"
+          width="100%"
+        />
+      </FormItem>
+      <FormItem label="EnableStatus" prop="enableStatus">
+        <MySelect
+          v-model="query.enableStatus"
+          enum="EnableStatus"
+          width="100%"
+        />
+      </FormItem>
+      <FormItem label="Script" prop="scriptPath">
+        <MyFileUploader v-model="query.scriptPath" />
+      </FormItem>
+      <FormItem label="Encoding" prop="crawlerPageEncoding">
+        <Input v-model="query.crawlerPageEncoding" placeholder="Input value" />
+      </FormItem>
+      <FormItem label="UrlMxCchCnt" prop="urlMaxCacheCount">
+        <Input v-model="query.urlMaxCacheCount" placeholder="Input value" />
+      </FormItem>
+      <FormItem label="Encodes" prop="urlEncodes">
+        <Input v-model="query.urlEncodes" placeholder="Input value" />
+      </FormItem>
+      <FormItem label="MtchPttns" prop="urlMatchPatterns">
+        <Input v-model="query.urlMatchPatterns" placeholder="Input value" />
+      </FormItem>
 
-        <FormItem v-if="showTaskUrlBatchCount" label="UrlBatchCount" prop="taskUrlBatchCount">
-          <Input v-model="query.taskUrlBatchCount" placeholder="Input value" />
-        </FormItem>
-        <FormItem v-if="showTaskMaxCount" label="MaxWaitToBindCount" prop="taskMaxCount">
-          <Input v-model="query.taskMaxCount" placeholder="Input value" />
-        </FormItem>
-        <FormItem v-if="showTaskMaxRunningCount" label="MaxRunningCount" prop="taskMaxRunningCount">
-          <Input v-model="query.taskMaxRunningCount" placeholder="Input value" />
-        </FormItem>
-        <FormItem v-if="showTaskTimeout" label="Timeout" prop="taskTimeout">
-          <Input v-model="query.taskTimeout" placeholder="Input value" />
-        </FormItem>
-        <FormItem v-if="showTaskBindTimeout" label="BdTmt" prop="taskBindTimeout">
-          <Input v-model="query.taskBindTimeout" placeholder="Input value" />
-        </FormItem>
-        <FormItem v-if="showUrlMaxDepth" label="UrlMaxDepth" prop="urlMaxDepth">
-          <Input v-model="query.urlMaxDepth" placeholder="Input value" />
-        </FormItem>
-        <FormItem v-if="showUrlMaxCrawlCount" label="UrlMaxCrawlCount" prop="urlMaxCrawlCount">
-          <Input v-model="query.urlMaxCrawlCount" placeholder="Input value" />
-        </FormItem>
-        <FormItem
-          v-if="showTaskUrlMaxFailCount"
-          label="TaskUrlMaxFailCount"
-          prop="taskUrlMaxFailCount"
-        >
-          <Input v-model="query.taskUrlMaxFailCount" placeholder="Input value" />
-        </FormItem>
-        <FormItem
-          v-if="showTaskUrlMaxContinuouslyFailCount"
-          label="TaskUrlMaxContinuouslyFailCount"
-          prop="taskUrlMaxContinuouslyFailCount"
-        >
-          <Input v-model="query.taskUrlMaxContinuouslyFailCount" placeholder="Input value" />
-        </FormItem>
-        <FormItem
-          v-if="showTaskUrlMaxConcurrency"
-          label="TaskUrlMaxConcurrency"
-          prop="taskUrlMaxConcurrency"
-        >
-          <Input v-model="query.taskUrlMaxConcurrency" placeholder="Input value" />
-        </FormItem>
-         <FormItem
-          v-if="showRunLimitMaxDays"
-          label="RunlimitMaxDays"
-          prop="runLimitMaxDays"
-        >
-          <Input v-model="query.runLimitMaxDays" placeholder="Input value" />
-        </FormItem>
-         <FormItem
-          v-if="showRunLimitMaxHours"
-          label="MaxHours"
-          prop="runLimitMaxHours"
-        >
-          <Input v-model="query.runLimitMaxHours" placeholder="Input value" />
-        </FormItem>
-          <FormItem v-if="showRunLimitAllowAutoBalance" label="AutoBalance" prop="runLimitAllowAutoBalance">
-          <MySelect v-model="query.runLimitAllowAutoBalance" enum="YesNo" width="100%" />
-        </FormItem>
-      </MyScroll>
+      <FormItem label="UrlBtchCnt" prop="taskUrlBatchCount">
+        <Input v-model="query.taskUrlBatchCount" placeholder="Input value" />
+      </FormItem>
+      <FormItem label="TskMxCnt" prop="taskMaxCount">
+        <Input v-model="query.taskMaxCount" placeholder="Input value" />
+      </FormItem>
+      <FormItem label="TskMxRunCnt" prop="taskMaxRunningCount">
+        <Input v-model="query.taskMaxRunningCount" placeholder="Input value" />
+      </FormItem>
+      <FormItem label="Timeout" prop="taskTimeout">
+        <Input v-model="query.taskTimeout" placeholder="Input value" />
+      </FormItem>
+      <FormItem label="BdTmt" prop="taskBindTimeout">
+        <Input v-model="query.taskBindTimeout" placeholder="Input value" />
+      </FormItem>
+      <FormItem label="UrlMaxDepth" prop="urlMaxDepth">
+        <Input v-model="query.urlMaxDepth" placeholder="Input value" />
+      </FormItem>
+      <FormItem label="UrlMxCrwlCnt" prop="urlMaxCrawlCount">
+        <Input v-model="query.urlMaxCrawlCount" placeholder="Input value" />
+      </FormItem>
+      <FormItem label="TaskUrlMaxFailCount" prop="taskUrlMaxFailCount">
+        <Input v-model="query.taskUrlMaxFailCount" placeholder="Input value" />
+      </FormItem>
+      <FormItem
+        label="TskUrlMxCntnslyFail"
+        prop="taskUrlMaxContinuouslyFailCount"
+      >
+        <Input
+          v-model="query.taskUrlMaxContinuouslyFailCount"
+          placeholder="Input value"
+        />
+      </FormItem>
+      <FormItem label="TskUrlMxCon" prop="taskUrlMaxConcurrency">
+        <Input
+          v-model="query.taskUrlMaxConcurrency"
+          placeholder="Input value"
+        />
+      </FormItem>
+      <FormItem label="RnlmtMxDays" prop="runLimitMaxDays">
+        <Input v-model="query.runLimitMaxDays" placeholder="Input value" />
+      </FormItem>
+      <FormItem label="RnlmtMxHour" prop="runLimitMaxHours">
+        <Input v-model="query.runLimitMaxHours" placeholder="Input value" />
+      </FormItem>
+      <FormItem label="AutoBlnce" prop="runLimitAllowAutoBalance">
+        <MySelect
+          v-model="query.runLimitAllowAutoBalance"
+          enum="YesNo"
+          width="100%"
+        />
+      </FormItem>
+      </div>
     </Form>
   </MyModal>
 </template>
@@ -129,40 +127,6 @@ export default {
   props: utils.addProps(),
   data() {
     return {
-      optionalFields: utils.options([
-        "Name",
-        "DownSystemSiteType",
-        "Description",
-        "CrawlerCrawlType",
-        "ScriptPath",
-        "CrawlerAutoDownloadPage",
-        "EnableStatus",
-        "CrawlerPageEncoding",
-        "UrlMaxCacheCount",
-        "UrlMaxDepth",
-        "UrlMaxCrawlCount",
-        "UrlEncodes",
-        "UrlMatchPatterns",
-        "TaskUrlBatchCount",
-        "TaskMaxCount",
-        "TaskMaxRunningCount",
-        "TaskTimeout",
-        "TaskBindTimeout",
-        "TaskUrlMaxFailCount",
-        "TaskUrlMaxContinuouslyFailCount",
-        "TaskUrlMaxConcurrency",
-        "RunLimitMaxDays",
-        "RunLimitMaxHours",
-        "RunLimitAllowAutoBalance"
-      ]),
-      showingOptionalFields: [
-        // "CrawlerCrawlType",
-        // "TaskTimeout",
-        // "TaskMaxRunningCount",
-        // "BloomExpectedUrlSize",
-        // "UrlEncodes",
-        // "CrawlerAutoDownloadPage",
-      ],
       rules: {
         siteId: [utils.require()],
         downSystemId: [utils.require()],
@@ -215,20 +179,13 @@ export default {
         taskUrlMaxFailCount: null,
         taskUrlMaxContinuouslyFailCount: null,
         taskUrlMaxConcurrency: null,
-        runLimitMaxDays:null,
-        runLimitMaxHours:null,
-        runLimitAllowAutoBalance:null
+        runLimitMaxDays: null,
+        runLimitMaxHours: null,
+        runLimitAllowAutoBalance: null,
       },
     };
   },
-  beforeMount() {
-    utils.initOptionsFieldsShows.call(this);
-    utils.copyFieldsFrom(this.query, this.model);
-       utils.restoreOptionalFields("/downSystemSite/add",this);
-    },
-    beforeDestroy(){
-       utils.snapShotOptionalFields("/downSystemSite/add",this);
-    },
+  
   watch: {
     model(newVal) {
       this.$utils.resetQuery(this.query);
@@ -251,3 +208,13 @@ export default {
   },
 };
 </script>
+<style scoped>
+.form-container{
+    display: flex;
+    flex-wrap: wrap;
+}
+.form-container >div{
+    display: inline-block;
+    width: 47%;
+}
+</style>

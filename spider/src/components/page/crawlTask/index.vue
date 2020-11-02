@@ -4,77 +4,66 @@
     <MyFilter>
       <MyDateRange v-model="timeRange" />
             <MySelect
-        v-show="showDownSystemId"
         v-model="query.downSystemId"
         title="System"
         enum="System"
         width="200px"
       />
-      <MySelect v-show="showSiteId" v-model="query.siteId" title="Site" enum="Site" width="200px" />
+      <MySelect v-model="query.siteId" title="Site" enum="Site" width="200px" />
       <MySelect
-        v-show="showTaskStatus"
         v-model="query.taskStatus"
         title="TaskStatus"
         enum="TaskStatus"
         width="200px"
       />
       <MySelect
-        v-show="showTaskExecuteResultType"
         v-model="query.taskResult"
         title="ResultType"
         enum="TaskResult"
         width="200px"
       />
       <MySelect
-        v-show="showDataSyncStatus"
         v-model="query.dataSyncStatus"
         title="DataSyncStatus"
         enum="SyncStatus"
         width="200px"
       />
       <MySelect
-        v-show="showUrlSyncStatus"
         v-model="query.urlSyncStatus"
         title="UrlSyncStatus"
         enum="SyncStatus"
         width="200px"
       />
       <MySelect
-        v-show="showCrawlerId"
         v-model="query.crawlerId"
         title="Crawler"
         enum="Crawler"
         width="200px"
       />
       <MySelect
-        v-show="showBindLastStatus"
         v-model="query.bindLastStatus"
         title="BindResult"
         enum="BindResult"
         width="200px"
       />
       <MySelect
-        v-show="showDispatchStatus"
         v-model="query.dispatchStatus"
         title="DispatchResult"
         enum="DispatchResult"
         width="200px"
       />
       <MySelect
-        v-show="showProxyId"
         v-model="query.proxyId"
         title="Proxy"
         enum="Proxy"
         width="200px"
       />
       <MySelect
-        v-show="showEnableStatus"
-        v-model="query.enableStatus"
         title="EnableStatus"
         enum="EnableStatus"
         width="200px"
       />
-       <span v-show="showRadioGroup">
+       <span>
         <MyRadioGroup v-model="radioKey" :options="radioOptions" width="200px" />
         <Input v-model="keyword" style="width: 200px;" />
       </span>
@@ -84,7 +73,7 @@
     </MyFilter>
     <MyTable
       ref="table"
-      @dsphRcd="showDispatchRecord"
+      @dspRcd="showDispatchRecord"
       @bdRcd="showBindRecord"
       filter
       border
@@ -118,36 +107,7 @@ export default {
     return {
       pageSetting: {
         filters: {
-          options: utils.options([
-            "TimeRange",
-            "SiteId",
-            "DownSystemId",
-            "TaskStatus",
-            "TaskExecuteResultType",
-            "CrawlerId",
-            "BindLastStatus",
-            "DispatchStatus",
-            "DataSyncStatus",
-            "UrlSyncStatus",
-            "ProxyId",
-            "EnableStatus",
-            "RadioGroup"
-          ]),
-          enabledFilters: [
-            "TimeRange",
-            "SiteId",
-            "DonwSystemId",
-            "TaskStatus",
-            "TaskExecuteResultType",
-            "CrawlerId",
-            "BindLastStatus",
-            "DispatchStatus",
-            "DataSyncStatus",
-            "UrlSyncStatus",
-            "ProxyId",
-            "EnableStatus",
-            "RadioGroup"
-          ],
+      
         },
         table: {
           columns: [
@@ -181,21 +141,21 @@ export default {
             utils.enumColumn("proxyId", "Proxy", "Pro"),
             utils.dateColumn("taskStartTime", "StTm"),
             utils.dateColumn("taskFinishTime", "FnshTm","MM-dd hh:mm"),
-            utils.column("urlSuccessCount", "SucUrlCnt"),
-            utils.column("urlFailedCount", "FailCnt"),
+            utils.column("urlSuccessCount", "SUrlCnt"),
+            utils.column("urlFailedCount", "FUrlCnt"),
             utils.column("urlNewCount", "NewCnt"),
             utils.column("urlBadCount", "BadCnt"),
-            utils.column("averageSpeedOfAll", "SpdOfAll"),
-            utils.column("averageSpeedOfSuccess", "SpdOfSuc"),
-            utils.column("medianSpeedOfSuccess", "MedianSpdOfSuc"),
-            utils.column("maxSpeedOfSuccess", "MxSpdOfSuc"),
+            utils.column("averageSpeedOfAll", "AllSpd"),
+            utils.column("averageSpeedOfSuccess", "ScsSpd"),
+            utils.column("medianSpeedOfSuccess", "MdnSpd"),
+            utils.column("maxSpeedOfSuccess", "MxSpd"),
             utils.enumColumn("urlSyncStatus", "SyncStatus", "UrlSync"),
-            utils.enumColumn("dataSyncStatus", "SyncStatus", "DataSync"),
-            utils.column("dataFile", "DataFile"),
+            utils.enumColumn("dataSyncStatus", "SyncStatus", "DtSync"),
+            utils.column("dataFile", "DtFile"),
             utils.enumColumn("taskResult", "TaskResult", "Result"),
             utils.dateColumn("createTime", "Ctime", "MM-dd hh:mm"),
             utils.operateColumn(
-              [utils.operation("bdRcd"), utils.operation("dsphRcd")],
+              [utils.operation("bdRcd"), utils.operation("dspRcd")],
               {
                 width: "150px",
               }
@@ -249,17 +209,12 @@ export default {
     };
   },
   beforeMount() {
-    utils.initFilterOptionShows.call(this);
     if (!utils.restoreIndex("/crawlTask/index", this)) this.getData(true);
   },
   beforeDestroy() {
     utils.snapShotIndex("/crawlTask/index", this);
   },
-  watch: {
-    "pageSetting.filters.enabledFilters"(newVal) {
-      utils.changeShowingFilters.call(this, newVal);
-    },
-  },
+ 
   methods: {
     showBindRecord(row) {
       this.$refs.bind.show(row.id);

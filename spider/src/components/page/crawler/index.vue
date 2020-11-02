@@ -119,7 +119,7 @@ export default {
             ),
             utils.column("maxConcurrency", "MxCon"),
             utils.column("currentConcurrency", "CrtCon"),
-            utils.column("heartbeatLostCount", "LosCnt"),
+            utils.column("heartbeatLostCount", "HbLstCnt"),
             utils.dateColumn("heartbeatLastTime", "HbTm", "MM-dd hh:mm", {
               width: "110px",
             }),

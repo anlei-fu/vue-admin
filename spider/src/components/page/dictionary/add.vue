@@ -1,6 +1,6 @@
 <template>
-  <MyModal :title="title" ref="modal" @ok="ok" width="40%">
-    <Form ref="form" :model="query" :rules="rules" :label-width="90">
+  <MyModal :title="title" ref="modal" @ok="ok" width="30%">
+    <Form class="form-container" ref="form" :model="query" :rules="rules" :label-width="90">
       <FormItem label="Type" prop="type">
         <Input v-model="query.type" placeholder="Type of item" />
       </FormItem>
@@ -16,12 +16,6 @@
        <FormItem label="SortNumber" prop="sortNumber">
         <Input v-model="query.sortNumber" placeholder="Label of item" />
       </FormItem>
-      <template v-if="optionalFields.length > 0">
-        <Divider orientation="left">Optional Filter</Divider>
-        <FormItem label="Fields">
-          <MyCheckBoxGroup v-model="showingOptionalFields" :options="optionalFields" />
-        </FormItem>
-      </template>
     </Form>
   </MyModal>
 </template>
@@ -77,3 +71,13 @@
     },
   };
 </script>
+<style scoped>
+.form-container{
+    display: flex;
+    flex-wrap: wrap;
+}
+.form-container >div{
+    display: inline-block;
+    width: 100%;
+}
+</style>

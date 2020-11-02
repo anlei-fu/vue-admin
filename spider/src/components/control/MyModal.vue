@@ -1,5 +1,5 @@
 <template>
-  <Modal v-model="show_" :title="title" :width="width" mask>
+  <Modal v-model="show_" :title="title" :width="width"  mask>
     <slot></slot>
     <div slot="footer" class="footer">
       <slot name="button" />

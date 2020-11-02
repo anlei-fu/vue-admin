@@ -252,6 +252,20 @@ const apiConfig = {
                 getList: {
                         method: "get",
                         url: "/crawlTask/page"
+                },
+                deleteById: {
+                        method: "delete",
+                        url: "/siteIpBlockMap/{id}"
+                },
+                deleteBatch: {
+                        method: "delete",
+                        url: "/site/delete/batch"
+                }
+        },
+        enableTask: {
+                getList: {
+                        method: "get",
+                        url: "/enableTask/page"
                 }
         },
         enum: {
@@ -311,8 +325,20 @@ const apiConfig = {
                 },
                 deleteById: {
                         method: "delete",
-                        url: "/downSystemSiteDispatch//{id}"
+                        url: "/downSystemSiteDispatch/{id}"
                 },
+        },
+        file :{
+                download:{
+                        method:"get",
+                        url:"/file/download"
+                },
+                
+                upload:{
+                        method:"post",
+                        url:"/file/upload"
+                }
+
         }
 
 }

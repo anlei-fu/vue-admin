@@ -1,26 +1,22 @@
 <template>
-  <MyModal :title="title" ref="modal" @ok="ok" width="40%">
-    <Form ref="form" :model="query" :rules="rules" :label-width="50">
-      <FormItem label="Fields">
-        <MyCheckBoxGroup v-model="showingOptionalFields" :options="optionalFields" />
-      </FormItem>
-      <MyScroll height="200px">
-        <FormItem v-if="showType" label="Type" prop="type">
+  <MyModal :title="title" ref="modal" @ok="ok" width="30%">
+    <Form ref="form" class="form-container" :model="query" :rules="rules" :label-width="90
+    ">
+        <FormItem label="Type" prop="type">
           <Input v-model="query.type" placeholder="Input value" />
         </FormItem>
-        <FormItem v-if="showLabel" label="Label" prop="label">
+        <FormItem  label="Label" prop="label">
           <Input v-model="query.label" placeholder="Input value" />
         </FormItem>
-        <FormItem v-if="showValue" label="Value" prop="value">
+        <FormItem label="Value" prop="value">
           <Input v-model="query.value" placeholder="Input value" />
         </FormItem>
-        <FormItem v-if="showColor" label="Color" prop="color">
+        <FormItem  label="Color" prop="color">
           <MyColorPicker v-model="query.color" />
         </FormItem>
-          <FormItem v-if="showSortNumber" label="SortNumber" prop="sortNumber">
+          <FormItem label="SortNumber" prop="sortNumber">
           <Input v-model="query.sortNumber" placeholder="Input value" />
         </FormItem>
-      </MyScroll>
     </Form>
   </MyModal>
 </template>
@@ -30,8 +26,6 @@
     props: utils.editProps(),
     data() {
       return {
-        optionalFields: utils.options(["Type", "Color", "Label", "Value","SortNumber"]),
-        showingOptionalFields: [],
         rules: {
           value: [utils.range(-1, 1000)],
         },
@@ -45,14 +39,6 @@
           id: null,
         },
       };
-    },
-    beforeMount() {
-      utils.initOptionsFieldsShows.call(this);
-      utils.copyFieldsFrom(this.query, this.model);
-       utils.restoreOptionalFields("/dictionary/edit",this);
-    },
-    beforeDestroy(){
-       utils.snapShotOptionalFields("/dictionary/edit",this);
     },
     watch: {
       model(newVal) {
@@ -75,3 +61,13 @@
     },
   };
 </script>
+<style scoped>
+.form-container{
+    display: flex;
+    flex-wrap: wrap;
+}
+.form-container >div{
+    display: inline-block;
+    width: 100%;
+}
+</style>

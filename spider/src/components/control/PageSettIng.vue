@@ -1,21 +1,12 @@
 <template>
-  <MyModal ref="model" @onOk="update" title="Page setting">
+  <MyModal ref="model" @onOk="update" okText="Save" cancelText="Close" title="Column setting" width="30%">
     <div class="container">
-      <template v-if="setting_.filters.options.length > 0">
-        <Divider orientation="left">Basic Filter</Divider>
-        <MyCheckBoxGroup
-          orientation="vertical"
-          v-model="enbaledFilters_"
-          :options="setting_.filters.options"
-        />
-      </template>
       <template v-if="setting_.table.columns.length > 0">
-        <Divider orientation="left">Columns</Divider>
         <MyCheckBoxGroup
           v-model="columns_"
           :options="setting_.table.columns"
-          value="key"
-          label="key"
+          value="slot"
+          label="title"
         />
       </template>
     </div>

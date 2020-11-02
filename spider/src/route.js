@@ -63,6 +63,11 @@ export default new Router({
         name: 'dictionary',
         component: () => import("@/components/page/dictionary/index"),
       },
+      {
+        path: 'enableTask',
+        name: 'enableTask',
+        component: () => import("@/components/page/enableTask/index"),
+      },
       ]
 
     }
